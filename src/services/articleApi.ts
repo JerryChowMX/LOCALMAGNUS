@@ -45,9 +45,33 @@ function normalizeArticle(data: any): StrapiArticle {
     tags: (attrs.tags || attrs.tags?.data)?.map((tag: any) => ({
       slug: tag.slug || tag.attributes?.slug
     })) || [],
-    blocks: attrs.blocks || attrs.content || [],
+    blocks: attrs.blocks || attrs.content || attrs.content_blocks || [],
     summary: attrs.summary || attrs.excerpt || '',
-    audioUrl: attrs.audio?.url || attrs.audio_url || undefined
+    audioUrl: attrs.audio?.url || attrs.audio_url || undefined,
+    executive_summary: attrs.executive_summary || undefined,
+    audio_summary: attrs.audio_summary ? {
+      audio_file: (attrs.audio_summary.audio_file || attrs.audio_summary.audio_file?.data) ? {
+        url: attrs.audio_summary.audio_file?.url || attrs.audio_summary.audio_file?.data?.attributes?.url
+      } : undefined,
+      duration_seconds: attrs.audio_summary.duration_seconds,
+      voice: attrs.audio_summary.voice,
+      transcript: attrs.audio_summary.transcript,
+      generated_at: attrs.audio_summary.generated_at,
+      file_size: attrs.audio_summary.file_size
+    } : undefined,
+    relatedArticles: (attrs.related_articles || attrs.related_articles?.data)?.map((item: any) => {
+      const ra = item.attributes || item;
+      return {
+        title: ra.title,
+        slug: ra.slug,
+        hero_image: ra.hero_image ? {
+          url: ra.hero_image.url || ra.hero_image.data?.attributes?.url
+        } : undefined,
+        category: ra.category ? {
+          name: ra.category.name || ra.category.data?.attributes?.name
+        } : undefined
+      };
+    }) || []
   };
 }
 
@@ -86,7 +110,19 @@ export const articleApi = {
   async getArticleBySlug(slug: string): Promise<StrapiArticle | null> {
     const params = new URLSearchParams({
       'filters[slug][$eq]': slug,
-      'populate': '*'
+      'populate[content_blocks][populate]': '*',
+      'populate[executive_summary][populate]': '*',
+      'populate[audio_summary][populate]': '*',
+      'populate[hero_image][fields][0]': 'url',
+      'populate[hero_image][fields][1]': 'alternativeText',
+      'populate[hero_image][fields][2]': 'caption',
+      'populate[hero_image][fields][3]': 'width',
+      'populate[hero_image][fields][4]': 'height',
+      'populate[author][populate]': '*',
+      'populate[category][populate]': '*',
+      'populate[tags][populate]': '*',
+      'populate[related_articles][populate][0]': 'hero_image',
+      'populate[related_articles][populate][1]': 'category'
     });
 
     const response = await strapiClient.get<StrapiCollectionResponse<StrapiArticleAttributes>>(

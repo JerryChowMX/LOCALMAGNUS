@@ -1,24 +1,50 @@
 import type { StrapiArticle } from '../types/strapi';
 import type { ArticleStandard } from '../types/articles';
+import { STRAPI_ORIGIN } from '../lib/env';
+
+// Helper to normalize content blocks
+export const normalizeContentBlocks = (blocks: any[] | string | undefined): any[] => {
+    let normalizedBlocks: any[] = [];
+    if (Array.isArray(blocks)) {
+        normalizedBlocks = blocks.map((block: any) => {
+            const componentType = block.__component || block.type;
+            if (componentType?.includes('rich-text')) {
+                return {
+                    ...block,
+                    text: block.content || block.text
+                };
+            }
+            if (componentType?.includes('quote')) {
+                return {
+                    ...block,
+                    quote: block.quote_text || block.quote
+                };
+            }
+            if (componentType?.includes('audio')) {
+                return {
+                    ...block,
+                    audioUrl: block.file?.url,
+                    title: block.title
+                };
+            }
+            return block;
+        });
+    } else if (typeof blocks === 'string') {
+        // Obsolete or simple text fallback
+        normalizedBlocks = [{ type: 'paragraph', text: blocks }];
+    }
+    return normalizedBlocks;
+};
 
 export const mapStrapiToStandard = (strapiArticle: StrapiArticle): ArticleStandard => {
     // 1. Map Content Blocks
     // Strapi might return 'blocks' (Rich Text) or we used 'content' in some types.
-    // We normalize to an array for StandardOneArticle.
-    let blocks = [];
-    if (Array.isArray(strapiArticle.blocks)) {
-        blocks = strapiArticle.blocks;
-    } else if (typeof strapiArticle.blocks === 'string') {
-        // Obsolete or simple text fallback
-        blocks = [{ type: 'paragraph', text: strapiArticle.blocks }];
-    } else {
-        // Fallback if we have raw text content
-        // @ts-ignore
-        if (strapiArticle.content) {
-            // @ts-ignore
-            blocks = [{ type: 'paragraph', text: strapiArticle.content }];
-        }
-    }
+    const rawBlocks = strapiArticle.blocks as any[] | string | undefined;
+
+    // Fallback if we have raw text content in 'content' field instead of blocks
+    const contentFallback = !rawBlocks && (strapiArticle as any).content ? (strapiArticle as any).content : undefined;
+
+    const blocks = normalizeContentBlocks(rawBlocks || contentFallback);
 
     return {
         id: strapiArticle.documentId,
@@ -43,6 +69,7 @@ export const mapStrapiToStandard = (strapiArticle: StrapiArticle): ArticleStanda
         })) || [],
         publishedAt: strapiArticle.publishedAt,
         readTimeMinutes: strapiArticle.reading_time,
+        audioUrl: strapiArticle.audioUrl,
         author: {
             id: strapiArticle.author?.slug || 'unknown',
             name: strapiArticle.author?.name || 'Vanguardia',
@@ -51,6 +78,14 @@ export const mapStrapiToStandard = (strapiArticle: StrapiArticle): ArticleStanda
             role: 'Columnista' // Placeholder, add to Strapi if needed
         },
         contentBlocks: blocks,
-        relatedArticles: [] // TODO: Add logic to fetch related
+        relatedArticles: strapiArticle.relatedArticles?.map(ra => {
+            const imgUrl = ra.hero_image?.url;
+            return {
+                title: ra.title,
+                category: ra.category?.name || 'General',
+                image: imgUrl ? (imgUrl.startsWith('http') ? imgUrl : `${STRAPI_ORIGIN}${imgUrl}`) : '',
+                slug: ra.slug
+            };
+        }) || []
     };
 };

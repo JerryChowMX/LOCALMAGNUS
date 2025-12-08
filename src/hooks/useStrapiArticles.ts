@@ -31,6 +31,25 @@ export interface StrapiArticle {
     blocks?: any[];
     summary?: string;
     audioUrl?: string;
+    executive_summary?: {
+        summary_text: string;
+        bullet_points: any[];
+        generated_at?: string;
+        tokens_used?: number;
+        ai_provider?: string;
+        version?: string;
+    };
+    audio_summary?: {
+        audio_file?: {
+            url: string;
+        };
+        duration_seconds?: number;
+        voice?: string;
+        transcript?: string;
+        generated_at?: string;
+        file_size?: number;
+    };
+
 }
 
 export const useStrapiArticles = (page = 1, pageSize = 10, date?: string) => {

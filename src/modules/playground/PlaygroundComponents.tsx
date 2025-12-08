@@ -32,6 +32,19 @@ export const PlaygroundComponents = () => {
                         title="Article Components"
                         description="Components specifically for article pages."
                     />
+
+                    <PlaygroundLink
+                        to={routes.PLAYGROUND_RESUMEN_EJECUTIVO_COMPONENTS}
+                        title="Resumen Ejecutivo Components"
+                        description="Components for the Resumen Ejecutivo section."
+                    />
+
+                    <PlaygroundLink
+                        to={routes.PLAYGROUND_AUDIO_SUMMARY}
+                        title="Audio Summary"
+                        description="Audio player component for summaries."
+                    />
+
                 </div>
             </div>
         </PageWrapper>

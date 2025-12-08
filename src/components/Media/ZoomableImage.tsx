@@ -17,12 +17,12 @@ export const ZoomableImage: React.FC<ZoomableImageProps> = ({
     className = '',
     ...props
 }) => {
-    const { openLightbox } = useLightbox();
+    const { openSingleImage } = useLightbox();
 
     const handleClick = (e: React.MouseEvent) => {
         if (zoomable && src) {
             e.stopPropagation();
-            openLightbox(fullSizeSrc || src, caption, alt);
+            openSingleImage(fullSizeSrc || src, caption, alt);
         }
         props.onClick?.(e as React.MouseEvent<HTMLImageElement, MouseEvent>);
     };

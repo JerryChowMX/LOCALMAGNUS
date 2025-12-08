@@ -26,8 +26,12 @@ const ResumenPodcastPage = lazy(() => import('../modules/resumenHub/pages/Resume
 const ResumenFotosPage = lazy(() => import('../modules/resumenHub/pages/ResumenFotosPage').then(module => ({ default: module.ResumenFotosPage })));
 const ResumenCartonesPage = lazy(() => import('../modules/resumenHub/pages/ResumenCartonesPage').then(module => ({ default: module.ResumenCartonesPage })));
 const ResumenJuegosRedirectPage = lazy(() => import('../modules/resumenHub/pages/ResumenJuegosRedirectPage').then(module => ({ default: module.ResumenJuegosRedirectPage })));
+const ResumenEjecutivoPage = lazy(() => import('../modules/resumenEjecutivo/pages/ResumenEjecutivoPage').then(module => ({ default: module.ResumenEjecutivoPage })));
+
 
 const EpaperHubPage = lazy(() => import('../modules/epaper/pages/EpaperHubPage').then(module => ({ default: module.EpaperHubPage })));
+
+
 const EpaperEditionPage = lazy(() => import('../modules/epaper/pages/EpaperEditionPage').then(module => ({ default: module.EpaperEditionPage })));
 
 const LoginPage = lazy(() => import('../modules/auth/pages/LoginPage').then(module => ({ default: module.LoginPage })));
@@ -51,7 +55,15 @@ const PlaygroundRichText = lazy(() => import('../modules/playground/components/a
 const PlaygroundQuote = lazy(() => import('../modules/playground/components/articlecomponents/PlaygroundQuote').then(module => ({ default: module.PlaygroundQuote })));
 const PlaygroundGallery = lazy(() => import('../modules/playground/components/articlecomponents/PlaygroundGallery').then(module => ({ default: module.PlaygroundGallery })));
 const PlaygroundEmbed = lazy(() => import('../modules/playground/components/articlecomponents/PlaygroundEmbed').then(module => ({ default: module.PlaygroundEmbed })));
+const PlaygroundResumenEjecutivoComponents = lazy(() => import('../modules/playground/components/resumen-ejecutivo/PlaygroundResumenEjecutivoComponents').then(module => ({ default: module.PlaygroundResumenEjecutivoComponents })));
+const PlaygroundResumenBody = lazy(() => import('../modules/playground/components/resumen-ejecutivo/PlaygroundResumenBody').then(module => ({ default: module.PlaygroundResumenBody })));
+const PlaygroundResumenUpperDesign = lazy(() => import('../modules/playground/components/resumen-ejecutivo/PlaygroundResumenUpperDesign').then(module => ({ default: module.PlaygroundResumenUpperDesign })));
+const PlaygroundResumenMainBody = lazy(() => import('../modules/playground/components/resumen-ejecutivo/PlaygroundResumenMainBody').then(module => ({ default: module.PlaygroundResumenMainBody })));
+const PlaygroundResumenLowerDesign = lazy(() => import('../modules/playground/components/resumen-ejecutivo/PlaygroundResumenLowerDesign').then(module => ({ default: module.PlaygroundResumenLowerDesign })));
+const PlaygroundResumenStaging = lazy(() => import('../modules/playground/components/resumen-ejecutivo/PlaygroundResumenStaging').then(module => ({ default: module.PlaygroundResumenStaging })));
+const PlaygroundAudioSummary = lazy(() => import('../modules/playground/components/audio-summary/PlaygroundAudioSummary').then(module => ({ default: module.PlaygroundAudioSummary })));
 const StrapiTestPage = lazy(() => import('../modules/noticiasHub/pages/StrapiTestPage'));
+
 const StandardOneRoute = lazy(() => import('./routes/article/StandardOneRoute').then(module => ({ default: module.StandardOneRoute })));
 
 const Articles = () => (
@@ -112,6 +124,8 @@ export const AppRouter = () => {
                         <Route path="/ResumenHub" element={<RedirectToToday />} />
                         <Route path="/ResumenHub/:date" element={<ResumenHubPage />} />
 
+
+
                         <Route path="/ResumenHub/:date/Las5DelDia" element={<ResumenLas5Page />} />
                         <Route path="/ResumenHub/:date/Las5DelDia/:slug" element={<ResumenLas5ArticlePage />} />
                         <Route path="/ResumenHub/:date/Las5DelDia/:slug/:format" element={<ResumenLas5ArticleFormatPage />} />
@@ -156,10 +170,18 @@ export const AppRouter = () => {
                         <Route path={routes.PLAYGROUND_QUOTE} element={<PlaygroundQuote />} />
                         <Route path={routes.PLAYGROUND_GALLERY} element={<PlaygroundGallery />} />
                         <Route path={routes.PLAYGROUND_EMBED} element={<PlaygroundEmbed />} />
+                        <Route path={routes.PLAYGROUND_RESUMEN_EJECUTIVO_COMPONENTS} element={<PlaygroundResumenEjecutivoComponents />} />
+                        <Route path={routes.PLAYGROUND_RESUMEN_BODY} element={<PlaygroundResumenBody />} />
+                        <Route path={routes.PLAYGROUND_RESUMEN_UPPER_DESIGN} element={<PlaygroundResumenUpperDesign />} />
+                        <Route path={routes.PLAYGROUND_RESUMEN_MAIN_BODY} element={<PlaygroundResumenMainBody />} />
+                        <Route path={routes.PLAYGROUND_RESUMEN_LOWER_DESIGN} element={<PlaygroundResumenLowerDesign />} />
+                        <Route path={routes.PLAYGROUND_RESUMEN_STAGING} element={<PlaygroundResumenStaging />} />
+                        <Route path={routes.PLAYGROUND_AUDIO_SUMMARY} element={<PlaygroundAudioSummary />} />
 
                         {/* Staging Routes */}
                         <Route path="/articulo/:slug" element={<StandardOneRoute />} />
-                        <Route path="/dev/staging/standard-one/:slug" element={<StandardOneRoute />} />
+                        <Route path="/dev/staging/standard-one/:slug" element={<StandardOneRoute />} />\r
+                        <Route path={routes.ejecutivo} element={<ResumenEjecutivoPage />} />
 
                         {/* Strapi Integration Test */}
                         <Route path={routes.strapiTest} element={<StrapiTestPage />} />

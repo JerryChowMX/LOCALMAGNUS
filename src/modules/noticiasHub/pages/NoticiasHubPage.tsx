@@ -8,6 +8,7 @@ import { ArticleCard } from '../components/ArticleCard';
 import { useNoticiasDate } from '../hooks/useNoticiasDate';
 import { useStrapiArticles } from '../../../hooks/useStrapiArticles';
 import { STRAPI_ORIGIN } from '../../../lib/env'; // Assuming env var is available or I will hardcode for now if env is not exposed
+import { Divider } from '../../../components/Divider/Divider';
 import './NoticiasHubPage.css';
 
 const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=2070&auto=format&fit=crop";
@@ -32,21 +33,25 @@ export const NoticiasHubPage: React.FC = () => {
 
                 {!isLoading && !error && (
                     <Grid columns={1} gap="md">
-                        {articles.map(article => {
+                        {articles.map((article, index) => {
                             // Construct full image URL if relative path exists
                             const imageUrl = article.hero_image?.url
                                 ? `${STRAPI_ORIGIN}${article.hero_image.url}`
                                 : DEFAULT_IMAGE;
 
                             return (
-                                <ArticleCard
-                                    key={article.documentId} // Use documentId from Strapi
-                                    title={article.title}
-                                    imageUrl={imageUrl}
-                                    publishedAt={article.publishedAt}
-                                    section={article.category?.name || 'General'}
-                                    onClick={() => navigate(`/NoticiasHub/${currentDate}/${article.slug}`)} // Use slug for routing
-                                />
+                                <React.Fragment key={article.documentId}>
+                                    <ArticleCard
+                                        title={article.title}
+                                        imageUrl={imageUrl}
+                                        publishedAt={article.publishedAt}
+                                        section={article.category?.name || 'General'}
+                                        onClick={() => navigate(`/NoticiasHub/${currentDate}/${article.slug}`)} // Use slug for routing
+                                    />
+                                    {index < articles.length - 1 && (
+                                        <Divider className="hub-divider" />
+                                    )}
+                                </React.Fragment>
                             );
                         })}
                     </Grid>

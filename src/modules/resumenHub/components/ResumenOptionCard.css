@@ -4,24 +4,22 @@
     align-content: center;
     gap: var(--spacing-md);
     padding: 24px;
-    background-color: var(--bg-secondary);
-    border-radius: 10px;
+    background-color: #ffffff;
+    border-radius: 12px;
     cursor: pointer;
-    transition: border-color 0.15s ease,
-        box-shadow 0.15s ease,
-        transform 0.15s ease;
-    border: 1px solid var(--border-secondary);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     width: 100%;
     aspect-ratio: 1;
     text-align: center;
     position: relative;
-    box-shadow: none;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 
 .resumen-option-card:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-1);
-    border-color: var(--border-primary);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.1);
 }
 
 .resumen-option-card__icon {
@@ -52,7 +50,7 @@
     top: 12px;
     right: 12px;
     background-color: var(--color-brand-orange);
-    color: #FFFFFF;
+    color: var(--text-on-accent);
     font-size: var(--font-size-caption);
     font-weight: 700;
     padding: 4px 8px;

@@ -26,6 +26,7 @@ export interface ArticleStandard {
 
     publishedAt: string;
     readTimeMinutes: number;
+    audioUrl?: string | null;
 
     author: {
         id: number | string;

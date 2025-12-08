@@ -61,7 +61,7 @@ export const NoticiasArticlePage: React.FC = () => {
                         src={imageUrl}
                         alt={article.title}
                         className="noticias-article-image"
-                        caption={article.title}
+
                     />
                 </div>
             </Section>

@@ -12,6 +12,13 @@ dist
 dist-ssr
 *.local
 
+# Strapi
+magnus-strapi/.tmp/
+magnus-strapi/build/
+magnus-strapi/.cache/
+magnus-strapi/public/uploads/
+*.db
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

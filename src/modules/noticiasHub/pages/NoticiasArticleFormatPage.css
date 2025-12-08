@@ -4,3 +4,36 @@
     border-radius: var(--radius-md);
     text-align: center;
 }
+
+/* Resumen Ejecutivo Container */
+.noticias-format-resumen-container {
+    max-width: 480px;
+    margin: 0 auto;
+    width: 100%;
+    min-height: 100vh;
+    background-color: white;
+}
+
+/* Audio Format Container */
+.noticias-format-audio-container {
+    max-width: 480px;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+
+.noticias-format-audio-headline {
+    font-size: 2rem;
+    line-height: 1.1;
+    font-weight: 800;
+    margin-bottom: 24px;
+    color: #111827;
+    letter-spacing: -0.02em;
+}
+
+.noticias-format-visual-aids {
+    margin-top: 40px;
+}
+
+.noticias-format-visual-aids-title {
+    margin-bottom: 16px;
+}

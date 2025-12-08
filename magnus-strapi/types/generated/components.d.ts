@@ -71,6 +71,20 @@ export interface AiVideoSummary extends Struct.ComponentSchema {
   };
 }
 
+export interface ContentAudio extends Struct.ComponentSchema {
+  collectionName: 'components_content_audios';
+  info: {
+    description: 'Article audio (Text-to-Speech or Uploaded)';
+    displayName: 'audio';
+    icon: 'music';
+  };
+  attributes: {
+    file: Schema.Attribute.Media<'files' | 'videos' | 'audios'> &
+      Schema.Attribute.Required;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface ContentEmbed extends Struct.ComponentSchema {
   collectionName: 'components_content_embeds';
   info: {
@@ -167,6 +181,7 @@ declare module '@strapi/strapi' {
       'ai.epaper-link': AiEpaperLink;
       'ai.executive-summary': AiExecutiveSummary;
       'ai.video-summary': AiVideoSummary;
+      'content.audio': ContentAudio;
       'content.embed': ContentEmbed;
       'content.gallery': ContentGallery;
       'content.quote': ContentQuote;

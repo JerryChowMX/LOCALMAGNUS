@@ -3,3 +3,7 @@
     display: grid;
     gap: var(--spacing-md);
 }
+
+.hub-divider {
+    margin: 0 !important;
+}

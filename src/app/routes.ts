@@ -1,5 +1,6 @@
 export const routes = {
     home: "/",
+    ejecutivo: "/ejecutivo",
 
     // Authentication
     login: "/login",
@@ -47,6 +48,13 @@ export const routes = {
     PLAYGROUND_QUOTE: '/dev/playground/components/articlecomponents/quote',
     PLAYGROUND_GALLERY: '/dev/playground/components/articlecomponents/gallery',
     PLAYGROUND_EMBED: '/dev/playground/components/articlecomponents/embed',
+    PLAYGROUND_RESUMEN_EJECUTIVO_COMPONENTS: '/dev/playground/components/resumen-ejecutivo',
+    PLAYGROUND_RESUMEN_BODY: '/dev/playground/components/resumen-ejecutivo/resumen-body',
+    PLAYGROUND_RESUMEN_UPPER_DESIGN: '/dev/playground/components/resumen-ejecutivo/resumen-body/upper-design',
+    PLAYGROUND_RESUMEN_MAIN_BODY: '/dev/playground/components/resumen-ejecutivo/resumen-body/main-body',
+    PLAYGROUND_RESUMEN_LOWER_DESIGN: '/dev/playground/components/resumen-ejecutivo/resumen-body/lower-design',
+    PLAYGROUND_RESUMEN_STAGING: '/dev/playground/components/resumen-ejecutivo/staging',
+    PLAYGROUND_AUDIO_SUMMARY: '/dev/playground/components/audio-summary',
 
     // Strapi Integration Test
     strapiTest: '/dev/strapi-test',

@@ -52,6 +52,11 @@ export const AiChatBarExpanded: React.FC<AiChatBarExpandedProps> = ({ onClose, c
                             </div>
                         </button>
                     </div>
+                    {!messages.some(m => m.sender === 'user') && (
+                        <div className="ai-chat-disclaimer">
+                            MAGNUS puede cometer errores, por favor revisa sus respuestas.
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

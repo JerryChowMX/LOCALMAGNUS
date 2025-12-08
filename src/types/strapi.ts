@@ -118,6 +118,26 @@ export interface StrapiArticleAttributes {
     tags?: {
         data: StrapiData<StrapiTagAttributes>[] | null;
     };
+    related_articles?: {
+        data: StrapiData<StrapiArticleAttributes>[] | null;
+    };
+    executive_summary?: {
+        summary_text: string;
+        bullet_points: any[];
+        generated_at?: string;
+        tokens_used?: number;
+        ai_provider?: string;
+        version?: string;
+    };
+    audio_summary?: {
+        audio_file?: StrapiMedia;
+        duration_seconds?: number;
+        voice?: string;
+        transcript?: string;
+        generated_at?: string;
+        file_size?: number;
+    };
+
 }
 
 // Flattened/Normalized Article type for frontend use
@@ -151,4 +171,33 @@ export interface StrapiArticle {
     blocks?: any[];
     summary?: string;
     audioUrl?: string;
+    audio_summary?: {
+        audio_file?: {
+            url: string;
+        };
+        duration_seconds?: number;
+        voice?: string;
+        transcript?: string;
+        generated_at?: string;
+        file_size?: number;
+    };
+
+    relatedArticles?: Array<{
+        title: string;
+        slug: string;
+        hero_image?: {
+            url: string;
+        };
+        category?: {
+            name: string;
+        }
+    }>;
+    executive_summary?: {
+        summary_text: string;
+        bullet_points: any[];
+        generated_at?: string;
+        tokens_used?: number;
+        ai_provider?: string;
+        version?: string;
+    };
 }

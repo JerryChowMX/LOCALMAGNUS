@@ -6,6 +6,7 @@ import './AudioPlayer.css';
 
 export interface AudioPlayerProps {
     src: string;
+    title?: string;
     onLike?: () => void;
     isLiked?: boolean;
     analytics?: {
@@ -14,7 +15,7 @@ export interface AudioPlayerProps {
     };
 }
 
-export const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, onLike, isLiked = false, analytics }) => {
+export const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, title, onLike, isLiked = false, analytics }) => {
     const audioRef = useRef<HTMLAudioElement>(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
@@ -44,7 +45,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, onLike, isLiked =
             audio.removeEventListener('loadedmetadata', updateDuration);
             audio.removeEventListener('ended', onEnded);
         };
-    }, []);
+    }, [analytics]);
 
     const togglePlay = () => {
         if (audioRef.current) {
@@ -100,6 +101,18 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, onLike, isLiked =
 
     return (
         <div className="audio-player">
+            {title && (
+                <div style={{
+                    marginBottom: '12px',
+                    fontFamily: '"Inter", sans-serif',
+                    fontSize: '1rem',
+                    fontWeight: 600,
+                    color: '#1F2937',
+                    textAlign: 'center'
+                }}>
+                    {title}
+                </div>
+            )}
             <audio ref={audioRef} src={src} />
 
             <div className="audio-player__progress-container">

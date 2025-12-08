@@ -40,3 +40,12 @@
 .ai-chat-send-button:hover {
     opacity: 0.8;
 }
+
+.ai-chat-disclaimer {
+    font-size: 11px;
+    color: var(--text-secondary, #666666);
+    /* Fallback to gray */
+    text-align: center;
+    margin-top: var(--spacing-sm);
+    /* Removed opacity for better visibility */
+}

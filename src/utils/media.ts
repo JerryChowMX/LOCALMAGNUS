@@ -13,6 +13,12 @@ export function getStrapiMedia(url: string | null | undefined): string | null {
     }
 
     // Prepend Strapi URL to relative paths
-    const strapiUrl = import.meta.env.VITE_STRAPI_URL || "http://localhost:1337";
+    let strapiUrl = import.meta.env.VITE_STRAPI_URL || "http://localhost:1337";
+
+    // If strapiUrl ends with /api, remove it as media is served from root
+    if (strapiUrl.endsWith('/api')) {
+        strapiUrl = strapiUrl.slice(0, -4);
+    }
+
     return `${strapiUrl}${url}`;
 }

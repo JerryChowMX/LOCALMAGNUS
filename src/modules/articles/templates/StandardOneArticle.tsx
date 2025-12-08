@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageWrapper } from '../../../components/Layout/PageWrapper';
@@ -30,11 +32,10 @@ export const StandardOneArticle: FC<StandardOneArticleProps> = ({ article }) => 
         title,
         dek,
         publishedAt,
-        readTimeMinutes,
         coverImage,
         author,
         contentBlocks,
-        category
+        audioUrl
     } = article;
 
     // Helper to format date
@@ -67,23 +68,22 @@ export const StandardOneArticle: FC<StandardOneArticleProps> = ({ article }) => 
                     <Text variant="caption" style={{ color: '#9CA3AF', marginBottom: '8px', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.05em' }}>
                         {formatDate(publishedAt)}
                     </Text>
-                    {category && (
-                        <Text variant="caption" style={{ color: '#EF4444', marginBottom: '4px', textTransform: 'uppercase', fontSize: '0.75rem', fontWeight: 700 }}>
-                            {category.name}
-                        </Text>
-                    )}
+
                     <Heading level={1} style={{ fontSize: '2rem', lineHeight: '1.2', fontWeight: 800, color: '#000', margin: '0 16px' }}>
                         {title}
                     </Heading>
                     {dek && (
-                        <Text variant="body" style={{ fontSize: '1.125rem', color: '#6B7280', margin: '8px 16px 0' }}>
-                            {dek}
-                        </Text>
+                        <div style={{ fontSize: '1.125rem', color: '#6B7280', margin: '8px 16px 0' }}>
+                            <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                components={{
+                                    p: ({ children }) => <p style={{ margin: 0 }}>{children}</p>
+                                }}
+                            >
+                                {dek}
+                            </ReactMarkdown>
+                        </div>
                     )}
-                    <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '12px', fontSize: '0.875rem', color: '#6B7280' }}>
-                        <span>{author.name}</span>
-                        <span>• {readTimeMinutes} min</span>
-                    </div>
                 </div>
 
                 {/* 2. Hero image */}
@@ -103,16 +103,23 @@ export const StandardOneArticle: FC<StandardOneArticleProps> = ({ article }) => 
                 )}
 
                 {/* 4. Audio player (Placeholder for now) */}
-                <div style={{ padding: '0 16px 24px 16px' }}>
-                    <AudioPlayer
-                        src=""
-                        onLike={() => console.log('Like clicked')}
-                    />
-                    <div style={{ height: '1px', backgroundColor: '#E5E7EB', width: '100%', marginTop: '24px' }}></div>
-                </div>
+                {/* 4. Audio player (Placeholder for now) */}
+                {audioUrl && (
+                    <div style={{ padding: '0 16px 24px 16px' }}>
+                        <AudioPlayer
+                            src={audioUrl}
+                            onLike={() => console.log('Like clicked')}
+                            analytics={{
+                                articleId: article.id?.toString(),
+                                section: 'noticias'
+                            }}
+                        />
+                        <div style={{ height: '1px', backgroundColor: '#E5E7EB', width: '100%', marginTop: '24px' }}></div>
+                    </div>
+                )}
 
                 {/* 5. Article body text */}
-                <div style={{ padding: '0 16px 120px 16px' }}>
+                <div style={{ padding: '0 16px 40px 16px' }}>
                     {contentBlocks.map((block, index) => {
                         // Normalize the component name to handle various Strapi formats (e.g. 'article.quote', 'ComponentArticleQuote')
                         const componentType = block.__component || block.__typename || block.type;
@@ -164,6 +171,7 @@ export const StandardOneArticle: FC<StandardOneArticleProps> = ({ article }) => 
                                 <ArticleGallery
                                     key={index}
                                     images={images}
+                                    caption={block.caption}
                                 />
                             );
                         }
@@ -178,6 +186,27 @@ export const StandardOneArticle: FC<StandardOneArticleProps> = ({ article }) => 
                                     key={index}
                                     name={block.name}
                                 />
+                            );
+                        }
+
+                        // 5. AUDIO (Embedded Block)
+                        if (
+                            componentType?.includes('audio') ||
+                            componentType === 'content.audio'
+                        ) {
+                            return (
+                                <div key={index} style={{ marginBottom: '24px' }}>
+                                    <AudioPlayer
+                                        src={getImageUrl(block.audioUrl)}
+                                        title={block.title}
+                                        onLike={() => console.log('Like clicked on audio block')}
+                                        analytics={{
+                                            articleId: article.id?.toString(),
+                                            section: 'noticias'
+                                        }}
+                                    />
+                                    <div style={{ height: '1px', backgroundColor: '#E5E7EB', width: '100%', marginTop: '24px' }}></div>
+                                </div>
                             );
                         }
 

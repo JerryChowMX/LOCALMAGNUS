@@ -4,12 +4,13 @@ import { Icons } from '../Icons';
 import './LightboxOverlay.css';
 
 export const LightboxOverlay: React.FC = () => {
-    const { isOpen, activeImage, closeLightbox } = useLightbox();
+    const { isOpen, currentImage, closeLightbox, nextImage, prevImage, images } = useLightbox();
     const [scale, setScale] = useState(1);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [isDragging, setIsDragging] = useState(false);
     const dragStart = useRef({ x: 0, y: 0 });
     const imageRef = useRef<HTMLImageElement>(null);
+    const requestRef = useRef<number>();
 
     // Reset state when opening new image
     useEffect(() => {
@@ -17,20 +18,25 @@ export const LightboxOverlay: React.FC = () => {
             setScale(1);
             setPosition({ x: 0, y: 0 });
         }
-    }, [isOpen, activeImage]);
+        return () => {
+            if (requestRef.current) cancelAnimationFrame(requestRef.current);
+        };
+    }, [isOpen, currentImage]);
 
-    // Handle ESC key
+    // Handle Keyboard events (ESC, Left, Right)
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowRight') nextImage();
+            if (e.key === 'ArrowLeft') prevImage();
         };
         if (isOpen) {
             window.addEventListener('keydown', handleKeyDown);
         }
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [isOpen, closeLightbox]);
+    }, [isOpen, closeLightbox, nextImage, prevImage]);
 
-    if (!isOpen || !activeImage) return null;
+    if (!isOpen || !currentImage) return null;
 
     const handleWheel = (e: React.WheelEvent) => {
         e.stopPropagation();
@@ -52,15 +58,28 @@ export const LightboxOverlay: React.FC = () => {
 
     const handleMouseMove = (e: React.MouseEvent) => {
         if (isDragging && scale > 1) {
-            setPosition({
-                x: e.clientX - dragStart.current.x,
-                y: e.clientY - dragStart.current.y
+            // Persist event values since we're using them in a callback
+            const clientX = e.clientX;
+            const clientY = e.clientY;
+
+            if (requestRef.current) return; // Skip if a frame is already pending
+
+            requestRef.current = requestAnimationFrame(() => {
+                setPosition({
+                    x: clientX - dragStart.current.x,
+                    y: clientY - dragStart.current.y
+                });
+                requestRef.current = undefined;
             });
         }
     };
 
     const handleMouseUp = () => {
         setIsDragging(false);
+        if (requestRef.current) {
+            cancelAnimationFrame(requestRef.current);
+            requestRef.current = undefined;
+        }
     };
 
     const handleDoubleClick = () => {
@@ -72,6 +91,8 @@ export const LightboxOverlay: React.FC = () => {
         }
     };
 
+    const hasMultipleImages = images.length > 1;
+
     return (
         <div className="lightbox-backdrop" onClick={closeLightbox}>
             <div className="lightbox-controls">
@@ -79,6 +100,23 @@ export const LightboxOverlay: React.FC = () => {
                     <Icons.x size={32} />
                 </button>
             </div>
+
+            {hasMultipleImages && (
+                <>
+                    <button
+                        className="lightbox-nav-btn prev"
+                        onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                    >
+                        <Icons.chevronLeft size={32} />
+                    </button>
+                    <button
+                        className="lightbox-nav-btn next"
+                        onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                    >
+                        <Icons.chevronRight size={32} />
+                    </button>
+                </>
+            )}
 
             <div
                 className="lightbox-content"
@@ -99,17 +137,18 @@ export const LightboxOverlay: React.FC = () => {
                 >
                     <img
                         ref={imageRef}
-                        src={activeImage.src}
-                        alt={activeImage.alt || ''}
+                        src={currentImage.src}
+                        alt={currentImage.alt || ''}
                         className="lightbox-image"
                         draggable={false}
                     />
                 </div>
             </div>
 
-            {activeImage.caption && (
+            {currentImage.caption && (
                 <div className="lightbox-caption" onClick={(e) => e.stopPropagation()}>
-                    {activeImage.caption}
+                    {currentImage.caption}
+                    {hasMultipleImages && ` (${images.indexOf(currentImage) + 1} / ${images.length})`}
                 </div>
             )}
         </div>

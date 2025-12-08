@@ -1,5 +1,6 @@
 import { strapiClient } from "./strapiClient";
 import type { ArticleStandard } from "../types/articles";
+import { normalizeContentBlocks } from "../utils/articleMapper";
 
 /**
  * Maps Strapi Article response to ArticleStandard
@@ -7,6 +8,8 @@ import type { ArticleStandard } from "../types/articles";
  */
 function mapStrapiArticleToStandard(one: any): ArticleStandard {
     if (!one) throw new Error("Article data is null");
+
+
 
     // Strapi v5 compatibility check: Flatten attributes if needed
     const attributes = one.attributes || one;
@@ -86,6 +89,10 @@ function mapStrapiArticleToStandard(one: any): ArticleStandard {
         });
     }
 
+    // Content Blocks Normalization
+    const rawBlocks = content_blocks || attributes.blocks || attributes.content || [];
+    const normalizedBlocks = normalizeContentBlocks(rawBlocks);
+
     return {
         id: id,
         layoutType: layout_type || "standard-one",
@@ -98,7 +105,8 @@ function mapStrapiArticleToStandard(one: any): ArticleStandard {
         category,
         tags,
         author,
-        contentBlocks: content_blocks || [],
+        audioUrl: attributes.audioUrl || attributes.audio?.url || undefined,
+        contentBlocks: normalizedBlocks,
         relatedArticles: [] // Populated by separate fetch
     };
 }

@@ -9,7 +9,6 @@ export interface RecommendedArticleCardProps {
 
 export const RecommendedArticleCard: React.FC<RecommendedArticleCardProps> = ({
     image,
-    category,
     title,
     slug
 }) => {
@@ -56,15 +55,7 @@ export const RecommendedArticleCard: React.FC<RecommendedArticleCardProps> = ({
                 />
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <span style={{
-                    fontSize: '0.75rem',
-                    fontWeight: 700,
-                    color: '#EF4444',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em'
-                }}>
-                    {category}
-                </span>
+
                 <h3 style={{
                     fontSize: '1rem',
                     fontWeight: 700,

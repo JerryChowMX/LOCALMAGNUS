@@ -55,7 +55,8 @@
         "content.rich-text",
         "content.quote",
         "content.gallery",
-        "content.embed"
+        "content.embed",
+        "content.audio"
       ]
     },
     "executive_summary": {

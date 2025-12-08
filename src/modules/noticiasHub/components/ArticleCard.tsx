@@ -28,9 +28,6 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
         >
             <div className="noticias-card__overlay">
                 <Stack spacing="sm" className="noticias-card__content">
-                    {section && (
-                        <Caption className="noticias-card__section">{section}</Caption>
-                    )}
                     <Headline level={3} className="noticias-card__title">{title}</Headline>
                     <Caption className="noticias-card__date">{new Date(publishedAt).toLocaleDateString()}</Caption>
                 </Stack>

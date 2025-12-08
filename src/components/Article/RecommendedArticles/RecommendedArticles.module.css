@@ -1,6 +1,6 @@
 .container {
     padding: 24px 16px;
-    background-color: #F9FAFB;
+    background-color: #ffffff;
     border-top: 1px solid #E5E7EB;
 }
 
@@ -21,7 +21,7 @@
 .cta {
     font-size: 0.875rem;
     font-weight: 600;
-    color: #EF4444;
+    color: var(--color-brand-orange);
     text-decoration: none;
 }
 

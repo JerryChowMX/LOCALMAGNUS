@@ -23,8 +23,10 @@ export const ResumenHubPage: React.FC = () => {
             />
 
             <Section padding="md">
-
-                {/* ... (inside component) */}
+                <div className="resumen-hub-header">
+                    <h1 className="resumen-hub-title">Lo que no te puedes perder</h1>
+                    <p className="resumen-hub-subtitle">Aqui encuentras el contenido seleccionado mas relevante del dia.</p>
+                </div>
 
                 <Grid columns={2} gap="md">
                     <ResumenOptionCard

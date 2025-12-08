@@ -11,7 +11,12 @@
   --color-accent: #0076ab;
   /* Default accent, can be overridden */
   --color-accent-teal: #00C7BE;
+  /* Default accent, can be overridden */
+  --color-accent-teal: #00C7BE;
   --color-accent-violet: #5E5CE6;
+
+  /* Borders */
+  --border-color: #E5E5E5;
 
   /* Spacing Scale */
   --spacing-xs: 4px;
@@ -112,8 +117,12 @@
   /* Visible borders */
   --border-secondary: #2A2A2A;
   /* Subtle dividers */
+  /* Visible borders */
+  --border-secondary: #2A2A2A;
+  /* Subtle dividers */
   --border-subtle: rgba(255, 255, 255, 0.1);
   /* Inner separators */
+  --border-color: #3A3A3A;
 
   /* === ACCENTS - Brighter for Dark Backgrounds === */
   --color-accent: #4DA6DE;

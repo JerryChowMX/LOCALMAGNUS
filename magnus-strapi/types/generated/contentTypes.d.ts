@@ -447,7 +447,13 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
     author: Schema.Attribute.Relation<'manyToOne', 'api::author.author'>;
     category: Schema.Attribute.Relation<'manyToOne', 'api::category.category'>;
     content_blocks: Schema.Attribute.DynamicZone<
-      ['content.rich-text', 'content.quote', 'content.gallery', 'content.embed']
+      [
+        'content.rich-text',
+        'content.quote',
+        'content.gallery',
+        'content.embed',
+        'content.audio',
+      ]
     >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
