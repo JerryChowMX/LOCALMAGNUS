@@ -6,6 +6,7 @@ import { HeaderHubs } from '../../noticiasHub/components/HeaderHubs';
 import { ResumenOptionCard } from '../components/ResumenOptionCard';
 import { useResumenDate } from '../hooks/useResumenDate';
 import { Icons } from '../../../components/Icons';
+import { AiChatBar } from '../../../components/AiChatBar';
 import './ResumenHubPage.css';
 
 export const ResumenHubPage: React.FC = () => {
@@ -24,8 +25,8 @@ export const ResumenHubPage: React.FC = () => {
 
             <Section padding="md">
                 <div className="resumen-hub-header">
-                    <h1 className="resumen-hub-title">Lo que no te puedes perder</h1>
-                    <p className="resumen-hub-subtitle">Aqui encuentras el contenido seleccionado mas relevante del dia.</p>
+                    <h1 className="resumen-hub-title">Lo que no te puedes perder de hoy...</h1>
+                    <p className="resumen-hub-subtitle">Aquí encuentras el contenido seleccionado más relevante del día.</p>
                 </div>
 
                 <Grid columns={2} gap="md">
@@ -62,6 +63,7 @@ export const ResumenHubPage: React.FC = () => {
                     />
                 </Grid>
             </Section>
+            <AiChatBar />
         </PageWrapper>
     );
 };
