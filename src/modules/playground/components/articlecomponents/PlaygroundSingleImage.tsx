@@ -26,7 +26,7 @@ const SingleImageCard = ({ image }: { image: typeof MOCK_IMAGE }) => {
             <img
                 src={image.imageUrl}
                 alt={image.caption}
-                style={{ width: '100%', display: 'block', border: '1px solid #F3F4F6' }}
+                style={{ width: '100%', display: 'block' }}
             />
             {/* Caption removed from view, only accessible via click/lightbox */}
         </div>
