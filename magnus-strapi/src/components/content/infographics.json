@@ -1,0 +1,44 @@
+{
+    "collectionName": "components_content_infographics",
+    "info": {
+        "displayName": "Infographics",
+        "icon": "chartLine",
+        "description": "Infographic images for data visualization"
+    },
+    "options": {},
+    "attributes": {
+        "images": {
+            "type": "media",
+            "multiple": true,
+            "required": true,
+            "allowedTypes": [
+                "images"
+            ]
+        },
+        "layout": {
+            "type": "enumeration",
+            "enum": [
+                "grid",
+                "carousel",
+                "single",
+                "stacked"
+            ],
+            "default": "single"
+        },
+        "title": {
+            "type": "string",
+            "description": "Title for the infographic section"
+        },
+        "caption": {
+            "type": "text"
+        },
+        "alt_text": {
+            "type": "text",
+            "description": "Alternative text for accessibility"
+        },
+        "source": {
+            "type": "string",
+            "description": "Data source or credit"
+        }
+    }
+}

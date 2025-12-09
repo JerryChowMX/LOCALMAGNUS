@@ -47,6 +47,7 @@ const PlaygroundArticle = lazy(() => import('../modules/playground/PlaygroundArt
 const PlaygroundArticleStandard = lazy(() => import('../modules/playground/PlaygroundArticleStandard').then(module => ({ default: module.PlaygroundArticleStandard })));
 const PlaygroundArticleStandardDark = lazy(() => import('../modules/playground/PlaygroundArticleStandardDark').then(module => ({ default: module.PlaygroundArticleStandardDark })));
 const PlaygroundHome = lazy(() => import('../modules/playground/PlaygroundHome').then(module => ({ default: module.PlaygroundHome })));
+const PlaygroundHeaders = lazy(() => import('../modules/playground/PlaygroundHeaders').then(module => ({ default: module.PlaygroundHeaders })));
 const PlaygroundComponents = lazy(() => import('../modules/playground/PlaygroundComponents').then(module => ({ default: module.PlaygroundComponents })));
 const PlaygroundArticleComponents = lazy(() => import('../modules/playground/components/articlecomponents/PlaygroundArticleComponents').then(module => ({ default: module.PlaygroundArticleComponents })));
 const PlaygroundRecommendedArticles = lazy(() => import('../modules/playground/components/articlecomponents/PlaygroundRecommendedArticles').then(module => ({ default: module.PlaygroundRecommendedArticles })));
@@ -55,6 +56,9 @@ const PlaygroundRichText = lazy(() => import('../modules/playground/components/a
 const PlaygroundQuote = lazy(() => import('../modules/playground/components/articlecomponents/PlaygroundQuote').then(module => ({ default: module.PlaygroundQuote })));
 const PlaygroundGallery = lazy(() => import('../modules/playground/components/articlecomponents/PlaygroundGallery').then(module => ({ default: module.PlaygroundGallery })));
 const PlaygroundEmbed = lazy(() => import('../modules/playground/components/articlecomponents/PlaygroundEmbed').then(module => ({ default: module.PlaygroundEmbed })));
+const PlaygroundInfographics = lazy(() => import('../modules/playground/components/articlecomponents/PlaygroundInfographics').then(module => ({ default: module.PlaygroundInfographics })));
+const PlaygroundIllustrations = lazy(() => import('../modules/playground/components/articlecomponents/PlaygroundIllustrations').then(module => ({ default: module.PlaygroundIllustrations })));
+const PlaygroundSingleImage = lazy(() => import('../modules/playground/components/articlecomponents/PlaygroundSingleImage').then(module => ({ default: module.PlaygroundSingleImage })));
 const PlaygroundResumenEjecutivoComponents = lazy(() => import('../modules/playground/components/resumen-ejecutivo/PlaygroundResumenEjecutivoComponents').then(module => ({ default: module.PlaygroundResumenEjecutivoComponents })));
 const PlaygroundResumenBody = lazy(() => import('../modules/playground/components/resumen-ejecutivo/PlaygroundResumenBody').then(module => ({ default: module.PlaygroundResumenBody })));
 const PlaygroundResumenUpperDesign = lazy(() => import('../modules/playground/components/resumen-ejecutivo/PlaygroundResumenUpperDesign').then(module => ({ default: module.PlaygroundResumenUpperDesign })));
@@ -162,6 +166,7 @@ export const AppRouter = () => {
                         <Route path={routes.PLAYGROUND_ARTICLE_STANDARD} element={<PlaygroundArticleStandard />} />
                         <Route path={routes.PLAYGROUND_ARTICLE_STANDARD_2} element={<PlaygroundArticleStandardDark />} />
                         <Route path={routes.PLAYGROUND_HOME} element={<PlaygroundHome />} />
+                        <Route path={routes.PLAYGROUND_HEADERS} element={<PlaygroundHeaders />} />
                         <Route path={routes.playgroundComponents} element={<PlaygroundComponents />} />
                         <Route path={routes.PLAYGROUND_ARTICLE_COMPONENTS} element={<PlaygroundArticleComponents />} />
                         <Route path={routes.PLAYGROUND_RECOMMENDED_ARTICLES} element={<PlaygroundRecommendedArticles />} />
@@ -170,6 +175,9 @@ export const AppRouter = () => {
                         <Route path={routes.PLAYGROUND_QUOTE} element={<PlaygroundQuote />} />
                         <Route path={routes.PLAYGROUND_GALLERY} element={<PlaygroundGallery />} />
                         <Route path={routes.PLAYGROUND_EMBED} element={<PlaygroundEmbed />} />
+                        <Route path={routes.PLAYGROUND_INFOGRAPHICS} element={<PlaygroundInfographics />} />
+                        <Route path={routes.PLAYGROUND_ILLUSTRATIONS} element={<PlaygroundIllustrations />} />
+                        <Route path={routes.PLAYGROUND_SINGLE_IMAGE} element={<PlaygroundSingleImage />} />
                         <Route path={routes.PLAYGROUND_RESUMEN_EJECUTIVO_COMPONENTS} element={<PlaygroundResumenEjecutivoComponents />} />
                         <Route path={routes.PLAYGROUND_RESUMEN_BODY} element={<PlaygroundResumenBody />} />
                         <Route path={routes.PLAYGROUND_RESUMEN_UPPER_DESIGN} element={<PlaygroundResumenUpperDesign />} />

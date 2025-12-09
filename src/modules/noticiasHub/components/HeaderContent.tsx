@@ -64,7 +64,6 @@ export const HeaderContent: React.FC<HeaderContentProps> = ({
             <Link to="/" style={{ textDecoration: 'none' }}>
                 <div className="header-content__logo-block">
                     <div className="header-content__logo">MAGNUS</div>
-                    <div className="header-content__vanguardia">VANGUARDIA</div>
                 </div>
             </Link>
 

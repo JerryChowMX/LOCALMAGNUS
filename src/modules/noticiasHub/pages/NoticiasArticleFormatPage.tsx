@@ -145,9 +145,6 @@ export const NoticiasArticleFormatPage: React.FC = () => {
 
                 return (
                     <div className="noticias-format-audio-container">
-                        <Headline level={1} className="noticias-format-audio-headline">
-                            Escucha esta noticia en formato podcast
-                        </Headline>
                         <AudioSummaryCard
                             title={article.title}
                             imageUrl={getStrapiMedia(article.hero_image?.url) || ''}

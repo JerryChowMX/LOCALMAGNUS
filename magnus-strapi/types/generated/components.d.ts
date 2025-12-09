@@ -117,6 +117,24 @@ export interface ContentGallery extends Struct.ComponentSchema {
   };
 }
 
+export interface ContentIllustrations extends Struct.ComponentSchema {
+  collectionName: 'components_content_illustrations';
+  info: {
+    description: 'Illustration images for articles';
+    displayName: 'Illustrations';
+    icon: 'paintBrush';
+  };
+  attributes: {
+    alt_text: Schema.Attribute.Text;
+    caption: Schema.Attribute.Text;
+    images: Schema.Attribute.Media<'images', true> & Schema.Attribute.Required;
+    layout: Schema.Attribute.Enumeration<
+      ['grid', 'carousel', 'single', 'side-by-side']
+    > &
+      Schema.Attribute.DefaultTo<'grid'>;
+  };
+}
+
 export interface ContentQuote extends Struct.ComponentSchema {
   collectionName: 'components_content_quotes';
   info: {
@@ -184,6 +202,7 @@ declare module '@strapi/strapi' {
       'content.audio': ContentAudio;
       'content.embed': ContentEmbed;
       'content.gallery': ContentGallery;
+      'content.illustrations': ContentIllustrations;
       'content.quote': ContentQuote;
       'content.rich-text': ContentRichText;
       'seo.seo-meta': SeoSeoMeta;

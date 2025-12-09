@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { PageWrapper } from '../../../components/Layout/PageWrapper';
 import { Section, Grid } from '../../../components/Layout';
 import { Body } from '../../../components/Typography/Typography';
-import { HeaderHubs } from '../../noticiasHub/components/HeaderHubs';
+import { HeaderCenteredStack } from '../../../components/Header/HeaderCenteredStack';
 import { ResumenArticleCard } from '../components/ResumenArticleCard';
 import { useResumenDate } from '../hooks/useResumenDate';
 import { useResumenOpinionArticles } from '../hooks/useResumenOpinionArticles';
@@ -16,7 +16,8 @@ export const ResumenOpinionPage: React.FC = () => {
 
     return (
         <PageWrapper>
-            <HeaderHubs
+            <HeaderCenteredStack
+                variant="light"
                 currentDate={currentDate}
                 onDateChange={handleDateChange}
                 onBack={() => navigate(`/ResumenHub/${currentDate}`)}

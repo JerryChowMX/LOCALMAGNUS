@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { PageWrapper } from '../../../components/Layout/PageWrapper';
 import { Section, Grid } from '../../../components/Layout';
 import { Body } from '../../../components/Typography/Typography';
-import { HeaderHubs } from '../components/HeaderHubs';
+import { HeaderCenteredStack } from '../../../components/Header/HeaderCenteredStack';
 import { ArticleCard } from '../components/ArticleCard';
 import { useNoticiasDate } from '../hooks/useNoticiasDate';
 import { useStrapiArticles } from '../../../hooks/useStrapiArticles';
@@ -21,7 +21,8 @@ export const NoticiasHubPage: React.FC = () => {
 
     return (
         <PageWrapper>
-            <HeaderHubs
+            <HeaderCenteredStack
+                variant="light"
                 currentDate={currentDate}
                 onDateChange={handleDateChange}
                 onBack={() => navigate('/')}

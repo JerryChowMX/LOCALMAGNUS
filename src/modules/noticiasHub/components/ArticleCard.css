@@ -42,9 +42,9 @@
 .noticias-card__title {
     color: white;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     line-height: 1.3;
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-medium);
 }
 
 .noticias-card__date {

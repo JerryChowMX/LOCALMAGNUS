@@ -67,6 +67,24 @@ export const PlaygroundArticleComponents = () => {
                         description="Embed component for external content (videos, tweets, etc)."
                     />
 
+                    <PlaygroundLink
+                        to={routes.PLAYGROUND_INFOGRAPHICS}
+                        title="Infographics"
+                        description="Infographic component for data visualizations."
+                    />
+
+                    <PlaygroundLink
+                        to={routes.PLAYGROUND_ILLUSTRATIONS}
+                        title="Illustrations"
+                        description="Illustration component for editorial images."
+                    />
+
+                    <PlaygroundLink
+                        to={routes.PLAYGROUND_SINGLE_IMAGE}
+                        title="Single Image"
+                        description="Photo and image display variations with captions"
+                    />
+
                 </div>
             </div>
         </PageWrapper>
