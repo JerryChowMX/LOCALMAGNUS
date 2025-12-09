@@ -135,6 +135,26 @@ export interface ContentIllustrations extends Struct.ComponentSchema {
   };
 }
 
+export interface ContentInfographics extends Struct.ComponentSchema {
+  collectionName: 'components_content_infographics';
+  info: {
+    description: 'Infographic images for data visualization';
+    displayName: 'Infographics';
+    icon: 'chartLine';
+  };
+  attributes: {
+    alt_text: Schema.Attribute.Text;
+    caption: Schema.Attribute.Text;
+    images: Schema.Attribute.Media<'images', true> & Schema.Attribute.Required;
+    layout: Schema.Attribute.Enumeration<
+      ['grid', 'carousel', 'single', 'stacked']
+    > &
+      Schema.Attribute.DefaultTo<'single'>;
+    source: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface ContentQuote extends Struct.ComponentSchema {
   collectionName: 'components_content_quotes';
   info: {
@@ -162,6 +182,25 @@ export interface ContentRichText extends Struct.ComponentSchema {
   };
   attributes: {
     content: Schema.Attribute.RichText & Schema.Attribute.Required;
+  };
+}
+
+export interface ContentSingleImage extends Struct.ComponentSchema {
+  collectionName: 'components_content_single_images';
+  info: {
+    description: 'A single image with caption and display options';
+    displayName: 'Single Image';
+    icon: 'picture';
+  };
+  attributes: {
+    alt_text: Schema.Attribute.Text;
+    caption: Schema.Attribute.Text;
+    credit: Schema.Attribute.String;
+    display_style: Schema.Attribute.Enumeration<
+      ['full-width', 'centered', 'standard-border']
+    > &
+      Schema.Attribute.DefaultTo<'full-width'>;
+    image: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
   };
 }
 
@@ -203,8 +242,10 @@ declare module '@strapi/strapi' {
       'content.embed': ContentEmbed;
       'content.gallery': ContentGallery;
       'content.illustrations': ContentIllustrations;
+      'content.infographics': ContentInfographics;
       'content.quote': ContentQuote;
       'content.rich-text': ContentRichText;
+      'content.single-image': ContentSingleImage;
       'seo.seo-meta': SeoSeoMeta;
     }
   }

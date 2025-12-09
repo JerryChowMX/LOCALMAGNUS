@@ -453,6 +453,9 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
         'content.gallery',
         'content.embed',
         'content.audio',
+        'content.single-image',
+        'content.illustrations',
+        'content.infographics',
       ]
     >;
     createdAt: Schema.Attribute.DateTime;

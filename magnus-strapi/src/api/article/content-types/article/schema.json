@@ -56,7 +56,10 @@
         "content.quote",
         "content.gallery",
         "content.embed",
-        "content.audio"
+        "content.audio",
+        "content.single-image",
+        "content.illustrations",
+        "content.infographics"
       ]
     },
     "executive_summary": {

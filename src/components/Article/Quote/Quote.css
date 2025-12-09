@@ -1,0 +1,67 @@
+.quote-container {
+    width: 100%;
+    max-width: 480px;
+    margin: var(--spacing-xl) auto;
+}
+
+.quote-interactive {
+    position: relative;
+    padding: calc(var(--spacing-lg) + var(--spacing-xs)) 0;
+    cursor: pointer;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    transition: all 450ms ease;
+}
+
+.quote-content,
+.quote-author-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    padding: calc(var(--spacing-lg) + var(--spacing-xs)) 0;
+}
+
+.quote-content {
+    opacity: 1;
+    transition: opacity 450ms ease;
+}
+
+.quote-content.hidden {
+    opacity: 0;
+}
+
+.quote-text {
+    font-family: var(--font-family-body);
+    font-weight: var(--font-weight-medium);
+    font-style: italic;
+    font-size: 1.125rem;
+    line-height: var(--line-height-relaxed);
+    color: var(--text-secondary);
+    margin: 0;
+    border-left: 2px solid var(--color-accent);
+    padding-left: calc(var(--spacing-lg) + var(--spacing-xs));
+}
+
+.quote-author-wrapper {
+    opacity: 0;
+    transition: opacity 450ms ease 40ms;
+    justify-content: center;
+}
+
+.quote-author-wrapper.visible {
+    opacity: 1;
+}
+
+.quote-author {
+    font-family: var(--font-family-body);
+    font-size: 1rem;
+    font-weight: var(--font-weight-medium);
+    color: var(--text-disabled);
+    margin: 0;
+    text-align: center;
+}
