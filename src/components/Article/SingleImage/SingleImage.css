@@ -1,0 +1,23 @@
+.single-image-container {
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
+    background-color: var(--bg-surface, #fff);
+    cursor: pointer;
+    box-shadow: var(--shadow-1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    /* Clean container, image does the work */
+}
+
+.single-image-container:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-2);
+}
+
+.single-image-img {
+    width: 100%;
+    display: block;
+    height: auto;
+    object-fit: cover;
+    border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.05));
+}
