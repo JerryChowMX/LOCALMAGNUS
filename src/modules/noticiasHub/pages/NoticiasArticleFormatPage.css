@@ -11,7 +11,7 @@
     margin: 0 auto;
     width: 100%;
     min-height: 100vh;
-    background-color: white;
+    background-color: var(--bg-primary);
 }
 
 /* Audio Format Container */
@@ -26,7 +26,7 @@
     line-height: 1.1;
     font-weight: 800;
     margin-bottom: 24px;
-    color: #111827;
+    color: var(--text-primary);
     letter-spacing: -0.02em;
 }
 

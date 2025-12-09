@@ -1,8 +1,13 @@
 // Production-ready Article Components for Strapi CMS Integration
-export { ArticleQuote } from './ArticleQuote';
-export { ArticleGallery } from './ArticleGallery';
-export { ArticleRichText } from './ArticleRichText';
-export { ArticleAuthor } from './ArticleAuthor';
+export { ArticleAuthor } from './ArticleAuthor/ArticleAuthor';
+export { ArticleGallery } from './ArticleGallery/ArticleGallery';
+export { ArticleHeader } from './ArticleHeader/ArticleHeader';
+export type { ArticleHeaderProps } from './ArticleHeader/ArticleHeader';
+export { ArticleQuote } from './ArticleQuote/ArticleQuote';
+export { ArticleRichText } from './ArticleRichText/ArticleRichText';
+export { Infographic } from './Infographic/Infographic';
+export { Illustration } from './Illustration/Illustration';
+export { SingleImage } from './SingleImage/SingleImage';
 export type {
     StrapiQuote,
     StrapiGallery,

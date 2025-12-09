@@ -42,6 +42,9 @@ function mapStrapiArticleToStandard(one: any): ArticleStandard {
         }
     }
 
+    // Hero Image Caption
+    const heroImageCaption = attributes.hero_image_caption || null;
+
     // Category
     let category = { id: 0, name: "Sin categoría", slug: "sin-categoria" };
     const rawCat = attributes.category;
@@ -102,6 +105,7 @@ function mapStrapiArticleToStandard(one: any): ArticleStandard {
         publishedAt: publishedAt || new Date().toISOString(),
         readTimeMinutes: read_time_minutes || 0,
         coverImage,
+        heroImageCaption,
         category,
         tags,
         author,

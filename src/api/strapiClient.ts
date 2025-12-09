@@ -64,7 +64,22 @@ class StrapiClient {
         });
 
         if (!response.ok) {
-            const error = new Error(`Strapi Request Failed: ${response.status} ${response.statusText}`);
+            let errorMessage = `Strapi Request Failed: ${response.status} ${response.statusText}`;
+            try {
+                const errorData = await response.json();
+                // Strapi error format: { error: { status, name, message, details } }
+                if (errorData?.error?.message) {
+                    errorMessage = errorData.error.message;
+                }
+
+                // Enhance common Strapi errors
+                if (errorMessage === 'Forbidden') {
+                    errorMessage = 'Acceso denegado. Es posible que tu cuenta no esté confirmada.';
+                }
+            } catch (e) {
+                // stick to default error if json parse fails
+            }
+            const error = new Error(errorMessage);
             throw error;
         }
 
@@ -135,6 +150,44 @@ class StrapiClient {
 
         return result.data;
     }
+
+    /**
+     * Upload a file to Strapi
+     */
+    async upload(file: File): Promise<any> {
+        const url = `${this.baseUrl}/upload`;
+        const formData = new FormData();
+        formData.append('files', file);
+
+        const headers: Record<string, string> = {
+            ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}),
+            // Content-Type is set automatically by fetch for FormData
+        };
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers,
+            body: formData,
+        });
+
+        if (!response.ok) {
+            let errorMessage = `Upload Failed: ${response.status} ${response.statusText}`;
+            try {
+                const errorData = await response.json();
+                if (errorData?.error?.message) {
+                    errorMessage = errorData.error.message;
+                }
+            } catch (e) {
+                // stick to default error
+            }
+            throw new Error(errorMessage);
+        }
+
+        const data = await response.json();
+        // Strapi returns an array of uploaded files
+        return data[0];
+    }
 }
+
 
 export const strapiClient = new StrapiClient();

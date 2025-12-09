@@ -17,12 +17,13 @@ import { Body } from '../../../components/Typography/Typography';
 import { useUserPreferences } from '../../../context/ThemeContext';
 import { SimulationBanner } from '../../../components/Alerts/SimulationBanner';
 import { getAnalyticsConsent, setAnalyticsConsent } from '../../../lib/analytics';
+import type { UserProfile } from '../../../types/perfil';
 import './PerfilHubPage.css';
 
 export const PerfilHubPage: React.FC = () => {
     const navigate = useNavigate();
-    const { user, logout } = useAuth();
-    const { settings, updateSettings, isLoading, error, isFallback } = useProfile();
+    const { user, logout, updateUser } = useAuth();
+    const { settings, updateSettings, updateProfile, isLoading, error, isFallback } = useProfile();
     const { theme, toggleTheme, fontSize, setFontSize } = useUserPreferences();
     const [analyticsEnabled, setAnalyticsEnabled] = React.useState(getAnalyticsConsent());
 
@@ -30,8 +31,21 @@ export const PerfilHubPage: React.FC = () => {
         navigate('/login');
     };
 
-    const handleEditProfile = (): void => {
-        console.log('Navigate to edit profile');
+    const handleUpdateProfile = async (data: Partial<UserProfile>, file?: File) => {
+        try {
+            const updated = await updateProfile(data, file);
+            if (updated) {
+                // Update global auth state
+                updateUser({
+                    name: updated.name,
+                    avatarUrl: updated.avatarUrl,
+                    description: updated.description,
+                });
+            }
+        } catch (e) {
+            console.error(e);
+            throw e;
+        }
     };
 
     const handleLogout = (): void => {
@@ -81,11 +95,10 @@ export const PerfilHubPage: React.FC = () => {
                                     name: user.name,
                                     email: user.email,
                                     avatarUrl: user.avatarUrl,
-                                    description: '' // TODO: Load from user profile
+                                    description: user.description // Pass description from auth context/user model if available
                                 }}
                                 onLogin={handleLogin}
-                                onEdit={handleEditProfile}
-                                onUpdateDescription={(desc) => console.log('Description updated:', desc)}
+                                onUpdateProfile={handleUpdateProfile}
                             />
                         )}
 

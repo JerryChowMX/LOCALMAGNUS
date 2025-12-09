@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../hooks/useAuth';
 import { TextInput } from '../../../components/Input/TextInput';
 import { Button } from '../../../components/Button/Button';
 import { Icons } from '../../../components/Icons';
@@ -9,6 +10,7 @@ import './SignupForm.css';
 
 export const SignupForm: React.FC = () => {
     const navigate = useNavigate();
+    const { register } = useAuth();
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
@@ -48,27 +50,21 @@ export const SignupForm: React.FC = () => {
         setIsSubmitting(true);
 
         try {
-            // TODO: Implement actual signup API call to Strapi
-            // const response = await fetch('http://localhost:1337/api/auth/local/register', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({
-            //         username: formData.email,
-            //         email: formData.email,
-            //         password: formData.password,
-            //         fullName: formData.fullName
-            //     })
-            // });
-
-            // Simulate API call for now
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
-            // On success, redirect to login
-            navigate(routes.login, {
-                state: { message: 'Cuenta creada exitosamente. Por favor inicia sesión.' }
+            await register({
+                username: formData.email, // Using email as username for now as per Strapi often defaults
+                email: formData.email,
+                password: formData.password,
+                fullName: formData.fullName
             });
-        } catch (err) {
-            setError('Error al crear la cuenta. El correo podría estar ya registrado.');
+
+            // On success, redirect to login or home (since register auto-logs in now)
+            // Let's go to PerfilHub or wherever login goes
+            navigate(routes.login, {
+                state: { message: 'Cuenta creada exitosamente.' }
+            });
+        } catch (err: any) {
+            // Display the actual error message from the backend
+            setError(err.message || 'Error al crear la cuenta. El correo podría estar ya registrado.');
         } finally {
             setIsSubmitting(false);
         }

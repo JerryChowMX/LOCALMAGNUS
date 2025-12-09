@@ -110,7 +110,13 @@ export const articleApi = {
   async getArticleBySlug(slug: string): Promise<StrapiArticle | null> {
     const params = new URLSearchParams({
       'filters[slug][$eq]': slug,
-      'populate[content_blocks][populate]': '*',
+      'populate[content_blocks][on][content.single-image][populate]': '*',
+      'populate[content_blocks][on][content.illustrations][populate]': '*',
+      'populate[content_blocks][on][content.infographics][populate]': '*',
+      'populate[content_blocks][on][content.audio][populate]': '*',
+      'populate[content_blocks][on][content.gallery][populate]': '*',
+      'populate[content_blocks][on][content.quote][populate]': '*',
+      'populate[content_blocks][on][content.rich-text][populate]': '*',
       'populate[executive_summary][populate]': '*',
       'populate[audio_summary][populate]': '*',
       'populate[hero_image][fields][0]': 'url',

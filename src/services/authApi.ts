@@ -1,6 +1,6 @@
 import { strapiClient } from '../api/strapiClient';
 import { withMockFallback } from '../api/mockFallback';
-import type { LoginCredentials, AuthResponse, User } from '../types/auth';
+import type { LoginCredentials, RegisterCredentials, AuthResponse, User } from '../types/auth';
 
 // Mock data for fallback (matches Strapi response format)
 const MOCK_USER: User = {
@@ -17,6 +17,46 @@ const MOCK_AUTH_RESPONSE: AuthResponse = {
 };
 
 export const authApi = {
+    /**
+     * Register user
+     */
+    register: async (credentials: RegisterCredentials) => {
+        return withMockFallback<AuthResponse>(
+            async () => {
+                const response = await strapiClient.post<{
+                    jwt: string;
+                    user: {
+                        id: number;
+                        username: string;
+                        email: string;
+                        provider: string;
+                        confirmed: boolean;
+                        blocked: boolean;
+                    }
+                }>('/auth/local/register', {
+                    username: credentials.username,
+                    email: credentials.email,
+                    password: credentials.password
+                });
+
+                strapiClient.setToken(response.jwt);
+
+                return {
+                    user: {
+                        id: response.user.id.toString(),
+                        name: response.user.username,
+                        email: response.user.email,
+                        avatarUrl: `https://i.pravatar.cc/150?u=${response.user.email}`
+                    },
+                    token: response.jwt,
+                    refreshToken: response.jwt
+                };
+            },
+            MOCK_AUTH_RESPONSE,
+            'auth/register'
+        );
+    },
+
     /**
      * Login user
      */

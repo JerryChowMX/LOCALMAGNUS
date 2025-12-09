@@ -36,7 +36,6 @@ export const ArticleGallery = ({ images, caption }: ArticleGalleryProps) => {
                         onClick={() => handleImageClick(index)}
                         style={{
                             cursor: 'pointer',
-                            borderRadius: '8px',
                             overflow: 'hidden',
                             aspectRatio: '1',
                             position: 'relative'

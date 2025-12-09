@@ -53,5 +53,25 @@ export const useProfile = () => {
         }
     };
 
-    return { profile, settings, updateSettings, isLoading, error, isFallback };
+    const updateProfile = async (data: Partial<UserProfile>, avatarFile?: File) => {
+        if (!profile?.id) {
+            console.error('Cannot update profile: No profile ID loaded');
+            throw new Error('No profile loaded');
+        }
+
+        try {
+            const { data: updatedProfile } = await perfilApi.updateUserProfile({
+                ...data,
+                id: profile.id,
+                avatarFile
+            });
+            setProfile(updatedProfile);
+            return updatedProfile;
+        } catch (err) {
+            console.error('Failed to update profile', err);
+            throw err;
+        }
+    };
+
+    return { profile, settings, updateSettings, updateProfile, isLoading, error, isFallback };
 };

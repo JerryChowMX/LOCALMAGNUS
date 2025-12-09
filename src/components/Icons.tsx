@@ -31,6 +31,8 @@ import {
     IconEyeOff,
     IconX,
     IconPencil,
+    IconRefresh,
+    IconCheck,
 } from '@tabler/icons-react';
 
 export const Icons = {
@@ -66,4 +68,6 @@ export const Icons = {
     eyeOff: IconEyeOff,
     x: IconX,
     edit: IconPencil,
+    refresh: IconRefresh,
+    check: IconCheck,
 };

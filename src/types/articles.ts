@@ -11,6 +11,7 @@ export interface ArticleStandard {
         alt?: string | null;
         caption?: string | null;
     };
+    heroImageCaption?: string | null;
 
     category: {
         id: number | string;

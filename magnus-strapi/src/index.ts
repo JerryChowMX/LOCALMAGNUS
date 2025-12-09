@@ -50,9 +50,40 @@ export default {
                 }
               });
               strapi.log.info(`🔐 Enabled: ${permissionName}`);
+            } else if (!existingPermission.enabled) {
+              await strapi.query('plugin::users-permissions.permission').update({
+                where: { id: existingPermission.id },
+                data: { enabled: true }
+              });
+              strapi.log.info(`🔐 Updated: ${permissionName}`);
             }
           }
         }
+      }
+
+      // ===== AUTO-CONFIRM USERS (DEV HELPER) =====
+      strapi.log.info('🔐 Auto-confirming unconfirmed users...');
+
+      // Try using strapi.db.query which is the lower level API and often reliable for plugins
+      // In Strapi v4/v5 plugin users-permissions user is 'plugin::users-permissions.user'
+      try {
+        const unconfirmedUsers = await strapi.db.query('plugin::users-permissions.user').findMany({
+          where: { confirmed: false }
+        });
+
+        strapi.log.info(`Found ${unconfirmedUsers.length} unconfirmed users.`);
+
+        if (unconfirmedUsers.length > 0) {
+          for (const user of unconfirmedUsers) {
+            await strapi.db.query('plugin::users-permissions.user').update({
+              where: { id: user.id },
+              data: { confirmed: true }
+            });
+            strapi.log.info(`✅ Confirmed user: ${user.email} (ID: ${user.id})`);
+          }
+        }
+      } catch (err) {
+        strapi.log.error('❌ Error confirming users:', err);
       }
 
       // ===== DATA SEEDING =====

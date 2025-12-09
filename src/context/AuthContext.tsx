@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, type ReactNode } from 'react';
 import { authApi } from '../services/authApi';
 import { strapiClient } from '../api/strapiClient';
-import type { User, LoginCredentials } from '../types/auth';
+import type { User, LoginCredentials, RegisterCredentials } from '../types/auth';
 
 interface AuthContextType {
     user: User | null;
@@ -9,8 +9,10 @@ interface AuthContextType {
     isAuthenticated: boolean;
     isLoading: boolean;
     login: (credentials: LoginCredentials) => Promise<void>;
+    register: (credentials: RegisterCredentials) => Promise<void>;
     socialLogin: (token: string) => Promise<void>;
     logout: () => void;
+    updateUser: (userData: Partial<User>) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -66,6 +68,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     };
 
+    const register = async (credentials: RegisterCredentials) => {
+        setIsLoading(true);
+        try {
+            const { data: response } = await authApi.register(credentials);
+
+            // Set token in strapiClient for authenticated requests
+            strapiClient.setToken(response.token);
+
+            setUser(response.user);
+            setToken(response.token);
+        } catch (error) {
+            console.error('Registration failed', error);
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const socialLogin = async (jwt: string) => {
         setIsLoading(true);
         try {
@@ -86,6 +106,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     };
 
+    const updateUser = (userData: Partial<User>) => {
+        if (user) {
+            setUser({ ...user, ...userData });
+        }
+    };
+
     const logout = () => {
         // Call logout API (which clears strapiClient token)
         authApi.logout().catch(console.error);
@@ -103,8 +129,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 isAuthenticated: !!user,
                 isLoading,
                 login,
+                register,
                 socialLogin,
-                logout
+                logout,
+                updateUser
             }}
         >
             {children}

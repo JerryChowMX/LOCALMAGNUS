@@ -29,8 +29,8 @@ export const LoginForm: React.FC = () => {
         try {
             await login({ email, password });
             navigate(from, { replace: true });
-        } catch (err) {
-            setError('Credenciales inválidas. Intente con demo@magnus.com');
+        } catch (err: any) {
+            setError(err.message || 'Credenciales inválidas.');
         } finally {
             setIsSubmitting(false);
         }

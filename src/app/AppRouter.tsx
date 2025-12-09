@@ -59,6 +59,8 @@ const PlaygroundEmbed = lazy(() => import('../modules/playground/components/arti
 const PlaygroundInfographics = lazy(() => import('../modules/playground/components/articlecomponents/PlaygroundInfographics').then(module => ({ default: module.PlaygroundInfographics })));
 const PlaygroundIllustrations = lazy(() => import('../modules/playground/components/articlecomponents/PlaygroundIllustrations').then(module => ({ default: module.PlaygroundIllustrations })));
 const PlaygroundSingleImage = lazy(() => import('../modules/playground/components/articlecomponents/PlaygroundSingleImage').then(module => ({ default: module.PlaygroundSingleImage })));
+const PlaygroundAudioPlayer = lazy(() => import('../modules/playground/components/articlecomponents/PlaygroundAudioPlayer').then(module => ({ default: module.PlaygroundAudioPlayer })));
+const PlaygroundHeroImage = lazy(() => import('../modules/playground/components/articlecomponents/PlaygroundHeroImage').then(module => ({ default: module.PlaygroundHeroImage })));
 const PlaygroundResumenEjecutivoComponents = lazy(() => import('../modules/playground/components/resumen-ejecutivo/PlaygroundResumenEjecutivoComponents').then(module => ({ default: module.PlaygroundResumenEjecutivoComponents })));
 const PlaygroundResumenBody = lazy(() => import('../modules/playground/components/resumen-ejecutivo/PlaygroundResumenBody').then(module => ({ default: module.PlaygroundResumenBody })));
 const PlaygroundResumenUpperDesign = lazy(() => import('../modules/playground/components/resumen-ejecutivo/PlaygroundResumenUpperDesign').then(module => ({ default: module.PlaygroundResumenUpperDesign })));
@@ -178,6 +180,8 @@ export const AppRouter = () => {
                         <Route path={routes.PLAYGROUND_INFOGRAPHICS} element={<PlaygroundInfographics />} />
                         <Route path={routes.PLAYGROUND_ILLUSTRATIONS} element={<PlaygroundIllustrations />} />
                         <Route path={routes.PLAYGROUND_SINGLE_IMAGE} element={<PlaygroundSingleImage />} />
+                        <Route path={routes.PLAYGROUND_AUDIO_PLAYER} element={<PlaygroundAudioPlayer />} />
+                        <Route path={routes.PLAYGROUND_HERO_IMAGE} element={<PlaygroundHeroImage />} />
                         <Route path={routes.PLAYGROUND_RESUMEN_EJECUTIVO_COMPONENTS} element={<PlaygroundResumenEjecutivoComponents />} />
                         <Route path={routes.PLAYGROUND_RESUMEN_BODY} element={<PlaygroundResumenBody />} />
                         <Route path={routes.PLAYGROUND_RESUMEN_UPPER_DESIGN} element={<PlaygroundResumenUpperDesign />} />

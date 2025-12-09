@@ -1,0 +1,133 @@
+/* Define local variables for the component to handle theming cleanly */
+.article-header {
+    --header-bg: #FFFFFF;
+    --header-text: #111827;
+    --header-text-secondary: #6B7280;
+    --header-border: #E5E7EB;
+
+    background-color: var(--header-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 40px;
+    color: var(--header-text);
+}
+
+@media (prefers-color-scheme: dark) {
+    .article-header {
+        /* Use the global background variable or black to blend with the page */
+        --header-bg: var(--bg-primary, #000000);
+        --header-text: #F9FAFB;
+        --header-text-secondary: #9CA3AF;
+        --header-border: #374151;
+    }
+}
+
+/* Support app-level theme switching via data attributes */
+:root[data-theme='dark'] .article-header {
+    --header-bg: var(--bg-primary, #000000);
+    --header-text: #F9FAFB;
+    --header-text-secondary: #9CA3AF;
+    --header-border: #374151;
+}
+
+.article-header__content {
+    padding: 32px 40px 40px 40px;
+    background-color: var(--header-bg);
+    text-align: center;
+}
+
+.article-header__date {
+    color: var(--header-text-secondary);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 16px;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+
+.article-header__title {
+    font-size: 4rem;
+    line-height: 1.1;
+    color: var(--header-text);
+    margin-bottom: 24px;
+    font-family: "Blinker", sans-serif;
+    max-width: 900px;
+    margin: 0 auto 24px auto;
+}
+
+.article-header__abstract {
+    color: var(--header-text-secondary);
+    margin-bottom: 32px;
+    font-size: 1.125rem;
+    line-height: 1.6;
+    max-width: 700px;
+    margin: 0 auto 32px auto;
+}
+
+.article-header__meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--header-border);
+}
+
+.article-header__author {
+    color: var(--header-text);
+    font-weight: 400;
+    font-size: 0.95rem;
+}
+
+.article-header__meta-text {
+    color: var(--header-text-secondary);
+    font-size: 0.95rem;
+}
+
+.article-header__image-container {
+    width: 100%;
+    height: 600px;
+    position: relative;
+    /* Ensure image fills width even if container is constrained */
+    min-width: 100%;
+}
+
+.article-header__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.article-header__gradient-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+    background: linear-gradient(to bottom, var(--header-bg) 0%, transparent 100%);
+}
+
+.article-header__caption-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 24px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
+    color: rgba(255, 255, 255, 0.9);
+    text-align: right;
+    font-size: 0.75rem;
+    font-style: italic;
+}
+
+/* Response adjustments for mobile if needed */
+@media (max-width: 768px) {
+    .article-header__title {
+        font-size: 2.8rem;
+    }
+
+    .article-header__image-container {
+        height: 400px;
+    }
+}

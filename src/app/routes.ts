@@ -51,6 +51,8 @@ export const routes = {
     PLAYGROUND_INFOGRAPHICS: '/dev/playground/components/articlecomponents/infographics',
     PLAYGROUND_ILLUSTRATIONS: '/dev/playground/components/articlecomponents/illustrations',
     PLAYGROUND_SINGLE_IMAGE: '/dev/playground/components/articlecomponents/singleimage',
+    PLAYGROUND_AUDIO_PLAYER: '/dev/playground/components/articlecomponents/audioplayer',
+    PLAYGROUND_HERO_IMAGE: '/dev/playground/components/articlecomponents/heroimage',
     PLAYGROUND_RESUMEN_EJECUTIVO_COMPONENTS: '/dev/playground/components/resumen-ejecutivo',
     PLAYGROUND_RESUMEN_BODY: '/dev/playground/components/resumen-ejecutivo/resumen-body',
     PLAYGROUND_RESUMEN_UPPER_DESIGN: '/dev/playground/components/resumen-ejecutivo/resumen-body/upper-design',

@@ -4,7 +4,7 @@
     flex-direction: column;
     gap: 8px;
     font-family: system-ui, -apple-system, sans-serif;
-    color: #000;
+    color: var(--text-primary);
 }
 
 .audio-player__progress-container {
@@ -13,7 +13,7 @@
     align-items: center;
     justify-content: space-between;
     font-size: 0.75rem;
-    color: #999;
+    color: var(--text-muted);
     font-weight: 500;
 }
 
@@ -31,7 +31,7 @@
 .audio-player__progress-bar {
     width: 100%;
     height: 2px;
-    background-color: #000;
+    background-color: var(--border-color);
     position: relative;
 }
 
@@ -72,7 +72,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #000;
+    color: var(--text-primary);
     transition: opacity 0.2s;
 }
 
@@ -83,16 +83,16 @@
 .audio-player__play-button {
     width: 48px;
     height: 48px;
-    background-color: #000;
+    background-color: var(--text-primary);
     border-radius: 50%;
-    color: #fff;
+    color: var(--bg-primary);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .audio-player__play-button svg {
-    fill: #fff;
+    fill: var(--bg-primary);
     /* Fill play icon */
 }
 
@@ -104,7 +104,7 @@
 }
 
 .audio-player__like {
-    color: #666;
+    color: var(--text-muted);
 }
 
 .audio-player__like--active {

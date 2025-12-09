@@ -35,6 +35,10 @@
         "images"
       ]
     },
+    "hero_image_caption": {
+      "type": "string",
+      "maxLength": 255
+    },
     "reading_time": {
       "type": "integer"
     },

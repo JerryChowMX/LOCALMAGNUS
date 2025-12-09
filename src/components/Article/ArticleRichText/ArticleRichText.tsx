@@ -13,7 +13,7 @@ const HEADING_STYLES: Record<number, React.CSSProperties> = {
         fontSize: '2.5rem',
         fontWeight: 800,
         lineHeight: '1.1',
-        color: '#111827',
+        color: 'var(--text-primary)',
         marginBottom: '24px',
         marginTop: '32px'
     },
@@ -22,7 +22,7 @@ const HEADING_STYLES: Record<number, React.CSSProperties> = {
         fontSize: '2rem',
         fontWeight: 700,
         lineHeight: '1.2',
-        color: '#111827',
+        color: 'var(--text-primary)',
         marginBottom: '20px',
         marginTop: '28px'
     },
@@ -31,7 +31,7 @@ const HEADING_STYLES: Record<number, React.CSSProperties> = {
         fontSize: '1.5rem',
         fontWeight: 700,
         lineHeight: '1.3',
-        color: '#111827',
+        color: 'var(--text-primary)',
         marginBottom: '16px',
         marginTop: '24px'
     },
@@ -40,7 +40,7 @@ const HEADING_STYLES: Record<number, React.CSSProperties> = {
         fontSize: '1.25rem',
         fontWeight: 700,
         lineHeight: '1.4',
-        color: '#111827',
+        color: 'var(--text-primary)',
         marginBottom: '12px',
         marginTop: '20px'
     },
@@ -49,7 +49,7 @@ const HEADING_STYLES: Record<number, React.CSSProperties> = {
         fontSize: '1.125rem',
         fontWeight: 600,
         lineHeight: '1.4',
-        color: '#111827',
+        color: 'var(--text-primary)',
         marginBottom: '12px',
         marginTop: '16px'
     },
@@ -58,7 +58,7 @@ const HEADING_STYLES: Record<number, React.CSSProperties> = {
         fontSize: '1rem',
         fontWeight: 600,
         lineHeight: '1.5',
-        color: '#374151',
+        color: 'var(--text-secondary)',
         marginBottom: '12px',
         marginTop: '16px'
     }
@@ -76,7 +76,7 @@ const components = {
             fontFamily: '"Inter", sans-serif',
             fontSize: '1.0625rem',
             lineHeight: '1.65',
-            color: '#374151',
+            color: 'var(--text-secondary)',
             marginBottom: '20px'
         }}>
             {children}
@@ -87,7 +87,7 @@ const components = {
             fontFamily: '"Inter", sans-serif',
             fontSize: '1.0625rem',
             lineHeight: '1.65',
-            color: '#374151',
+            color: 'var(--text-secondary)',
             marginBottom: '20px',
             paddingLeft: '24px',
             listStyleType: 'disc'
@@ -100,7 +100,7 @@ const components = {
             fontFamily: '"Inter", sans-serif',
             fontSize: '1.0625rem',
             lineHeight: '1.65',
-            color: '#374151',
+            color: 'var(--text-secondary)',
             marginBottom: '20px',
             paddingLeft: '24px',
             listStyleType: 'decimal'
@@ -114,7 +114,7 @@ const components = {
         </li>
     ),
     strong: ({ children }: any) => (
-        <strong style={{ fontWeight: 700, color: '#111827' }}>
+        <strong style={{ fontWeight: 700, color: 'var(--text-primary)' }}>
             {children}
         </strong>
     )

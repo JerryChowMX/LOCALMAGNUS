@@ -85,6 +85,18 @@ export const PlaygroundArticleComponents = () => {
                         description="Photo and image display variations with captions"
                     />
 
+                    <PlaygroundLink
+                        to={routes.PLAYGROUND_AUDIO_PLAYER}
+                        title="Audio Player"
+                        description="Audio playback component with controls and progress bar"
+                    />
+
+                    <PlaygroundLink
+                        to={routes.PLAYGROUND_HERO_IMAGE}
+                        title="Hero Image"
+                        description="Hero image display variations for article headers"
+                    />
+
                 </div>
             </div>
         </PageWrapper>

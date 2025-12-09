@@ -12,37 +12,70 @@ export interface UserProfile {
 }
 
 export interface ProfileCardProps {
-
     user?: UserProfile;
     onLogin?: () => void;
     onEdit?: () => void;
     onUpdateDescription?: (description: string) => void;
+    onUpdateProfile?: (data: Partial<UserProfile>, file?: File) => Promise<void>;
 }
 
-export const ProfileCard: React.FC<ProfileCardProps> = ({ user, onLogin, onEdit, onUpdateDescription }) => {
+export const ProfileCard: React.FC<ProfileCardProps> = ({ user, onLogin, onUpdateProfile }) => {
+    const [name, setName] = useState(user?.name || '');
     const [description, setDescription] = useState(user?.description || '');
     const MAX_CHARS = 160;
 
-    useEffect(() => {
-        if (user?.description) {
-            setDescription(user.description);
-        }
-    }, [user?.description]);
+    // Edit modes
+    const [isEditingName, setIsEditingName] = useState(false);
+    const [isEditingDescription, setIsEditingDescription] = useState(!user?.description);
+    const [isUploading, setIsUploading] = useState(false);
 
-    const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const val = e.target.value;
-        if (val.length <= MAX_CHARS) {
-            setDescription(val);
-            // The actual update to parent component will happen on save
+    // File input ref
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (user) {
+            setName(user.name);
+            if (user.description) setDescription(user.description);
+        }
+    }, [user]);
+
+    const handleSaveName = async () => {
+        if (!name.trim() || !onUpdateProfile) return;
+        try {
+            await onUpdateProfile({ name });
+            setIsEditingName(false);
+        } catch (error) {
+            console.error(error);
+            // Revert on error
+            if (user) setName(user.name);
         }
     };
 
-    const [isEditingDescription, setIsEditingDescription] = useState(!user?.description);
+    const handleSaveDescription = async () => {
+        if (!onUpdateProfile) return;
+        try {
+            await onUpdateProfile({ description });
+            setIsEditingDescription(false);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
-    const handleSaveDescription = () => {
-        setIsEditingDescription(false);
-        if (onUpdateDescription) {
-            onUpdateDescription(description);
+    const handleImageClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file || !onUpdateProfile) return;
+
+        try {
+            setIsUploading(true);
+            await onUpdateProfile({}, file);
+        } catch (error) {
+            console.error('Failed to upload image', error);
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -63,21 +96,57 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({ user, onLogin, onEdit,
 
     return (
         <div className="profile-card">
+            <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                accept="image/*"
+                onChange={handleFileChange}
+            />
+
             <div className="profile-card__image-container">
                 {user.avatarUrl ? (
                     <img src={user.avatarUrl} alt={user.name} className="profile-card__image" />
                 ) : (
                     <Icons.user size={80} stroke={1.5} />
                 )}
-                {onEdit && (
-                    <button className="profile-card__edit-button" onClick={onEdit} aria-label="Editar foto">
-                        <Icons.edit size={18} stroke={1.5} />
-                    </button>
-                )}
+                <button
+                    className="profile-card__edit-button"
+                    onClick={handleImageClick}
+                    disabled={isUploading}
+                    aria-label="Editar foto"
+                >
+                    {isUploading ? <Icons.refresh size={18} className="animate-spin" /> : <Icons.edit size={18} stroke={1.5} />}
+                </button>
             </div>
 
             <div className="profile-card__info">
-                <Heading level={2}>{user.name}</Heading>
+                {isEditingName ? (
+                    <div className="profile-card__name-edit">
+                        <input
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleSaveName()}
+                            className="profile-card__name-input"
+                            autoFocus
+                        />
+                        <button onClick={handleSaveName} className="profile-card__save-mini-btn">
+                            <Icons.check size={18} />
+                        </button>
+                    </div>
+                ) : (
+                    <div className="profile-card__name-display">
+                        <Heading level={2}>{user.name}</Heading>
+                        <button
+                            className="profile-card__edit-icon-btn"
+                            onClick={() => setIsEditingName(true)}
+                            aria-label="Editar nombre"
+                        >
+                            <Icons.edit size={16} stroke={1.5} />
+                        </button>
+                    </div>
+                )}
                 <Text variant="body" color="secondary">{user.email}</Text>
             </div>
 
@@ -100,13 +169,8 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({ user, onLogin, onEdit,
                             className="profile-card__description-input"
                             placeholder="Agrega una descripción..."
                             value={description}
-                            onChange={handleDescriptionChange}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter' && !e.shiftKey) {
-                                    e.preventDefault();
-                                    handleSaveDescription();
-                                }
-                            }}
+                            onChange={(e) => setDescription(e.target.value)}
+                            maxLength={MAX_CHARS}
                         />
                         <div className="profile-card__footer">
                             <span className="profile-card__char-count">
