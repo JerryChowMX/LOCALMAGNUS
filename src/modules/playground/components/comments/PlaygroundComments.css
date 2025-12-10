@@ -1,0 +1,322 @@
+/* PlaygroundComments.css - Matching AI Chat Interface */
+
+.comments-container-wrapper {
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+    height: calc(100vh - 130px);
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+}
+
+.comments-glass-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    overflow: hidden;
+    position: relative;
+
+    /* Glassmorphism - Match AI Chat */
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-3);
+}
+
+.comments-header {
+    padding: var(--spacing-lg) var(--spacing-xl);
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.comments-body {
+    flex: 1;
+    padding: var(--spacing-xl);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+
+    /* Hide scrollbar - Match AI Chat */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.comments-body::-webkit-scrollbar {
+    display: none;
+}
+
+/* Comment Item - Chat Bubble Style */
+.comment-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Comment Bubble Container */
+.comment-bubble {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.comment-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg-secondary);
+    border: 2px solid var(--glass-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.comment-avatar-text {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-family: var(--font-family-title);
+}
+
+.comment-content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Message Bubble Style */
+.comment-message-bubble {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 12px 16px;
+    border-radius: var(--radius-lg);
+    max-width: 85%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+}
+
+.comment-header-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.comment-author-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    font-family: var(--font-family-title);
+}
+
+.comment-role-badge {
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.comment-text {
+    color: var(--text-primary);
+    line-height: 1.5;
+    font-size: 0.95rem;
+    font-family: var(--font-family-body);
+}
+
+/* Comment Actions - Inline */
+.comment-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-left: 4px;
+}
+
+.comment-action-button {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.comment-action-button:hover {
+    background: var(--bg-tertiary);
+}
+
+.comment-action-button.active {
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
+/* Reply Section */
+.comment-replies {
+    margin-left: 52px;
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.comment-thread-line {
+    width: 2px;
+    background: var(--glass-border);
+    position: absolute;
+    left: 20px;
+    top: 50px;
+    bottom: 0;
+}
+
+/* Input Area - Match AI Chat */
+.comments-input-area {
+    padding: var(--spacing-lg) var(--spacing-xl);
+    border-top: 1px solid var(--border-subtle);
+}
+
+.comments-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-full);
+    padding: 8px 8px 8px 16px;
+    /* Less padding on right for button */
+    transition: all 0.2s ease;
+}
+
+.comments-input-wrapper:focus-within {
+    /* border-color: var(--color-brand-orange); Removed per user request */
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+}
+
+.comments-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 0.95rem;
+    resize: none;
+    height: 24px;
+    max-height: 100px;
+    font-family: var(--font-family-body);
+    background: transparent;
+    color: var(--text-primary);
+}
+
+.send-button {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--color-brand-orange);
+    color: #fff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    box-shadow: none;
+    padding: 0;
+}
+
+.send-button:disabled {
+    background-color: var(--bg-tertiary);
+    color: var(--text-disabled);
+    cursor: default;
+    box-shadow: none;
+    opacity: 0.5;
+}
+
+.send-button:hover:not(:disabled) {
+    transform: scale(1.05);
+    background-color: #ff8533;
+}
+
+/* Reply Input Inline */
+.reply-input-inline {
+    margin-top: 8px;
+    margin-left: 52px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: 12px;
+}
+
+.reply-textarea {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text-primary);
+    font-family: var(--font-family-body);
+    font-size: 0.9rem;
+    resize: none;
+    min-height: 50px;
+}
+
+.reply-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--glass-border);
+}
+
+.reply-btn {
+    padding: 6px 16px;
+    border-radius: 8px;
+    border: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.reply-btn-cancel {
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.reply-btn-submit {
+    background: var(--color-accent);
+    color: white;
+}
+
+.reply-btn-submit:disabled {
+    background: var(--bg-tertiary);
+    color: var(--text-disabled);
+    cursor: not-allowed;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -24,7 +24,7 @@ export const AiChatBarCollapsed: React.FC<AiChatBarCollapsedProps> = ({
                 <div className="chatIconWrapper">
                     <SparklesIcon style={{ width: '20px', height: '20px' }} />
                 </div>
-                <span className="chatTextGradient">Chat</span>
+                <span className="chatLabel">Chatear</span>
             </button>
 
             {/* Divider */}
@@ -33,6 +33,7 @@ export const AiChatBarCollapsed: React.FC<AiChatBarCollapsedProps> = ({
             {/* Comments Section */}
             <button className="commentsButton" onClick={onCommentsClick}>
                 <ChatBubbleLeftRightIcon style={{ width: '20px', height: '20px' }} />
+                <span>Comentar</span>
                 <span>{commentCount}</span>
             </button>
         </div>

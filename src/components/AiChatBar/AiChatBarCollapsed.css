@@ -1,19 +1,23 @@
 /* AiChatBarCollapsed.css */
 
 .chatBarContainer {
-    position: relative;
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
     height: 44px;
     /* Default height */
     display: flex;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-radius: 9999px;
     /* Pill shape */
     padding: 4px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     transition: all 0.3s ease;
     width: fit-content;
 }
@@ -43,11 +47,9 @@
     justify-content: center;
 }
 
-.chatTextGradient {
-    background: linear-gradient(to right, #4F46E5, #9333EA);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+.chatLabel {
+    color: #000000;
+    font-weight: 700;
 }
 
 .divider {
@@ -74,4 +76,36 @@
 
 .commentsButton:hover {
     background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Dark Mode Overrides */
+:root[data-theme='dark'] .chatBarContainer {
+    background-color: rgba(20, 20, 20, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+}
+
+:root[data-theme='dark'] .chatLabel {
+    color: #FFFFFF;
+}
+
+:root[data-theme='dark'] .commentsButton {
+    color: #E5E7EB;
+}
+
+:root[data-theme='dark'] .commentsButton:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+:root[data-theme='dark'] .divider {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+:root[data-theme='dark'] .chatButton:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+:root[data-theme='dark'] .chatIconWrapper {
+    color: #818CF8;
+    /* Lighter Indigo */
 }

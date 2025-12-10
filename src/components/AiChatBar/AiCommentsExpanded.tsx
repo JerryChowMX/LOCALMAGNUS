@@ -1,71 +1,58 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { PageWrapper } from '../../../../components/Layout/PageWrapper';
-import { HeaderContent } from '../../../../modules/noticiasHub/components/HeaderContent';
-import { CommentsSection } from '../../../../components/Comments/CommentsSection';
-import type { Comment } from '../../../../components/Comments/types';
+import React, { useState } from 'react';
+import { CommentsSection } from '../../components/Comments/CommentsSection';
+import type { Comment } from '../../components/Comments/types';
+import './styles.css';
 
-// 1. Standard Comment
-const commentVariable1: Comment = {
-    id: 'c1',
-    author: 'Ricardo Morales',
-    role: 'Subscriber',
-    date: '2 hours ago',
-    content: 'This is a fantastic article! The analysis on the economic trends in Monterrey is spot on. I particularly agreed with the point about infrastructure development.',
-    likes: 24,
-    isLiked: true,
-    dislikes: 2,
-    isDisliked: false
-};
+interface AiCommentsExpandedProps {
+    onClose: () => void;
+}
 
-// 2. Short/Snappy Comment
-const commentVariable2: Comment = {
-    id: 'c2',
-    author: 'Ana G.',
-    date: '45 mins ago',
-    content: 'Great read! 👏',
-    likes: 5,
-    dislikes: 0
-};
+// 1. Mock Data (Same as Playground)
+const MOCK_COMMENTS: Comment[] = [
+    {
+        id: 'c1',
+        author: 'Ricardo Morales',
+        role: 'Subscriber',
+        date: '2 hours ago',
+        content: 'This is a fantastic article! The analysis on the economic trends in Monterrey is spot on.',
+        likes: 24,
+        isLiked: true,
+        dislikes: 2,
+        isDisliked: false
+    },
+    {
+        id: 'c2',
+        author: 'Ana G.',
+        date: '45 mins ago',
+        content: 'Great read! 👏',
+        likes: 5,
+        dislikes: 0
+    },
+    {
+        id: 'c4',
+        author: 'Sofia Martinez',
+        role: 'Admin',
+        date: '1 hour ago',
+        content: 'Thanks for the feedback everyone. We are planning a series of articles to cover the environmental aspects next week.',
+        likes: 45,
+        dislikes: 0,
+        replies: [
+            {
+                id: 'c4-r1',
+                author: 'Carlos D.',
+                date: '30 mins ago',
+                content: 'That is good news. Looking forward to it.',
+                likes: 3,
+                dislikes: 0
+            }
+        ]
+    }
+];
 
-// 3. Critical/Long Comment
-const commentVariable3: Comment = {
-    id: 'c3',
-    author: 'Fernando T.',
-    role: 'Guest',
-    date: '5 hours ago',
-    content: 'While I understand the perspective, I think the author missed a crucial detail regarding the environmental impact. We cannot just focus on growth without considering sustainability. Ideally, we should see a follow-up piece addressing these concerns specifically.',
-    likes: 12,
-    dislikes: 1
-};
-
-// 4. Comment with Replies (Nested)
-const commentVariable4: Comment = {
-    id: 'c4',
-    author: 'Sofia Martinez',
-    role: 'Admin',
-    date: '1 hour ago',
-    content: 'Thanks for the feedback everyone. We are planning a series of articles to cover the environmental aspects next week. Stay tuned!',
-    likes: 45,
-    dislikes: 0,
-    replies: [
-        {
-            id: 'c4-r1',
-            author: 'Carlos D.',
-            date: '30 mins ago',
-            content: 'That is good news. Looking forward to it.',
-            likes: 3,
-            dislikes: 0
-        }
-    ]
-};
-
-export const PlaygroundComments = () => {
-    const navigate = useNavigate();
-    const [comments, setComments] = useState<Comment[]>([commentVariable1, commentVariable2, commentVariable3, commentVariable4]);
+export const AiCommentsExpanded: React.FC<AiCommentsExpandedProps> = ({ onClose }) => {
+    const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS);
 
     // Handlers (Controller Logic)
-
     const handleReply = (parentId: string, content: string) => {
         setComments(prevComments => {
             const newComments = [...prevComments];
@@ -117,7 +104,6 @@ export const PlaygroundComments = () => {
                         } else {
                             newLikes--;
                         }
-
                         return { ...comment, likes: newLikes, isLiked: newIsLiked, dislikes: newDislikes, isDisliked: newIsDisliked };
                     }
                     if (comment.replies) {
@@ -149,7 +135,6 @@ export const PlaygroundComments = () => {
                         } else {
                             newDislikes--;
                         }
-
                         return { ...comment, dislikes: newDislikes, isDisliked: newIsDisliked, likes: newLikes, isLiked: newIsLiked };
                     }
                     if (comment.replies) {
@@ -175,15 +160,12 @@ export const PlaygroundComments = () => {
     };
 
     return (
-        <PageWrapper>
-            <div style={{
-                maxWidth: '600px',
-                margin: '0 auto',
-                height: 'calc(100vh - 130px)',
-                display: 'flex',
-                flexDirection: 'column'
-            }}>
-                <HeaderContent onBack={() => navigate('/dev/playground/components')} />
+        <div className="ai-chat-modal-overlay" onClick={onClose}>
+            {/* 
+                Stop propagation to prevent closing when clicking inside content.
+                Using style to ensure it fits nicely in the modal overlay structure.
+            */}
+            <div onClick={e => e.stopPropagation()} style={{ width: '90%', maxWidth: '600px', height: '80vh', display: 'flex' }}>
                 <CommentsSection
                     comments={comments}
                     onAddComment={handleAddComment}
@@ -191,9 +173,37 @@ export const PlaygroundComments = () => {
                     onLike={handleLike}
                     onDislike={handleDislike}
                     title="Comentarios"
-                    style={{ flex: 1, minHeight: 0 }}
+                    style={{ width: '100%', height: '100%' }}
                 />
+                {/* Close Button customized or overlay can just handle outside click. 
+                     The design doesn't show a close button on the comments panel specifically, 
+                     but standard UX usually has one or relies on clicking outside. 
+                     We'll add a separate close button or rely on clicking outside. 
+                     Let's add a close button absolutely positioned or rely on outside click for now as designed.
+                 */}
+                <button
+                    onClick={onClose}
+                    style={{
+                        position: 'absolute',
+                        top: '20px',
+                        right: '20px',
+                        background: 'rgba(0,0,0,0.5)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '50%',
+                        width: '32px',
+                        height: '32px',
+                        cursor: 'pointer',
+                        zIndex: 2002,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '20px'
+                    }}
+                >
+                    &times;
+                </button>
             </div>
-        </PageWrapper>
+        </div>
     );
 };

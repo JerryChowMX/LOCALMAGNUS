@@ -321,7 +321,10 @@ export const StandardOneArticle: FC<StandardOneArticleProps> = ({ article }) => 
             </div>
 
             {/* 3. AI Chat Bar */}
-            <AiChatBarCollapsed onClick={() => setIsChatOpen(true)} />
+            <AiChatBarCollapsed
+                onChatClick={() => setIsChatOpen(true)}
+                onCommentsClick={() => setIsChatOpen(true)}
+            />
 
             {/* Expanded Chat Modal */}
             {isChatOpen && (
