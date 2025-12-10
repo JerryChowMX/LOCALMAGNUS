@@ -25,6 +25,7 @@ export const ArticleGallery = ({ images, caption }: ArticleGalleryProps) => {
 
     const heroImage = images[0];
     const thumbnails = images.slice(1);
+    const visibleThumbnails = thumbnails.slice(0, 3); // Only show first 3 thumbnails (4 images total visible)
 
     return (
         <>
@@ -41,10 +42,10 @@ export const ArticleGallery = ({ images, caption }: ArticleGalleryProps) => {
                     />
                 </div>
 
-                {/* Grid Thumbnails (Remaining Images) */}
-                {thumbnails.length > 0 && (
+                {/* Grid Thumbnails (Showing first 3 only, but all available in lightbox) */}
+                {visibleThumbnails.length > 0 && (
                     <div className="gallery-thumbnails">
-                        {thumbnails.map((img, index) => (
+                        {visibleThumbnails.map((img, index) => (
                             <div
                                 key={img.id}
                                 className="gallery-thumbnail"
