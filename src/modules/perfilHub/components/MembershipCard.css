@@ -1,0 +1,68 @@
+.membership-card {
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    border: 1px solid var(--border-secondary);
+}
+
+.membership-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-md);
+}
+
+.membership-card__title {
+    font-family: 'Blinker', sans-serif;
+    font-weight: 700;
+    font-size: var(--font-size-h2);
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.membership-card__renewal {
+    font-family: 'Blinker', sans-serif;
+    font-size: var(--font-size-caption);
+    color: var(--text-secondary);
+}
+
+.membership-card__benefits {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--spacing-lg) 0;
+}
+
+.membership-card__benefit {
+    display: flex;
+    align-items: center;
+    font-family: 'Blinker', sans-serif;
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.membership-card__benefit::before {
+    content: "•";
+    color: var(--text-primary);
+    font-weight: bold;
+    margin-right: var(--spacing-sm);
+}
+
+.membership-card__actions {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.membership-card__actions>* {
+    flex: 1;
+}
+
+.membership-card__btn-manage {
+    background-color: var(--text-primary) !important;
+    color: var(--bg-primary) !important;
+    border-color: var(--text-primary) !important;
+}
+
+.membership-card__btn-manage:hover {
+    opacity: 0.9;
+}

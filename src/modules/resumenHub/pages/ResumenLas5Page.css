@@ -1,0 +1,4 @@
+.resumen-las5-grid {
+    display: grid;
+    gap: var(--spacing-md);
+}

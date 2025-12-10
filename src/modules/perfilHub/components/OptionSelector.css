@@ -1,0 +1,33 @@
+.option-selector {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.option-selector__option {
+    padding: var(--spacing-xs) var(--spacing-md);
+    background-color: var(--bg-tertiary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-secondary);
+    border-radius: var(--radius-btn);
+    font-family: 'Blinker', sans-serif;
+    font-weight: 500;
+    font-size: var(--font-size-body);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.option-selector__option:hover {
+    background-color: var(--bg-elevated);
+    border-color: var(--border-primary);
+}
+
+.option-selector__option--active {
+    background-color: var(--color-brand-orange);
+    color: #FFFFFF;
+    border-color: var(--color-brand-orange);
+}
+
+.option-selector__option--active:hover {
+    background-color: var(--color-brand-orange);
+    opacity: 0.9;
+}

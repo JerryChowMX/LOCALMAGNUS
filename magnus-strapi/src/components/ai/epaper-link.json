@@ -1,0 +1,28 @@
+{
+    "collectionName": "components_ai_epaper_links",
+    "info": {
+        "displayName": "E-Paper Link",
+        "icon": "file-pdf",
+        "description": "Link to printed edition"
+    },
+    "options": {},
+    "attributes": {
+        "pdf_url": {
+            "type": "media",
+            "multiple": false,
+            "required": false,
+            "allowedTypes": [
+                "files"
+            ]
+        },
+        "page_number": {
+            "type": "integer"
+        },
+        "section": {
+            "type": "string"
+        },
+        "edition_date": {
+            "type": "date"
+        }
+    }
+}

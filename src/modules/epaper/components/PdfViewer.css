@@ -1,0 +1,13 @@
+.pdf-viewer-container {
+    width: 100%;
+    height: 80vh;
+    background: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pdf-viewer-placeholder {
+    color: white;
+    text-align: center;
+}

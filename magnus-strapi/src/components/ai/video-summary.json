@@ -1,0 +1,45 @@
+{
+    "collectionName": "components_ai_video_summaries",
+    "info": {
+        "displayName": "Video Summary",
+        "icon": "play",
+        "description": "Short video summary"
+    },
+    "options": {},
+    "attributes": {
+        "video_file": {
+            "type": "media",
+            "multiple": false,
+            "required": false,
+            "allowedTypes": [
+                "videos"
+            ]
+        },
+        "thumbnail": {
+            "type": "media",
+            "multiple": false,
+            "required": false,
+            "allowedTypes": [
+                "images"
+            ]
+        },
+        "duration_seconds": {
+            "type": "integer"
+        },
+        "resolution": {
+            "type": "enumeration",
+            "enum": [
+                "HD_720p",
+                "HD_1080p",
+                "UHD_4k"
+            ],
+            "default": "HD_1080p"
+        },
+        "generated_at": {
+            "type": "datetime"
+        },
+        "file_size": {
+            "type": "integer"
+        }
+    }
+}

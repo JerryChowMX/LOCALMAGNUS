@@ -1,0 +1,14 @@
+.login-page__container {
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: white;
+}
+
+.login-page__form-card {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    /* gap: var(--spacing-xl); handled by internal components + divider margin */
+}

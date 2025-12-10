@@ -1,0 +1,15 @@
+.page-wrapper {
+    max-width: 480px;
+    /* Mobile-first enforcement */
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+    padding-top: 96px;
+    /* 80px header + 16px spacing */
+    /* 16px outer margin */
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--bg-primary);
+    position: relative;
+    overflow-x: hidden;
+    /* Avoid horizontal scroll */
+}

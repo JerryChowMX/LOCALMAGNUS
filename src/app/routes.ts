@@ -1,0 +1,70 @@
+export const routes = {
+    home: "/",
+    ejecutivo: "/ejecutivo",
+
+    // Authentication
+    login: "/login",
+    signup: "/signup",
+    forgotPassword: "/forgot-password",
+    authCallback: "/connect/:provider/redirect",
+
+    articleList: "/articles",
+    articleDetail: (slug: string) => `/articles/${slug}`,
+    audio: "/audio",
+    epaper: "/epaper",
+    noticiasHub: (date: string) => `/NoticiasHub/${date}`,
+    noticiasArticle: (date: string, slug: string) => `/NoticiasHub/${date}/${slug}`,
+    noticiasFormat: (date: string, slug: string, format: string) => `/NoticiasHub/${date}/${slug}/${format}`,
+
+    resumenHub: (date: string) => `/ResumenHub/${date}`,
+    resumenLas5: (date: string) => `/ResumenHub/${date}/Las5DelDia`,
+    resumenLas5Article: (date: string, slug: string) => `/ResumenHub/${date}/Las5DelDia/${slug}`,
+    resumenLas5Format: (date: string, slug: string, format: string) => `/ResumenHub/${date}/Las5DelDia/${slug}/${format}`,
+    resumenOpinion: (date: string) => `/ResumenHub/${date}/LaOpinionDelDia`,
+    resumenOpinionArticle: (date: string, slug: string) => `/ResumenHub/${date}/LaOpinionDelDia/${slug}`,
+    resumenOpinionFormat: (date: string, slug: string, format: string) => `/ResumenHub/${date}/LaOpinionDelDia/${slug}/${format}`,
+    resumenPodcast: (date: string) => `/ResumenHub/${date}/ElPodcastDelDia`,
+    resumenFotos: (date: string) => `/ResumenHub/${date}/LasFotosDelDia`,
+    resumenCartones: (date: string) => `/ResumenHub/${date}/LosCartonesDelDia`,
+    resumenJuegos: (date: string) => `/ResumenHub/${date}/LosJuegosDelDia`,
+
+    epaperHub: (date: string) => `/EPaper/${date}`,
+    epaperEdition: (date: string, editionNumber: string) => `/EPaper/${date}/${editionNumber}`,
+
+    perfilHub: '/PerfilHub',
+
+    // Dev Routes
+    STAGING_ROOT: '/dev/staging',
+    playground: '/dev/playground',
+    PLAYGROUND_ARTICLE: '/dev/playground/article',
+    PLAYGROUND_ARTICLE_STANDARD: '/dev/playground/article/standard-one',
+    PLAYGROUND_ARTICLE_STANDARD_2: '/dev/playground/article/standard-two',
+    PLAYGROUND_HOME: '/dev/playground/home',
+    playgroundComponents: '/dev/playground/components',
+    PLAYGROUND_ARTICLE_COMPONENTS: '/dev/playground/components/articlecomponents',
+    PLAYGROUND_RECOMMENDED_ARTICLES: '/dev/playground/components/articlecomponents/recommended',
+    PLAYGROUND_AUTHOR_CARD: '/dev/playground/components/articlecomponents/authorcard',
+    PLAYGROUND_RICH_TEXT: '/dev/playground/components/articlecomponents/richtext',
+    PLAYGROUND_QUOTE: '/dev/playground/components/articlecomponents/quote',
+    PLAYGROUND_GALLERY: '/dev/playground/components/articlecomponents/gallery',
+    PLAYGROUND_EMBED: '/dev/playground/components/articlecomponents/embed',
+    PLAYGROUND_INFOGRAPHICS: '/dev/playground/components/articlecomponents/infographics',
+    PLAYGROUND_ILLUSTRATIONS: '/dev/playground/components/articlecomponents/illustrations',
+    PLAYGROUND_SINGLE_IMAGE: '/dev/playground/components/articlecomponents/singleimage',
+    PLAYGROUND_AUDIO_PLAYER: '/dev/playground/components/articlecomponents/audioplayer',
+    PLAYGROUND_HERO_IMAGE: '/dev/playground/components/articlecomponents/heroimage',
+    PLAYGROUND_RESUMEN_EJECUTIVO_COMPONENTS: '/dev/playground/components/resumen-ejecutivo',
+    PLAYGROUND_RESUMEN_BODY: '/dev/playground/components/resumen-ejecutivo/resumen-body',
+    PLAYGROUND_RESUMEN_UPPER_DESIGN: '/dev/playground/components/resumen-ejecutivo/resumen-body/upper-design',
+    PLAYGROUND_RESUMEN_MAIN_BODY: '/dev/playground/components/resumen-ejecutivo/resumen-body/main-body',
+    PLAYGROUND_RESUMEN_LOWER_DESIGN: '/dev/playground/components/resumen-ejecutivo/resumen-body/lower-design',
+    PLAYGROUND_RESUMEN_STAGING: '/dev/playground/components/resumen-ejecutivo/staging',
+    PLAYGROUND_AUDIO_SUMMARY: '/dev/playground/components/audio-summary',
+    PLAYGROUND_COMMENTS: '/dev/playground/components/comments',
+    PLAYGROUND_ARTICLE_COMMENTS_ENTRY: '/dev/playground/components/articlecomponents/comments-entry',
+
+    PLAYGROUND_HEADERS: '/dev/playground/home/headers',
+
+    // Strapi Integration Test
+    strapiTest: '/dev/strapi-test',
+};

@@ -1,0 +1,41 @@
+{
+    "collectionName": "components_ai_audio_summaries",
+    "info": {
+        "displayName": "Audio Summary",
+        "icon": "headphones",
+        "description": "AI-generated audio version"
+    },
+    "options": {},
+    "attributes": {
+        "audio_file": {
+            "type": "media",
+            "multiple": false,
+            "required": false,
+            "allowedTypes": [
+                "audios"
+            ]
+        },
+        "duration_seconds": {
+            "type": "integer"
+        },
+        "voice": {
+            "type": "enumeration",
+            "enum": [
+                "male",
+                "female",
+                "neural"
+            ],
+            "default": "neural"
+        },
+        "transcript": {
+            "type": "text"
+        },
+        "generated_at": {
+            "type": "datetime"
+        },
+        "file_size": {
+            "type": "integer",
+            "description": "Size in bytes"
+        }
+    }
+}

@@ -1,0 +1,111 @@
+.quote-wrapper {
+    position: relative;
+    margin-bottom: 60px;
+    width: 100%;
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.quote-card {
+    background-color: var(--bg-surface, #fff);
+    padding: 32px;
+    border-radius: 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid var(--border-subtle, #F3F4F6);
+    position: relative;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.quote-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    position: relative;
+    align-items: center;
+}
+
+.quote-text-element {
+    grid-area: 1 / 1;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--text-secondary, #4B5563);
+    margin: 0 0 16px 0;
+    font-family: var(--font-family-body, "Inter"), sans-serif;
+    font-style: italic;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    pointer-events: auto;
+}
+
+.quote-text-element.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.quote-author-element {
+    grid-area: 1 / 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.quote-author-element.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.quote-author-name {
+    font-family: var(--font-family-display, "Blinker"), sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--text-primary, #111827);
+}
+
+.quote-actions {
+    position: absolute;
+    top: -16px;
+    right: 0;
+    display: flex;
+    gap: 8px;
+    padding: 4px;
+}
+
+.quote-action-btn {
+    background: var(--bg-surface, #fff);
+    border: 1px solid var(--border-subtle, #E5E7EB);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-secondary, #6B7280);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s;
+}
+
+.quote-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.quote-icon-main {
+    margin-bottom: 16px;
+    color: #E5E7EB;
+}

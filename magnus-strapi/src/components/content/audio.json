@@ -1,0 +1,24 @@
+{
+    "collectionName": "components_content_audios",
+    "info": {
+        "displayName": "audio",
+        "icon": "music",
+        "description": "Article audio (Text-to-Speech or Uploaded)"
+    },
+    "options": {},
+    "attributes": {
+        "file": {
+            "type": "media",
+            "multiple": false,
+            "required": true,
+            "allowedTypes": [
+                "files",
+                "videos",
+                "audios"
+            ]
+        },
+        "title": {
+            "type": "string"
+        }
+    }
+}

@@ -1,0 +1,38 @@
+.social-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: var(--spacing-md);
+    background-color: white;
+    border: 1px solid #D1D5DB;
+    /* Visible gray border */
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: background-color 0.2s;
+    position: relative;
+}
+
+.social-button:hover {
+    background-color: var(--surface-card);
+}
+
+.social-button__icon {
+    position: absolute;
+    left: var(--spacing-lg);
+}
+
+.social-button__label {
+    font-family: 'Blinker', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.social-button--apple .social-button__icon {
+    color: black;
+}
+
+/* Google icon usually has its own colors, but Tabler icons are monochrome by default.
+   If we want brand colors, we'd need to style the SVG or use an image.
+   For now, we'll keep it simple or add specific color if requested. */

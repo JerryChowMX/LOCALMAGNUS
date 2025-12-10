@@ -1,0 +1,144 @@
+/* Base Variables */
+.container {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  max-width: 500px;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Header Sections */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.authorInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.names {
+  display: flex;
+  flex-direction: column;
+}
+
+.displayName {
+  font-weight: 700;
+  font-size: 16px;
+  color: #111;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.username {
+  color: #536471;
+  font-size: 14px;
+}
+
+.logoIcon {
+  color: #000;
+  width: 20px;
+  height: 20px;
+}
+
+.verified {
+  color: #1d9bf0;
+  width: 16px;
+  height: 16px;
+}
+
+/* Content */
+.content {
+  font-size: 18px;
+  line-height: 1.5;
+  color: #0f1419;
+  white-space: pre-wrap;
+  margin-bottom: 12px;
+}
+
+.media {
+  margin-top: 12px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #cfd9de;
+}
+
+.mediaImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Footer / Metrics */
+.metadata {
+  display: flex;
+  gap: 4px;
+  color: #536471;
+  font-size: 14px;
+  margin-top: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eff3f4;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 12px;
+  color: #536471;
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  transition: color 0.2s;
+}
+
+.actionButton:hover {
+  cursor: pointer;
+}
+
+.actionButton.reply:hover {
+  color: #1d9bf0;
+}
+
+.actionButton.repost:hover {
+  color: #00ba7c;
+}
+
+.actionButton.like:hover {
+  color: #f91880;
+}
+
+.actionButton.share:hover {
+  color: #1d9bf0;
+}
+
+/* === SHARP ORIGINAL (The Winner) ===
+   - Square/Sharp corners
+   - Tighter padding
+   - Left accent border
+*/
+.sharp {
+  background: #ffffff;
+  padding: 16px;
+  border: 1px solid #e1e8ed;
+  border-radius: 0px;
+  border-left: 4px solid #0076ab;
+  /* Magnus Blue */
+}

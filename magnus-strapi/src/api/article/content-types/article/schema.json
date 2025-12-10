@@ -1,0 +1,137 @@
+{
+  "kind": "collectionType",
+  "collectionName": "articles",
+  "info": {
+    "singularName": "article",
+    "pluralName": "articles",
+    "displayName": "Article",
+    "description": "Core MAGNUS content object"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "maxLength": 200,
+      "required": true,
+      "unique": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "excerpt": {
+      "type": "richtext",
+      "maxLength": 100
+    },
+    "hero_image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "hero_image_caption": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "reading_time": {
+      "type": "integer"
+    },
+    "state": {
+      "type": "enumeration",
+      "default": "draft",
+      "enum": [
+        "draft",
+        "review",
+        "published",
+        "scheduled",
+        "archived"
+      ]
+    },
+    "content_blocks": {
+      "type": "dynamiczone",
+      "components": [
+        "content.rich-text",
+        "content.quote",
+        "content.gallery",
+        "content.embed",
+        "content.audio",
+        "content.single-image",
+        "content.illustrations",
+        "content.infographics"
+      ]
+    },
+    "executive_summary": {
+      "type": "component",
+      "component": "ai.executive-summary",
+      "repeatable": false
+    },
+    "audio_summary": {
+      "type": "component",
+      "component": "ai.audio-summary",
+      "repeatable": false
+    },
+    "video_summary": {
+      "type": "component",
+      "component": "ai.video-summary",
+      "repeatable": false
+    },
+    "epaper_link": {
+      "type": "component",
+      "component": "ai.epaper-link",
+      "repeatable": false
+    },
+    "seo_meta": {
+      "type": "component",
+      "component": "seo.seo-meta",
+      "repeatable": false
+    },
+    "author": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::author.author",
+      "inversedBy": "articles"
+    },
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::category.category",
+      "inversedBy": "articles"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "articles"
+    },
+    "related_articles": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::article.article"
+    },
+    "view_count": {
+      "type": "integer",
+      "default": 0
+    },
+    "share_count": {
+      "type": "integer",
+      "default": 0
+    },
+    "trending_score": {
+      "type": "decimal"
+    },
+    "ai_metadata": {
+      "type": "json",
+      "private": true
+    },
+    "editor_notes": {
+      "type": "text",
+      "private": true
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+    "collectionName": "components_seo_seo_metas",
+    "info": {
+        "displayName": "SEO Meta",
+        "icon": "search",
+        "description": "Search Engine Optimization fields"
+    },
+    "options": {},
+    "attributes": {
+        "meta_title": {
+            "type": "string",
+            "maxLength": 60
+        },
+        "meta_description": {
+            "type": "text",
+            "maxLength": 160
+        },
+        "og_image": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images"
+            ]
+        },
+        "og_title": {
+            "type": "string"
+        },
+        "og_description": {
+            "type": "text"
+        },
+        "twitter_card": {
+            "type": "enumeration",
+            "enum": [
+                "summary",
+                "summary_large_image"
+            ],
+            "default": "summary_large_image"
+        },
+        "canonical_url": {
+            "type": "string"
+        }
+    }
+}

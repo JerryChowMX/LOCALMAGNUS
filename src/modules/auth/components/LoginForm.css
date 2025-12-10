@@ -1,0 +1,84 @@
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+    width: 100%;
+}
+
+.login-form__fields {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.login-form__forgot {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: var(--spacing-xs);
+}
+
+.login-form__forgot-link {
+    color: var(--color-accent);
+    font-size: 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.login-form__forgot-link:hover {
+    text-decoration: underline;
+}
+
+.login-form__error {
+    color: var(--text-error);
+    font-size: var(--font-size-caption);
+    text-align: center;
+    background: var(--bg-error);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+}
+
+.login-form__submit {
+    width: 100%;
+    padding: var(--spacing-md);
+    background-color: var(--color-brand-orange);
+    color: white;
+    border: none;
+    border-radius: var(--radius-btn);
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-body);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: var(--spacing-md);
+}
+
+.login-form__submit:hover {
+    background-color: var(--color-brand-orange);
+    filter: brightness(0.9);
+}
+
+.login-form__submit:disabled {
+    background-color: var(--text-disabled);
+    cursor: not-allowed;
+}
+
+.login-form__register {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    align-items: center;
+}
+
+/* Targeting the Caption components inside register */
+.login-form__register span {
+    font-size: 12px;
+}
+
+.login-form__register-link {
+    color: var(--color-brand-orange);
+    font-weight: 600;
+    cursor: pointer;
+    text-transform: uppercase;
+}

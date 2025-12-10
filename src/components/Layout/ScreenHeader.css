@@ -1,0 +1,27 @@
+.screen-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-lg) 0;
+    margin-bottom: var(--spacing-md);
+    width: 100%;
+}
+
+.screen-header__title {
+    font-family: var(--font-family-title);
+    font-size: var(--font-size-h1);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+    margin: 0;
+    line-height: var(--line-height-tight);
+}
+
+.screen-header__actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.screen-header--with-back {
+    gap: var(--spacing-md);
+    justify-content: flex-start;
+}

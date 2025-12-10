@@ -1,0 +1,113 @@
+.audio-player {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: var(--text-primary);
+}
+
+.audio-player__progress-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.audio-player__progress-bar-wrapper {
+    flex: 1;
+    margin: 0 12px;
+    height: 20px;
+    /* Larger hit area */
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.audio-player__progress-bar {
+    width: 100%;
+    height: 2px;
+    background-color: var(--border-color);
+    position: relative;
+}
+
+.audio-player__progress-fill {
+    height: 100%;
+    background-color: #ff5500;
+    /* Orange color from design */
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.audio-player__progress-knob {
+    width: 8px;
+    height: 8px;
+    background-color: #ff5500;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(50%, -50%);
+    /* Center knob on end of fill */
+    right: 0;
+}
+
+.audio-player__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 4px;
+}
+
+.audio-player__button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    transition: opacity 0.2s;
+}
+
+.audio-player__button:hover {
+    opacity: 0.7;
+}
+
+.audio-player__play-button {
+    width: 48px;
+    height: 48px;
+    background-color: var(--text-primary);
+    border-radius: 50%;
+    color: var(--bg-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.audio-player__play-button svg {
+    fill: var(--bg-primary);
+    /* Fill play icon */
+}
+
+.audio-player__speed {
+    font-size: 1rem;
+    font-weight: 500;
+    width: 40px;
+    text-align: left;
+}
+
+.audio-player__like {
+    color: var(--text-muted);
+}
+
+.audio-player__like--active {
+    color: #ff5500;
+    fill: #ff5500;
+}

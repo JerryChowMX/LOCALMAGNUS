@@ -1,0 +1,114 @@
+.image-slider-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    user-select: none;
+    /* Prevent image selection while dragging */
+    touch-action: pan-y;
+    /* Allow vertical scroll but handle horizontal swipe in JS */
+    border-radius: 16px;
+    /* Match existing design */
+}
+
+.image-slider-track {
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    /* Smooth ease-out */
+    width: 100%;
+    height: 100%;
+}
+
+.image-slider-slide {
+    min-width: 100%;
+    width: 100%;
+    flex-shrink: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f3f4f6;
+    /* localized bg-gray-100 */
+}
+
+/* Ensure ZoomableImage fills the slide */
+.image-slider-slide .zoomable-image-container {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+.image-slider-slide .zoomable-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Navigation Arrows */
+.image-slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    backdrop-filter: blur(4px);
+    color: #1f2937;
+    /* gray-800 */
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.image-slider-arrow:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.image-slider-arrow:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.image-slider-arrow.prev {
+    left: 16px;
+}
+
+.image-slider-arrow.next {
+    right: 16px;
+}
+
+/* Dots Indicator */
+.image-slider-dots {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    backdrop-filter: blur(2px);
+}
+
+.image-slider-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.image-slider-dot.active {
+    background: #fff;
+    transform: scale(1.2);
+}

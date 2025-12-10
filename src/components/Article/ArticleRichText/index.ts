@@ -1,0 +1,1 @@
+export { ArticleRichText } from './ArticleRichText';

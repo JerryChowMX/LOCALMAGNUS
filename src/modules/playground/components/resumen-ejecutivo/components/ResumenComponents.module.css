@@ -1,0 +1,159 @@
+/* ResumenComponents.module.css */
+
+.container {
+    padding: 0 24px;
+    /* Keep horizontal padding, maybe reduce vertical or handle in sections */
+    /* Removed card styling for seamless flow */
+}
+
+/* Header (Upper Design) */
+.headerContainer {
+    composes: container;
+    padding-top: 24px;
+    padding-bottom: 24px;
+}
+
+.date {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.dateText {
+    text-transform: uppercase;
+    color: #9CA3AF;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.titleText {
+    font-size: 2.25rem;
+    line-height: 1.2;
+    font-weight: 800;
+    color: #111827;
+}
+
+.dek {
+    text-align: center;
+    margin-bottom: 32px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.dekText {
+    font-size: 1.125rem;
+    color: #6B7280;
+    line-height: 1.6;
+}
+
+.heroImage {
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.heroImage img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Body (Highlights) */
+.bodyContainer {
+    composes: container;
+}
+
+.highlightsTitle {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin-bottom: 24px;
+    color: #000000;
+}
+
+.highlightsList {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.highlightItem {
+    display: flex;
+    align-items: stretch;
+}
+
+.highlightBar {
+    width: 12px;
+    background-color: #006996;
+    flex-shrink: 0;
+}
+
+.highlightContent {
+    flex: 1;
+    background-color: #FFF8F5;
+    padding: 24px;
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.highlightText {
+    font-size: 1.125rem;
+    font-weight: 700;
+    font-style: italic;
+    color: #111827;
+    margin: 0;
+}
+
+/* Footer (Lower Design) */
+.footerContainer {
+    composes: container;
+}
+
+.readMoreLabel {
+    font-weight: 700;
+    color: #9CA3AF;
+    margin-bottom: 16px;
+    font-size: 1.125rem;
+}
+
+.imagePlaceholder {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background-color: #CACC5C;
+    border-radius: 24px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.imagePlaceholderImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.footerTitle {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #111827;
+    line-height: 1.2;
+}
+
+/* Responsive adjustments if needed */
+@media (max-width: 640px) {
+    .titleText {
+        font-size: 1.75rem;
+    }
+
+    .footerTitle {
+        font-size: 1.5rem;
+    }
+}

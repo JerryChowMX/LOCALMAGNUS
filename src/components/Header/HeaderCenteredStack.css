@@ -1,0 +1,121 @@
+/* HeaderCenteredStack - Glassmorphism header with centered logo and date picker */
+
+.header-centered-stack {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-md);
+
+    /* Glassmorphism */
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+
+    /* Subtle border */
+    border-bottom: 1px solid var(--border-subtle);
+
+    /* Premium shadow */
+    box-shadow: var(--glass-shadow);
+
+    transition: all 0.3s ease;
+}
+
+/* Light Mode */
+.header-centered-stack--light {
+    color: var(--text-primary);
+}
+
+/* Dark Mode */
+.header-centered-stack--dark {
+    color: var(--text-primary);
+}
+
+/* Back Button */
+.header-centered-stack__back {
+    position: absolute;
+    left: var(--spacing-md);
+    top: 50%;
+    transform: translateY(-50%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    color: var(--text-secondary);
+
+    transition: color 0.2s ease;
+}
+
+.header-centered-stack__back:hover {
+    color: var(--text-primary);
+}
+
+.header-centered-stack__back svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Logo */
+.header-centered-stack__logo {
+    font-family: var(--font-family-display);
+    font-weight: 800;
+    font-size: 2rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+/* Divider */
+.header-centered-stack__divider {
+    width: 40px;
+    height: 2px;
+    background: #FF6B35;
+    margin-bottom: var(--spacing-xs);
+}
+
+/* Date Picker Button */
+.header-centered-stack__date-button {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-caption);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-2xs);
+
+    transition: color 0.2s ease;
+}
+
+.header-centered-stack__date-button:hover {
+    color: var(--text-primary);
+}
+
+.header-centered-stack__date-button span {
+    text-transform: capitalize;
+}
+
+.header-centered-stack__date-picker {
+    display: flex;
+    align-items: center;
+}

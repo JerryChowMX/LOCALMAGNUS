@@ -1,0 +1,88 @@
+.consent-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--color-background-paper, #ffffff);
+    border-top: 1px solid var(--color-divider, #e0e0e0);
+    padding: 16px 24px;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+    animation: slideUp 0.3s ease-out;
+}
+
+.consent-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    text-align: center;
+}
+
+@media (min-width: 768px) {
+    .consent-content {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+    }
+}
+
+.consent-text {
+    font-family: var(--font-family-sans, sans-serif);
+    font-size: 14px;
+    color: var(--color-text-primary, #000000);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.consent-subtext {
+    font-size: 12px;
+    color: var(--color-text-secondary, #666666);
+}
+
+.consent-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.consent-button {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-family: var(--font-family-sans, sans-serif);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.consent-button.accept {
+    background-color: var(--color-primary, #000000);
+    color: #ffffff;
+}
+
+.consent-button.accept:hover {
+    opacity: 0.9;
+}
+
+.consent-button.decline {
+    background-color: transparent;
+    color: var(--color-text-secondary, #666666);
+    border: 1px solid var(--color-divider, #e0e0e0);
+}
+
+.consent-button.decline:hover {
+    background-color: var(--color-action-hover, rgba(0, 0, 0, 0.04));
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}

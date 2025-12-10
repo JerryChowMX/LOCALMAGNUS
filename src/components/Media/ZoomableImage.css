@@ -1,0 +1,29 @@
+.zoomable-image-container {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: block;
+}
+
+.zoomable-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.zoomable-image.is-zoomable {
+    cursor: zoom-in;
+    transition: filter 0.2s;
+}
+
+.zoomable-image.is-zoomable:hover {
+    filter: brightness(0.95);
+}
+
+.zoomable-image-caption {
+    margin-top: 8px;
+    font-size: 0.85rem;
+    color: var(--text-secondary, #666);
+    text-align: center;
+    font-style: italic;
+}

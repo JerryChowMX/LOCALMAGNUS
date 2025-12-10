@@ -1,0 +1,38 @@
+{
+    "collectionName": "components_ai_executive_summaries",
+    "info": {
+        "displayName": "Executive Summary",
+        "icon": "align-justify",
+        "description": "AI-generated text summary"
+    },
+    "options": {},
+    "attributes": {
+        "summary_text": {
+            "type": "text",
+            "required": true
+        },
+        "bullet_points": {
+            "type": "component",
+            "repeatable": true,
+            "component": "content.quote"
+        },
+        "generated_at": {
+            "type": "datetime"
+        },
+        "tokens_used": {
+            "type": "integer"
+        },
+        "ai_provider": {
+            "type": "enumeration",
+            "enum": [
+                "openai",
+                "mistral",
+                "custom"
+            ],
+            "default": "openai"
+        },
+        "version": {
+            "type": "string"
+        }
+    }
+}

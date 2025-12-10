@@ -1,0 +1,39 @@
+{
+    "collectionName": "components_content_single_images",
+    "info": {
+        "displayName": "Single Image",
+        "icon": "picture",
+        "description": "A single image with caption and display options"
+    },
+    "options": {},
+    "attributes": {
+        "image": {
+            "type": "media",
+            "multiple": false,
+            "required": true,
+            "allowedTypes": [
+                "images"
+            ]
+        },
+        "caption": {
+            "type": "text"
+        },
+        "alt_text": {
+            "type": "text",
+            "description": "Alternative text for accessibility"
+        },
+        "credit": {
+            "type": "string",
+            "description": "Photo credit or attribution"
+        },
+        "display_style": {
+            "type": "enumeration",
+            "enum": [
+                "full-width",
+                "centered",
+                "standard-border"
+            ],
+            "default": "full-width"
+        }
+    }
+}

@@ -1,0 +1,29 @@
+.resumen-article-hero {
+    width: 100%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-md);
+    background-color: var(--bg-secondary);
+}
+
+.resumen-article-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.noticias-article-title {
+    font-size: var(--font-size-h1) !important;
+    font-weight: 800 !important;
+    line-height: 1.1 !important;
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-primary);
+}
+
+.noticias-article-instruction {
+    font-size: var(--font-size-body) !important;
+    font-weight: 400 !important;
+    opacity: 0.8;
+    margin-bottom: var(--spacing-lg);
+}

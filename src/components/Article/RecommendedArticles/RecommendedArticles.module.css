@@ -1,0 +1,86 @@
+.container {
+    padding: 24px 16px;
+    background-color: #ffffff;
+    border-top: 1px solid #E5E7EB;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0;
+}
+
+.cta {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-brand-orange);
+    text-decoration: none;
+}
+
+.cta:hover {
+    text-decoration: underline;
+}
+
+.carouselWrapper {
+    position: relative;
+    margin: 0 -16px;
+    padding: 0 16px;
+}
+
+.carouselContainer {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 16px;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
+}
+
+.carouselContainer::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari */
+}
+
+.chevron {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #E5E7EB;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    color: #4B5563;
+    transition: all 0.2s ease;
+}
+
+.chevron:hover {
+    background-color: #ffffff;
+    transform: translateY(-50%) scale(1.05);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.chevronLeft {
+    left: 8px;
+}
+
+.chevronRight {
+    right: 8px;
+}

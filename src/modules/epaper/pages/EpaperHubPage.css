@@ -1,0 +1,12 @@
+.epaper-single-edition-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 60vh;
+    padding-top: var(--spacing-xl);
+}
+
+.epaper-single-edition-container .epaper-card {
+    max-width: 400px;
+    width: 100%;
+}

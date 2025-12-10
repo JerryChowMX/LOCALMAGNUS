@@ -1,0 +1,116 @@
+.header-content {
+    position: fixed;
+    /* Fixed as requested */
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+    height: 80px;
+    /* Standard height */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--spacing-md);
+    transition: all 0.3s ease;
+
+    /* Glassmorphism Always On */
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    box-shadow: var(--glass-shadow);
+}
+
+/* Light Mode Variant */
+.header-content--light {
+    background: var(--glass-bg);
+    /* Uses the light/dark token logic */
+    color: var(--text-primary);
+}
+
+/* Dark Mode Variant */
+.header-content--dark {
+    background: rgba(0, 0, 0, 0.75);
+    /* Dark glass override */
+    color: #FFFFFF;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Scrolled State - Optional extra styling */
+.header-content--scrolled {
+    /* box-shadow: var(--shadow-2); */
+}
+
+/* Left: Back Button */
+.header-content__back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    color: inherit;
+    height: 40px;
+    width: 40px;
+}
+
+.header-content__back svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Center: Logo Block */
+.header-content__logo-block {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-content__logo {
+    font-family: var(--font-family-display);
+    /* Blinker */
+    font-weight: 800;
+    /* ExtraBold */
+    font-size: 2rem;
+    /* Adjusted for standard header */
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    /* Black (or theme text) */
+    text-transform: uppercase;
+}
+
+.header-content__vanguardia {
+    font-family: var(--font-family-display);
+    font-weight: var(--font-weight-bold);
+    font-size: 0.6rem;
+    color: var(--color-brand-orange);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 2px;
+}
+
+/* Right: Share Button */
+.header-content__share {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    color: inherit;
+    height: 40px;
+    width: 40px;
+}
+
+.header-content__share svg {
+    width: 24px;
+    height: 24px;
+}

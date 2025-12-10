@@ -1,0 +1,24 @@
+.resumen-hub-grid {
+    display: grid;
+    gap: var(--spacing-md);
+}
+
+.resumen-hub-header {
+    margin-bottom: 2rem;
+}
+
+.resumen-hub-title {
+    font-family: 'Blinker', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: #1a1a1a;
+    line-height: 1.2;
+}
+
+.resumen-hub-subtitle {
+    font-size: 1.1rem;
+    color: #666;
+    margin: 0;
+    font-weight: 400;
+}

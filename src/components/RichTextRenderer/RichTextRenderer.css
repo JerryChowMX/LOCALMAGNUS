@@ -1,0 +1,67 @@
+.rich-text-renderer {
+    width: 100%;
+    color: var(--text-primary);
+}
+
+.rich-text-paragraph {
+    margin-bottom: var(--spacing-md);
+    line-height: 1.6;
+}
+
+.rich-text-ul,
+.rich-text-ol {
+    margin-bottom: var(--spacing-md);
+    padding-left: var(--spacing-lg);
+}
+
+.rich-text-li {
+    margin-bottom: var(--spacing-xs);
+}
+
+.rich-text-blockquote {
+    border-left: 4px solid var(--primary);
+    padding-left: var(--spacing-md);
+    margin: var(--spacing-md) 0;
+    font-style: italic;
+    color: var(--text-secondary);
+}
+
+.rich-text-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.rich-text-link:hover {
+    text-decoration: underline;
+}
+
+.rich-text-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+    margin: var(--spacing-md) 0;
+}
+
+.rich-text-table-wrapper {
+    overflow-x: auto;
+    margin-bottom: var(--spacing-md);
+}
+
+.rich-text-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--border-color);
+}
+
+.rich-text-table th,
+.rich-text-table td {
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border-color);
+    text-align: left;
+}
+
+.rich-text-table th {
+    background-color: var(--bg-secondary);
+    font-weight: 600;
+}

@@ -1,0 +1,104 @@
+/* Frame & Layout */
+.home-hubs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: var(--spacing-xxl);
+    padding-bottom: var(--spacing-lg);
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    justify-content: space-between;
+    /* Spread content evenly */
+}
+
+/* 1. MAGNUS Logo Stack */
+.home-hubs__brand {
+    text-align: center;
+    margin-top: var(--spacing-xl);
+    /* Push down slightly */
+}
+
+.home-hubs__logo {
+    font-size: 4rem;
+    /* Custom larger size for logo */
+    margin-bottom: var(--spacing-xs);
+    line-height: 0.9;
+    /* Tighter line height for large text */
+    letter-spacing: -0.02em;
+}
+
+.home-hubs__submark {
+    font-family: var(--font-family-display);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-brand-orange);
+    font-size: var(--font-size-lg);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+/* 2. Welcome Block */
+.home-hubs__welcome {
+    text-align: center;
+    flex-grow: 1;
+    /* Allow this to take space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.home-hubs__greeting {
+    font-weight: var(--font-weight-regular);
+    margin-bottom: var(--spacing-xs);
+    font-size: var(--font-size-xl);
+}
+
+.home-hubs__date {
+    color: var(--color-text-secondary);
+    display: block;
+    font-size: var(--font-size-md);
+    text-transform: capitalize;
+}
+
+.home-hubs__username {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-top: var(--spacing-xs);
+}
+
+/* 3. Prompt Block */
+.home-hubs__prompt {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    font-weight: var(--font-weight-semibold);
+}
+
+/* 4. Button Group */
+.home-hubs__buttons {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+/* Override button padding for Home Screen */
+.home-hubs__buttons .btn--lg {
+    padding: var(--spacing-lg) var(--spacing-xl);
+    /* Bigger padding */
+    font-size: var(--font-size-lg);
+}
+
+/* 5. Footer */
+.home-hubs__footer {
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+}
+
+.home-hubs__footer button {
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-medium);
+}

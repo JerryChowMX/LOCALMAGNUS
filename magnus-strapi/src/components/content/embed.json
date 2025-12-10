@@ -1,0 +1,30 @@
+{
+    "collectionName": "components_content_embeds",
+    "info": {
+        "displayName": "Embed",
+        "icon": "code",
+        "description": "Social media or video embed"
+    },
+    "options": {},
+    "attributes": {
+        "embed_type": {
+            "type": "enumeration",
+            "enum": [
+                "youtube",
+                "twitter",
+                "instagram",
+                "facebook",
+                "tiktok",
+                "custom"
+            ],
+            "default": "custom"
+        },
+        "embed_url": {
+            "type": "string"
+        },
+        "embed_code": {
+            "type": "text",
+            "description": "Raw HTML for custom embeds"
+        }
+    }
+}

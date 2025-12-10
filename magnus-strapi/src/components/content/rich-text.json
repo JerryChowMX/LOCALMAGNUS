@@ -1,0 +1,15 @@
+{
+    "collectionName": "components_content_rich_texts",
+    "info": {
+        "displayName": "Rich Text",
+        "icon": "align-left",
+        "description": "Text block with formatting"
+    },
+    "options": {},
+    "attributes": {
+        "content": {
+            "type": "richtext",
+            "required": true
+        }
+    }
+}

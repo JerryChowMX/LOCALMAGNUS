@@ -1,0 +1,48 @@
+.perfil-hub-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.perfil-hub-page__content {
+    flex: 1;
+    padding-bottom: 80px;
+    /* Space for AiChatBar */
+}
+
+.perfil-hub-page__preferences-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md);
+    background-color: var(--bg-secondary);
+    border-bottom: 1px solid var(--bg-tertiary);
+}
+
+.perfil-hub-page__preferences-label {
+    font-family: 'Blinker', sans-serif;
+    font-weight: 500;
+    font-size: var(--font-size-body);
+    color: var(--text-primary);
+}
+
+.perfil-hub-page__logout-container {
+    margin-top: var(--spacing-xl);
+}
+
+.perfil-hub-page__logout-button {
+    width: 100%;
+    padding: var(--spacing-md);
+    background-color: var(--bg-error);
+    color: var(--text-error);
+    border: 1px solid var(--border-error);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: var(--font-size-body);
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.perfil-hub-page__logout-button:hover {
+    opacity: 0.9;
+}
