@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { PageWrapper } from '../../../components/Layout/PageWrapper';
 import { Section, Stack } from '../../../components/Layout';
 import { HeaderContent } from '../../noticiasHub/components/HeaderContent';
-import { AiChatBar } from '../../../components/AiChatBar';
 import { Icons } from '../../../components/Icons';
 import { ProfileCard } from '../components/ProfileCard';
 import { MembershipCard } from '../components/MembershipCard';
@@ -80,7 +79,7 @@ export const PerfilHubPage: React.FC = () => {
             <HeaderContent
                 onBack={() => navigate('/')}
                 rightIcon={<Icons.settings size={24} stroke={1.5} />}
-                onRightClick={() => console.log('Settings clicked')}
+                onRightClick={() => {/* TODO: Implement settings navigation */ }}
             />
 
             <div className="perfil-hub-page__content">
@@ -116,7 +115,7 @@ export const PerfilHubPage: React.FC = () => {
                                     "Acceso a eventos exclusivos"
                                 ]}
                                 onViewBenefits={() => window.open('https://Membresiavanguardia.com', '_blank')}
-                                onManage={() => console.log('Administrar')}
+                                onManage={() => {/* TODO: Implement membership management */ }}
                             />
                         </SettingsSection>
 
@@ -125,22 +124,22 @@ export const PerfilHubPage: React.FC = () => {
                             <SettingsRow
                                 icon={<Icons.bell size={24} stroke={1.5} />}
                                 label="Notificaciones"
-                                onClick={() => console.log('Notificaciones')}
+                                onClick={() => {/* TODO: Implement notifications settings */ }}
                             />
                             <SettingsRow
                                 icon={<Icons.privacy size={24} stroke={1.5} />}
                                 label="Privacidad y seguridad"
-                                onClick={() => console.log('Privacidad')}
+                                onClick={() => {/* TODO: Implement privacy settings */ }}
                             />
                             <SettingsRow
                                 icon={<Icons.info size={24} stroke={1.5} />}
                                 label="Acerca de Magnus"
-                                onClick={() => console.log('Acerca de')}
+                                onClick={() => {/* TODO: Implement about page */ }}
                             />
                             <SettingsRow
                                 icon={<Icons.help size={24} stroke={1.5} />}
                                 label="Ayuda y soporte"
-                                onClick={() => console.log('Ayuda')}
+                                onClick={() => {/* TODO: Implement help & support */ }}
                             />
                         </SettingsSection>
 
@@ -194,8 +193,6 @@ export const PerfilHubPage: React.FC = () => {
                     </Stack>
                 </Section>
             </div>
-
-            <AiChatBar context="global" />
         </PageWrapper>
     );
 };

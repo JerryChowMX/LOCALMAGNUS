@@ -27,7 +27,7 @@ export const ResumenEjecutivoPage = () => {
 
     return (
         <PageWrapper>
-            <div style={{ maxWidth: '600px', margin: '0 auto', width: '100%', minHeight: '100vh', backgroundColor: 'white' }}>
+            <div style={{ maxWidth: '600px', margin: '0 auto', width: '100%', minHeight: '100vh', backgroundColor: 'var(--bg-primary)' }}>
                 <HeaderContent
                     onBack={() => navigate(routes.home)}
                 />

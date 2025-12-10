@@ -135,7 +135,7 @@
    - Left accent border
 */
 .sharp {
-  background: #ffffff;
+  background: var(--bg-surface);
   padding: 16px;
   border: 1px solid #e1e8ed;
   border-radius: 0px;

@@ -24,21 +24,22 @@
     font-weight: 600;
     letter-spacing: 0.05em;
     font-size: 0.75rem;
-    /* Explicitly set to match Original caption */
+    margin-bottom: 16px;
+    display: block;
 }
 
 .title {
     text-align: center;
-    margin: 0 16px 16px 16px;
-    /* Explicit margins */
+    margin: 0 0 16px 0;
 }
 
 .titleText {
-    font-size: 2.25rem;
+    font-size: 3rem;
     line-height: 1.1;
     font-weight: 800;
     color: var(--text-primary);
-    /* Match Standard exactly */
+    font-family: "Blinker", sans-serif;
+    margin: 0 auto 24px auto;
 }
 
 .dek {
@@ -51,22 +52,36 @@
 .dekText {
     font-size: 1rem;
     color: var(--text-secondary);
-    line-height: 1.5;
+    line-height: 1.6;
+    margin: 0 auto 32px auto;
 }
 
 .heroImage {
-    width: auto;
-    /* Allow sizing by margins */
-    margin: 0 12px 0 12px;
-    /* Explicit 12px side margins, 0 bottom to rely on container padding */
-    border-radius: 16px;
-    overflow: hidden;
+    width: 100%;
+    height: 600px;
+    position: relative;
+    margin-bottom: 24px;
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 0;
+    overflow: visible;
 }
 
-.heroImage img {
+.heroImageImg {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
     display: block;
+}
+
+.gradientOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+    background: linear-gradient(to bottom, var(--bg-primary) 0%, transparent 100%);
+    pointer-events: none;
 }
 
 /* Body (Highlights) - Magazine Card Style */
@@ -156,10 +171,6 @@
 
 /* Responsive adjustments if needed */
 @media (max-width: 640px) {
-    .titleText {
-        font-size: 1.75rem;
-    }
-
     .footerTitle {
         font-size: 1.5rem;
     }

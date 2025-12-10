@@ -1,7 +1,7 @@
 .container {
     padding: 24px 16px;
-    background-color: #ffffff;
-    border-top: 1px solid #E5E7EB;
+    background-color: var(--bg-surface);
+    border-top: 1px solid var(--border-subtle);
 }
 
 .header {
@@ -72,7 +72,7 @@
 }
 
 .chevron:hover {
-    background-color: #ffffff;
+    background-color: var(--bg-surface);
     transform: translateY(-50%) scale(1.05);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }

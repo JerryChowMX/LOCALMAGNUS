@@ -1,5 +1,4 @@
 // ... imports
-import { ImageSlider } from '../../../components/Media/ImageSlider';
 import styles from './ResumenComponents.module.css';
 import { Heading, Text } from '../../../components/Typography/Typography';
 
@@ -56,15 +55,12 @@ export const ResumenHeader = ({ date, title, dek, imageUrl }: ResumenHeaderProps
             {/* Hero Image */}
             {imageUrl && (
                 <div className={styles.heroImage}>
-                    <ImageSlider
-                        images={[
-                            {
-                                src: imageUrl,
-                                alt: title,
-                                caption: ''
-                            }
-                        ]}
+                    <img
+                        src={imageUrl}
+                        alt={title}
+                        className={styles.heroImageImg}
                     />
+                    <div className={styles.gradientOverlay}></div>
                 </div>
             )}
         </div>

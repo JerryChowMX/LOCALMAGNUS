@@ -4,8 +4,8 @@
     justify-content: center;
     width: 100%;
     padding: var(--spacing-md);
-    background-color: white;
-    border: 1px solid #D1D5DB;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
     /* Visible gray border */
     border-radius: var(--radius-lg);
     cursor: pointer;
@@ -30,7 +30,7 @@
 }
 
 .social-button--apple .social-button__icon {
-    color: black;
+    color: var(--text-primary);
 }
 
 /* Google icon usually has its own colors, but Tabler icons are monochrome by default.

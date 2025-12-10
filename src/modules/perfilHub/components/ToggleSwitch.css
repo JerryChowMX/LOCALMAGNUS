@@ -30,7 +30,7 @@
     width: 20px;
     left: 2px;
     bottom: 2px;
-    background-color: white;
+    background-color: var(--bg-primary);
     transition: .4s;
     border-radius: 50%;
 }

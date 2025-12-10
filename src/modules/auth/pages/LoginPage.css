@@ -2,7 +2,7 @@
     display: flex;
     justify-content: center;
     min-height: 100vh;
-    background-color: white;
+    background-color: var(--bg-primary);
 }
 
 .login-page__form-card {
