@@ -36,7 +36,7 @@ export const ArticleQuote = ({ quote, author }: ArticleQuoteProps) => {
         <div className="quote-wrapper">
 
             {/* Component Container */}
-            <div style={{ position: 'relative' }}>
+            <div className="quote-content-container">
                 <div
                     className="quote-card"
                     onClick={toggleAuthor}

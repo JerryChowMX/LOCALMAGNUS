@@ -1,24 +1,40 @@
 import React from 'react';
-import './styles.css';
+import { SparklesIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/solid';
+import './AiChatBarCollapsed.css';
 
 interface AiChatBarCollapsedProps {
-    onClick: () => void;
+    onChatClick?: () => void;
+    onCommentsClick?: () => void;
+    commentCount?: number;
     style?: React.CSSProperties;
     className?: string;
 }
 
-export const AiChatBarCollapsed: React.FC<AiChatBarCollapsedProps> = ({ onClick, style, className }) => {
+export const AiChatBarCollapsed: React.FC<AiChatBarCollapsedProps> = ({
+    onChatClick,
+    onCommentsClick,
+    commentCount = 12,
+    style,
+    className
+}) => {
     return (
-        <div className={`ai-chat-bar-container ${className || ''}`} style={style}>
-            <div className="ai-chat-bar-collapsed" onClick={onClick}>
-                <span className="ai-chat-bar-placeholder">Pregúntale a MAGNUS...</span>
-                <div className="ai-chat-bar-icon">
-                    {/* Simple Arrow Icon */}
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
+        <div className={`chatBarContainer ${className || ''}`} style={style}>
+            {/* Chat Section with Tech Glow Gradient */}
+            <button className="chatButton" onClick={onChatClick}>
+                <div className="chatIconWrapper">
+                    <SparklesIcon style={{ width: '20px', height: '20px' }} />
                 </div>
-            </div>
+                <span className="chatTextGradient">Chat</span>
+            </button>
+
+            {/* Divider */}
+            <div className="divider"></div>
+
+            {/* Comments Section */}
+            <button className="commentsButton" onClick={onCommentsClick}>
+                <ChatBubbleLeftRightIcon style={{ width: '20px', height: '20px' }} />
+                <span>{commentCount}</span>
+            </button>
         </div>
     );
 };

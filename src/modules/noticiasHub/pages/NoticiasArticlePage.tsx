@@ -56,6 +56,9 @@ export const NoticiasArticlePage: React.FC = () => {
             />
 
             <Section padding="none">
+                <Section padding="md">
+                    <Display align="center" className="noticias-article-title">{article.title}</Display>
+                </Section>
                 <div className="noticias-article-hero">
                     <ZoomableImage
                         src={imageUrl}
@@ -63,16 +66,12 @@ export const NoticiasArticlePage: React.FC = () => {
                         className="noticias-article-image"
 
                     />
+                    <div className="noticias-article-gradient-overlay"></div>
                 </div>
             </Section>
 
             <Section padding="md">
                 <Stack spacing="lg" align="center">
-                    <Display align="center" className="noticias-article-title">{article.title}</Display>
-
-                    <Body size="sm" color="secondary" align="center" className="noticias-article-instruction">
-                        Elige como quieres consumir esta noticia:
-                    </Body>
 
                     <FormatSelectionGrid basePath={`/NoticiasHub/${date}/${slug}`} />
 

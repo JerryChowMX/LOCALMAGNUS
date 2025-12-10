@@ -1,0 +1,66 @@
+.article-gallery-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.article-gallery-container.with-caption {
+    margin-bottom: 8px;
+}
+
+/* Hero Image (First Image) */
+.gallery-hero {
+    cursor: pointer;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    position: relative;
+    border-radius: 0;
+    /* Or use a variable if we want rounded corners, but user seems to like sharp/minimal */
+}
+
+.gallery-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.gallery-hero:hover .gallery-hero-img {
+    transform: scale(1.05);
+}
+
+/* Thumbnail Grid (Rest of Images) */
+.gallery-thumbnails {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.gallery-thumbnail {
+    cursor: pointer;
+    overflow: hidden;
+    aspect-ratio: 1;
+    position: relative;
+}
+
+.gallery-thumbnail-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.gallery-thumbnail:hover .gallery-thumbnail-img {
+    transform: scale(1.05);
+}
+
+/* Caption */
+.gallery-caption {
+    font-family: var(--font-family-body, "Inter", sans-serif);
+    font-size: 0.875rem;
+    color: var(--text-secondary, #6B7280);
+    font-style: italic;
+    margin-bottom: 24px;
+    text-align: center;
+}

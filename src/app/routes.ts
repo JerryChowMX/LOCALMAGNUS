@@ -62,7 +62,9 @@ export const routes = {
     PLAYGROUND_AUDIO_SUMMARY: '/dev/playground/components/audio-summary',
     PLAYGROUND_COMMENTS: '/dev/playground/components/comments',
     PLAYGROUND_ARTICLE_COMMENTS_ENTRY: '/dev/playground/components/articlecomponents/comments-entry',
+    PLAYGROUND_NOTICIAS_ARTICLE_LANDING: '/dev/playground/noticias-article-landing',
 
+    PLAYGROUND_AI_CHAT_BAR: '/dev/playground/components/articlecomponents/aichatbar',
     PLAYGROUND_HEADERS: '/dev/playground/home/headers',
 
     // Strapi Integration Test

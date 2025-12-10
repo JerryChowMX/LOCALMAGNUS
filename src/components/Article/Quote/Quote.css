@@ -7,14 +7,18 @@
     margin-right: auto;
 }
 
+.quote-content-container {
+    position: relative;
+}
+
 .quote-card {
-    background-color: var(--bg-surface, #fff);
+    background-color: var(--bg-secondary);
     padding: 32px;
     border-radius: 0;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    box-shadow: var(--shadow-1);
     text-align: center;
     cursor: pointer;
-    border: 1px solid var(--border-subtle, #F3F4F6);
+    border: 1px solid var(--border-subtle);
     position: relative;
     min-height: 200px;
     display: flex;
@@ -35,9 +39,9 @@
     grid-area: 1 / 1;
     font-size: 1.125rem;
     line-height: 1.7;
-    color: var(--text-secondary, #4B5563);
+    color: var(--text-secondary);
     margin: 0 0 16px 0;
-    font-family: var(--font-family-body, "Inter"), sans-serif;
+    font-family: var(--font-family-body), sans-serif;
     font-style: italic;
     opacity: 1;
     transition: opacity 0.3s ease;
@@ -70,10 +74,10 @@
 }
 
 .quote-author-name {
-    font-family: var(--font-family-display, "Blinker"), sans-serif;
+    font-family: var(--font-family-display), sans-serif;
     font-weight: 700;
     font-size: 1.5rem;
-    color: var(--text-primary, #111827);
+    color: var(--text-primary);
 }
 
 .quote-actions {
@@ -86,8 +90,8 @@
 }
 
 .quote-action-btn {
-    background: var(--bg-surface, #fff);
-    border: 1px solid var(--border-subtle, #E5E7EB);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
     border-radius: 50%;
     width: 32px;
     height: 32px;
@@ -95,8 +99,8 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: var(--text-secondary, #6B7280);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    color: var(--text-secondary);
+    box-shadow: var(--shadow-1);
     transition: all 0.2s;
 }
 
@@ -107,5 +111,5 @@
 
 .quote-icon-main {
     margin-bottom: 16px;
-    color: #E5E7EB;
+    color: var(--text-disabled);
 }

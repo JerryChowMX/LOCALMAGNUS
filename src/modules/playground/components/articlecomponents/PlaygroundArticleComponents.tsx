@@ -103,6 +103,12 @@ export const PlaygroundArticleComponents = () => {
                         description="Design for the comment section entry point at the bottom of an article."
                     />
 
+                    <PlaygroundLink
+                        to={routes.PLAYGROUND_AI_CHAT_BAR}
+                        title="AI CHAT BAR"
+                        description="Interactive AI Chat interface."
+                    />
+
                 </div>
             </div>
         </PageWrapper>

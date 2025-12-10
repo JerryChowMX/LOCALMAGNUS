@@ -1,0 +1,77 @@
+/* AiChatBarCollapsed.css */
+
+.chatBarContainer {
+    position: relative;
+    height: 44px;
+    /* Default height */
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 9999px;
+    /* Pill shape */
+    padding: 4px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease;
+    width: fit-content;
+}
+
+.chatButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 9999px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    transition: transform 0.2s ease;
+}
+
+.chatButton:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.chatIconWrapper {
+    color: #4F46E5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chatTextGradient {
+    background: linear-gradient(to right, #4F46E5, #9333EA);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.divider {
+    width: 1px;
+    height: 20px;
+    background-color: #E5E7EB;
+    margin: 0 2px;
+}
+
+.commentsButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 9999px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.commentsButton:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}

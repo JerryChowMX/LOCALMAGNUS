@@ -70,6 +70,8 @@ const PlaygroundResumenLowerDesign = lazy(() => import('../modules/playground/co
 const PlaygroundResumenStaging = lazy(() => import('../modules/playground/components/resumen-ejecutivo/PlaygroundResumenStaging').then(module => ({ default: module.PlaygroundResumenStaging })));
 const PlaygroundAudioSummary = lazy(() => import('../modules/playground/components/audio-summary/PlaygroundAudioSummary').then(module => ({ default: module.PlaygroundAudioSummary })));
 const PlaygroundComments = lazy(() => import('../modules/playground/components/comments/PlaygroundComments').then(module => ({ default: module.PlaygroundComments })));
+const PlaygroundNoticiasArticleLanding = lazy(() => import('../modules/playground/PlaygroundNoticiasArticleLanding').then(module => ({ default: module.PlaygroundNoticiasArticleLanding })));
+const PlaygroundAiChatBar = lazy(() => import('../modules/playground/components/articlecomponents/PlaygroundAiChatBar').then(module => ({ default: module.PlaygroundAiChatBar })));
 const StrapiTestPage = lazy(() => import('../modules/noticiasHub/pages/StrapiTestPage'));
 
 const StandardOneRoute = lazy(() => import('./routes/article/StandardOneRoute').then(module => ({ default: module.StandardOneRoute })));
@@ -193,6 +195,8 @@ export const AppRouter = () => {
                         <Route path={routes.PLAYGROUND_AUDIO_SUMMARY} element={<PlaygroundAudioSummary />} />
                         <Route path={routes.PLAYGROUND_COMMENTS} element={<PlaygroundComments />} />
                         <Route path={routes.PLAYGROUND_ARTICLE_COMMENTS_ENTRY} element={<PlaygroundArticleCommentsEntry />} />
+                        <Route path={routes.PLAYGROUND_NOTICIAS_ARTICLE_LANDING} element={<PlaygroundNoticiasArticleLanding />} />
+                        <Route path={routes.PLAYGROUND_AI_CHAT_BAR} element={<PlaygroundAiChatBar />} />
 
                         {/* Staging Routes */}
                         <Route path="/articulo/:slug" element={<StandardOneRoute />} />

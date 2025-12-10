@@ -3,6 +3,7 @@ import { PageWrapper } from '../../components/Layout/PageWrapper';
 import { Heading, Text } from '../../components/Typography/Typography';
 import { HeaderContent } from '../../modules/noticiasHub/components/HeaderContent';
 import { routes } from '../../app/routes';
+import { getMonterreyDate } from '../../lib/dateUtils';
 
 // Simple list component for playground menu
 const PlaygroundLink = ({ to, title, description }: { to: string, title: string, description: string }) => (
@@ -16,6 +17,7 @@ const PlaygroundLink = ({ to, title, description }: { to: string, title: string,
 
 export const PlaygroundComponents = () => {
     const navigate = useNavigate();
+    const today = getMonterreyDate();
 
     return (
         <PageWrapper>
@@ -49,6 +51,18 @@ export const PlaygroundComponents = () => {
                         to={routes.PLAYGROUND_COMMENTS}
                         title="Comment Section"
                         description="Comments section component."
+                    />
+
+                    <PlaygroundLink
+                        to={routes.noticiasHub(today)}
+                        title={`NoticiasHub/${today}`}
+                        description="Direct link to today's NoticiasHub."
+                    />
+
+                    <PlaygroundLink
+                        to={routes.PLAYGROUND_NOTICIAS_ARTICLE_LANDING}
+                        title="Noticias Article Landing (Playground)"
+                        description="Clone of the 'Format Selection' page for design iteration."
                     />
 
                 </div>
