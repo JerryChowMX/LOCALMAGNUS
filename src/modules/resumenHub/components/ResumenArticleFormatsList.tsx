@@ -15,7 +15,7 @@ export const ResumenArticleFormatsList: React.FC<ResumenArticleFormatsListProps>
     const navigate = useNavigate();
 
     const options = [
-        { label: 'Nota Original', icon: <Icons.original size={48} stroke={1.5} />, path: 'original', format: 'nota_original' as const },
+        { label: 'Leer Nota Original', icon: <Icons.original size={48} stroke={1.5} />, path: 'original', format: 'nota_original' as const },
         { label: 'Resumen Ejecutivo', icon: <Icons.summary size={48} stroke={1.5} />, path: 'ejecutivo', format: 'resumen_ejecutivo' as const },
         { label: 'Resumen de Audio', icon: <Icons.podcast size={48} stroke={1.5} />, path: 'audio', format: 'audio' as const },
         { label: 'Presentación Guiada', icon: <Icons.guided size={48} stroke={1.5} />, path: 'guiada', format: 'guiada' as const },

@@ -34,12 +34,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .magnus-comments-body {
     flex: 1;
     padding: var(--spacing-xl);
     overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     gap: var(--spacing-lg);
@@ -191,6 +193,7 @@
 .magnus-comments-input-area {
     padding: var(--spacing-lg) var(--spacing-xl);
     border-top: 1px solid var(--border-subtle);
+    flex-shrink: 0;
 }
 
 .magnus-comments-input-wrapper {

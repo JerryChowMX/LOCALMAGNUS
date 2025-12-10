@@ -175,7 +175,7 @@ export const NoticiasArticleFormatPage: React.FC = () => {
                 // Fallback for 'original' if mapping failed or generic content needed
                 return (
                     <Stack spacing="md">
-                        <Headline level={3}>Nota Original</Headline>
+                        <Headline level={3}>Leer Nota Original</Headline>
                         <Body>{String(article.blocks || "No content found")}</Body>
                     </Stack>
                 );

@@ -129,17 +129,18 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, title, onLike, is
                             cursor: 'pointer',
                             fontSize: '1.25rem',
                             color: 'var(--text-primary)',
-                            width: '32px',
+                            width: '48px',
+                            height: '48px',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             padding: 0
                         }}
                     >
-                        {isPlaying ? <Icons.pause size={16} fill="currentColor" stroke={0} /> : <Icons.play size={16} fill="currentColor" stroke={0} />}
+                        {isPlaying ? <Icons.pause size={20} fill="currentColor" stroke={0} /> : <Icons.play size={20} fill="currentColor" stroke={0} />}
                     </button>
-                    <Text variant="caption" style={{ color: 'var(--text-primary)', fontWeight: 600, fontFamily: '"Blinker", sans-serif', fontSize: '0.9rem', whiteSpace: 'nowrap' }}>
-                        {formatTime(duration || 0)}
+                    <Text variant="caption" style={{ color: 'var(--text-primary)', fontWeight: 600, fontFamily: '"Blinker", sans-serif', fontSize: '0.9rem', whiteSpace: 'nowrap', minWidth: '50px', textAlign: 'center' }}>
+                        {duration > 0 ? `-${formatTime(duration - currentTime)}` : '00:00'}
                     </Text>
                 </div>
 

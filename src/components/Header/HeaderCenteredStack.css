@@ -76,6 +76,17 @@
     text-transform: uppercase;
     color: var(--text-primary);
     margin-bottom: var(--spacing-xs);
+
+    /* Button reset for clickable logo */
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.header-centered-stack__logo:hover {
+    opacity: 0.8;
 }
 
 /* Divider */

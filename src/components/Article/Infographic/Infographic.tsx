@@ -30,23 +30,6 @@ export const Infographic = ({ imageUrl, caption, author }: InfographicProps) => 
                     </div>
                 </div>
             </div>
-
-            {/* Content Section */}
-            <div className="infographic-content">
-                <span className="infographic-label">
-                    Infografía
-                </span>
-
-                <div className="infographic-caption">
-                    {caption}
-                </div>
-
-                {author && (
-                    <div className="infographic-author">
-                        Por {author}
-                    </div>
-                )}
-            </div>
         </div>
     );
 };

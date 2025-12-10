@@ -89,7 +89,12 @@ export const HeaderCenteredStack: React.FC<HeaderCenteredStackProps> = ({
                 </button>
             )}
 
-            <div className="header-centered-stack__logo">MAGNUS</div>
+            <button
+                className="header-centered-stack__logo"
+                onClick={() => navigate('/')}
+            >
+                MAGNUS
+            </button>
             <div className="header-centered-stack__divider"></div>
 
             <div className="header-centered-stack__date-picker">

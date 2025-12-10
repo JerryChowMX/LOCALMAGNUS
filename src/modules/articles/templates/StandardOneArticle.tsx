@@ -19,6 +19,7 @@ import {
     SingleImage
 } from '../../../components/Article';
 import { RecommendedArticles } from '../../../components/Article/RecommendedArticles/RecommendedArticles';
+import { AiCommentsExpanded } from '../../../components/AiChatBar/AiCommentsExpanded';
 import type { ArticleStandard } from '../../../types/articles';
 import { STRAPI_ORIGIN } from '../../../lib/env';
 
@@ -31,6 +32,7 @@ interface StandardOneArticleProps {
 export const StandardOneArticle: FC<StandardOneArticleProps> = ({ article }) => {
     const navigate = useNavigate();
     const [isChatOpen, setIsChatOpen] = useState(false);
+    const [isCommentsOpen, setIsCommentsOpen] = useState(false);
 
     const {
         title,
@@ -323,12 +325,17 @@ export const StandardOneArticle: FC<StandardOneArticleProps> = ({ article }) => 
             {/* 3. AI Chat Bar */}
             <AiChatBarCollapsed
                 onChatClick={() => setIsChatOpen(true)}
-                onCommentsClick={() => setIsChatOpen(true)}
+                onCommentsClick={() => setIsCommentsOpen(true)}
             />
 
             {/* Expanded Chat Modal */}
             {isChatOpen && (
                 <AiChatBarExpanded onClose={() => setIsChatOpen(false)} />
+            )}
+
+            {/* Comments Modal */}
+            {isCommentsOpen && (
+                <AiCommentsExpanded onClose={() => setIsCommentsOpen(false)} />
             )}
 
         </PageWrapper>
