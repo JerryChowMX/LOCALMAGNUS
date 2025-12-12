@@ -30,6 +30,8 @@ interface StandardOneArticleProps {
 }
 
 export const StandardOneArticle: FC<StandardOneArticleProps> = ({ article }) => {
+    console.log('StandardOneArticle rendering with:', article);
+    console.log('Content Blocks:', article.contentBlocks);
     const navigate = useNavigate();
     const [isChatOpen, setIsChatOpen] = useState(false);
     const [isCommentsOpen, setIsCommentsOpen] = useState(false);
@@ -128,8 +130,9 @@ export const StandardOneArticle: FC<StandardOneArticleProps> = ({ article }) => 
                     {/* 5. Article body text */}
                     <div className="standard-article-content">
                         {contentBlocks.map((block, index) => {
-                            // Normalize the component name to handle various Strapi formats (e.g. 'article.quote', 'ComponentArticleQuote')
+                            // Normalize the board component name to handle various Strapi formats (e.g. 'article.quote', 'ComponentArticleQuote')
                             const componentType = block.__component || block.__typename || block.type;
+                            console.log('Rendering Block:', componentType, block);
 
                             // 1. RICH TEXT
                             if (
@@ -167,11 +170,12 @@ export const StandardOneArticle: FC<StandardOneArticleProps> = ({ article }) => 
                                 componentType === 'ComponentArticleGallery'
                             ) {
                                 // Normalize images to StrapiGalleryImage[]
-                                const images = (block.images?.data || block.images || []).map((img: any) => ({
+                                // We can now assume block.images is an array of normalized objects from articleApi
+                                const images = (block.images || []).map((img: any) => ({
                                     id: img.id,
-                                    url: img.attributes?.url ? `${STRAPI_ORIGIN}${img.attributes.url}` : (img.url?.startsWith('http') ? img.url : `${STRAPI_ORIGIN}${img.url}`),
-                                    caption: img.attributes?.caption || img.caption,
-                                    alt: img.attributes?.alternativeText || img.alt
+                                    url: getImageUrl(img.url),
+                                    caption: img.caption,
+                                    alt: img.alternativeText || img.alt
                                 }));
 
                                 return (
@@ -227,15 +231,14 @@ export const StandardOneArticle: FC<StandardOneArticleProps> = ({ article }) => 
                                 componentType === 'ComponentArticleInfographic'
                             ) {
                                 // Extract single image (handle both 'image' and 'images' fields)
-                                let img = block.image?.data?.attributes || block.image?.data || block.image;
+                                // We rely on normalizeArticle to have put the correct object in 'image' or 'images' array
+                                let img = block.image;
 
                                 // If not found in 'image', check 'images' (plural) for illustrations/infographics
                                 if (!img) {
-                                    const images = block.images?.data || block.images;
+                                    const images = block.images;
                                     if (Array.isArray(images) && images.length > 0) {
-                                        img = images[0].attributes || images[0];
-                                    } else if (images?.attributes) {
-                                        img = images.attributes;
+                                        img = images[0];
                                     }
                                 }
 

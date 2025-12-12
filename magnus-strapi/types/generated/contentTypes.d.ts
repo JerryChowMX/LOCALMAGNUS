@@ -443,6 +443,7 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
   };
   attributes: {
     ai_metadata: Schema.Attribute.JSON & Schema.Attribute.Private;
+    article_date: Schema.Attribute.Date;
     audio_summary: Schema.Attribute.Component<'ai.audio-summary', false>;
     author: Schema.Attribute.Relation<'manyToOne', 'api::author.author'>;
     category: Schema.Attribute.Relation<'manyToOne', 'api::category.category'>;
@@ -463,7 +464,7 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     excerpt: Schema.Attribute.Text &
       Schema.Attribute.SetMinMaxLength<{
-        maxLength: 300;
+        maxLength: 380;
       }>;
     hero_image: Schema.Attribute.Media<'images'>;
     hero_image_caption: Schema.Attribute.String &
@@ -497,7 +498,7 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
       Schema.Attribute.Required &
       Schema.Attribute.Unique &
       Schema.Attribute.SetMinMaxLength<{
-        maxLength: 200;
+        maxLength: 130;
       }>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

@@ -45,7 +45,54 @@ function normalizeArticle(data: any): StrapiArticle {
     tags: (attrs.tags || attrs.tags?.data)?.map((tag: any) => ({
       slug: tag.slug || tag.attributes?.slug
     })) || [],
-    blocks: attrs.blocks || attrs.content || attrs.content_blocks || [],
+    blocks: (attrs.blocks || attrs.content || attrs.content_blocks || []).map((block: any) => {
+      // Handle Single Image Component Normalization
+      if (block.__component === 'content.single-image') {
+        const imgData = block.image || block.image?.data;
+        return {
+          ...block,
+          image: imgData ? {
+            url: imgData.url || imgData.attributes?.url,
+            alternativeText: imgData.alternativeText || imgData.attributes?.alternativeText,
+            caption: imgData.caption || imgData.attributes?.caption,
+            width: imgData.width || imgData.attributes?.width,
+            height: imgData.height || imgData.attributes?.height
+          } : undefined
+        };
+      }
+
+      // Handle Gallery Component Normalization
+      if (block.__component === 'content.gallery') {
+        const imagesData = block.images || block.images?.data;
+        return {
+          ...block,
+          images: Array.isArray(imagesData) ? imagesData.map((img: any) => ({
+            url: img.url || img.attributes?.url,
+            alternativeText: img.alternativeText || img.attributes?.alternativeText,
+            caption: img.caption || img.attributes?.caption,
+            width: img.width || img.attributes?.width,
+            height: img.height || img.attributes?.height
+          })) : []
+        };
+      }
+
+      // Handle Illustrations Component Normalization
+      if (block.__component === 'content.illustrations') {
+        const imagesData = block.images || block.images?.data;
+        return {
+          ...block,
+          images: Array.isArray(imagesData) ? imagesData.map((img: any) => ({
+            url: img.url || img.attributes?.url,
+            alternativeText: img.alternativeText || img.attributes?.alternativeText,
+            caption: img.caption || img.attributes?.caption,
+            width: img.width || img.attributes?.width,
+            height: img.height || img.attributes?.height
+          })) : []
+        };
+      }
+
+      return block;
+    }),
     summary: attrs.summary || attrs.excerpt || '',
     audioUrl: attrs.audio?.url || attrs.audio_url || undefined,
     audio_summary: attrs.audio_summary ? {
@@ -139,24 +186,21 @@ export const articleApi = {
       'populate[content_blocks][on][content.single-image][populate]': '*',
       'populate[content_blocks][on][content.illustrations][populate]': '*',
       'populate[content_blocks][on][content.infographics][populate]': '*',
-      'populate[content_blocks][on][content.audio][populate]': '*',
       'populate[content_blocks][on][content.gallery][populate]': '*',
       'populate[content_blocks][on][content.quote][populate]': '*',
       'populate[content_blocks][on][content.rich-text][populate]': '*',
+      'populate[content_blocks][on][content.audio][populate]': '*',
+      'populate[content_blocks][on][content.embed][populate]': '*',
       'populate[audio_summary][populate]': '*',
       'populate[video_summary][populate]': '*',
       'populate[ppt_summary][populate]': '*',
       'populate[infographic_summary][populate]': '*',
-      'populate[hero_image][fields][0]': 'url',
-      'populate[hero_image][fields][1]': 'alternativeText',
-      'populate[hero_image][fields][2]': 'caption',
-      'populate[hero_image][fields][3]': 'width',
-      'populate[hero_image][fields][4]': 'height',
+      'populate[hero_image][populate]': '*',
       'populate[author][populate]': '*',
       'populate[category][populate]': '*',
       'populate[tags][populate]': '*',
-      'populate[related_articles][populate][0]': 'hero_image',
-      'populate[related_articles][populate][1]': 'category'
+      'populate[related_articles][populate][hero_image][populate]': '*',
+      'populate[related_articles][populate][category][populate]': '*'
     });
 
     // Add status parameter for draft preview support

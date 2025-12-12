@@ -47,7 +47,7 @@ export const ArticleGallery = ({ images, caption }: ArticleGalleryProps) => {
                     <div className="gallery-thumbnails">
                         {visibleThumbnails.map((img, index) => (
                             <div
-                                key={img.id}
+                                key={img.id || index}
                                 className="gallery-thumbnail"
                                 onClick={() => handleImageClick(index + 1)} // Index 0 is hero, so thumbs start at 1
                             >
