@@ -244,19 +244,19 @@
     align-items: center;
     justify-content: center;
     padding: 8px 4px;
-    background: rgba(255, 255, 255, 0.05);
-    /* Subtle */
-    border: 1px solid var(--border-subtle);
+    background: rgba(0, 0, 0, 0.04);
+    /* Subtle gray tint for light mode */
+    border: none;
     border-radius: 0;
     cursor: pointer;
     min-width: auto;
     text-align: center;
     height: 100%;
+    transition: background 0.2s;
 }
 
 .ai-quick-action-chip:active {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--color-brand-orange);
+    background: rgba(0, 0, 0, 0.08);
     color: var(--color-brand-orange);
 }
 
