@@ -26,17 +26,18 @@ export const useAiChat = (context: AiChatUsedProps['context'] = 'global') => {
         };
     }, []);
 
-    const sendMessage = useCallback(() => {
-        if (!input.trim()) return;
+    const sendMessage = useCallback((textOverride?: string) => {
+        const textToSend = textOverride || input;
+        if (!textToSend.trim()) return;
 
         const userMessage: ChatMessage = {
-            text: input,
+            text: textToSend,
             sender: 'user',
             timestamp: Date.now()
         };
 
         // Track usage
-        trackAiChatUsed(context, input.length);
+        trackAiChatUsed(context, textToSend.length);
 
         setMessages(prev => [...prev, userMessage]);
         setInput('');

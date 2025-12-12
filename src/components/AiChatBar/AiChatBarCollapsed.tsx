@@ -34,7 +34,6 @@ export const AiChatBarCollapsed: React.FC<AiChatBarCollapsedProps> = ({
             <button className="commentsButton" onClick={onCommentsClick}>
                 <ChatBubbleLeftRightIcon style={{ width: '20px', height: '20px' }} />
                 <span>Comentar</span>
-                <span>{commentCount}</span>
             </button>
         </div>
     );

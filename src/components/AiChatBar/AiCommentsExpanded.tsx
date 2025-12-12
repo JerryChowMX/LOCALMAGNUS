@@ -190,7 +190,7 @@ export const AiCommentsExpanded: React.FC<AiCommentsExpandedProps> = ({ onClose 
                         background: 'rgba(0,0,0,0.5)',
                         color: 'white',
                         border: 'none',
-                        borderRadius: '50%',
+                        borderRadius: '0',
                         width: '32px',
                         height: '32px',
                         cursor: 'pointer',

@@ -10,11 +10,11 @@
     /* Default height */
     display: flex;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-radius: 9999px;
-    /* Pill shape */
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 0;
+    /* Pill shape removed */
     padding: 4px;
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.4);
@@ -27,7 +27,7 @@
     align-items: center;
     gap: 8px;
     padding: 8px 16px;
-    border-radius: 9999px;
+    border-radius: 0;
     border: none;
     background: transparent;
     cursor: pointer;
@@ -64,7 +64,7 @@
     align-items: center;
     gap: 8px;
     padding: 8px 16px;
-    border-radius: 9999px;
+    border-radius: 0;
     border: none;
     background: transparent;
     cursor: pointer;
