@@ -31,13 +31,16 @@
 
   /* Borders */
   --border-color: #E2E8F0;
+
+  /* Podcast */
+  --podcast-blob-color: #E0F2FE;
 }
 
 [data-theme='dark'] {
   /* Dark Mode Overrides */
   --magnus-blue: #38BDF8;
   /* Sky-400 for better contrast */
-  --magnus-blue-light: rgba(56, 189, 248, 0.1);
+  --magnus-blue-light: rgba(56, 189, 248, 0.15);
 
   --text-primary: #F1F5F9;
   --text-secondary: #94A3B8;
@@ -49,4 +52,7 @@
 
   --border-color: #334155;
   /* Slate-700 */
+
+  /* Podcast - Deep blue glow */
+  --podcast-blob-color: rgba(56, 189, 248, 0.2);
 }

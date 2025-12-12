@@ -233,7 +233,7 @@
    =========================================== */
 
 .podcast-hero {
-    background: #F0F9FF;
+    background: var(--magnus-blue-light, #F0F9FF);
     padding: 40px;
     min-height: 500px;
     display: flex;
@@ -243,17 +243,27 @@
     overflow: hidden;
 }
 
+/* Dark mode podcast hero - solid dark blue */
+[data-theme='dark'] .podcast-hero {
+    background: #082F49;
+}
+
 .podcast-blob {
     position: absolute;
     top: -50px;
     right: -50px;
     width: 300px;
     height: 300px;
-    background: #E0F2FE;
+    background: var(--podcast-blob-color, #E0F2FE);
     border-radius: 50%;
     filter: blur(60px);
     z-index: 0;
     animation: podcastBlobFloat 10s infinite alternate;
+}
+
+/* Dark mode - hide the blob */
+[data-theme='dark'] .podcast-blob {
+    display: none;
 }
 
 @keyframes podcastBlobFloat {
@@ -277,7 +287,7 @@
     letter-spacing: 2px;
     margin-bottom: 16px;
     font-size: 12px;
-    color: #0284C7;
+    color: var(--magnus-blue, #0284C7);
     font-weight: 600;
 }
 
@@ -285,7 +295,7 @@
     font-family: 'Bitter', serif;
     font-size: 42px;
     line-height: 1.15;
-    color: #0369A1;
+    color: var(--magnus-blue, #0369A1);
     margin: 0;
     font-style: italic;
     font-weight: 400;
@@ -312,7 +322,7 @@
 .podcast-play-btn {
     font-size: 48px;
     cursor: pointer;
-    color: #0369A1;
+    color: var(--magnus-blue, #0369A1);
     background: none;
     border: none;
     padding: 0;
@@ -326,13 +336,13 @@
 
 .podcast-speed-btn {
     background: none;
-    border: 1px solid #0369A1;
+    border: 1px solid var(--magnus-blue, #0369A1);
     width: 40px;
     height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #0369A1;
+    color: var(--magnus-blue, #0369A1);
     font-weight: bold;
     cursor: pointer;
     font-size: 12px;
@@ -341,20 +351,20 @@
 }
 
 .podcast-speed-btn:hover {
-    background: rgba(3, 105, 161, 0.1);
+    background: var(--magnus-blue-light, rgba(3, 105, 161, 0.1));
 }
 
 .podcast-time {
     font-family: monospace;
     font-size: 16px;
-    color: #0369A1;
+    color: var(--magnus-blue, #0369A1);
     font-weight: bold;
 }
 
 .podcast-progress-track {
     width: 100%;
     height: 3px;
-    background: rgba(3, 105, 161, 0.2);
+    background: var(--magnus-blue-light, rgba(3, 105, 161, 0.2));
     cursor: pointer;
     position: relative;
     transition: height 0.15s ease;
@@ -377,7 +387,7 @@
 
 .podcast-progress-fill {
     height: 100%;
-    background: #0369A1;
+    background: var(--magnus-blue, #0369A1);
     position: relative;
 }
 
@@ -389,7 +399,7 @@
     transform: translate(50%, -50%) scale(0);
     width: 14px;
     height: 14px;
-    background: #0369A1;
+    background: var(--magnus-blue, #0369A1);
     border-radius: 50%;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -403,5 +413,160 @@
 
 .podcast-progress-track.scrubbing .podcast-progress-thumb {
     transform: translate(50%, -50%) scale(1.3);
-    box-shadow: 0 0 0 6px rgba(3, 105, 161, 0.15), 0 2px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 0 6px var(--magnus-blue-light, rgba(3, 105, 161, 0.15)), 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* ===========================================
+   INFOGRAFIA VIEWER
+   =========================================== */
+
+.infografia-preview {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+    aspect-ratio: 9 / 16;
+    background: #F1F5F9;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.infografia-preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.infografia-preview:hover .infografia-preview-image {
+    transform: scale(1.02);
+}
+
+.infografia-expand-icon {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* Lightbox */
+.infografia-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: fadeInContent 0.2s ease-out;
+}
+
+.infografia-close-btn {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 8px;
+    z-index: 10001;
+}
+
+.infografia-zoom-controls {
+    position: absolute;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 10001;
+}
+
+.infografia-zoom-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.infografia-zoom-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.infografia-zoom-reset {
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.infografia-image-container {
+    width: 100%;
+    max-width: 600px;
+    height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.infografia-full-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+}
+
+.infografia-actions {
+    margin-top: 24px;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.infografia-download-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 30px;
+    padding: 12px 24px;
+    color: white;
+    font-family: var(--font-family-body);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+}
+
+.infografia-download-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.infografia-share-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 46px;
+    height: 46px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.infografia-share-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
 }

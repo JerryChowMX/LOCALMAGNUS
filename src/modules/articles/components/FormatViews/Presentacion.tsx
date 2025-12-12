@@ -47,7 +47,7 @@ export const Presentacion: FC<PresentacionProps> = ({ article }) => {
             </div>
 
             {/* Spacer for bottom sheet */}
-            <div className="article-format-spacer"></div>
+            <div style={{ height: '100px' }} />
         </div>
     );
 };

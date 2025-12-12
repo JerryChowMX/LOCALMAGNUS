@@ -12,9 +12,10 @@ export const routes = {
     articleDetail: (slug: string) => `/articles/${slug}`,
     audio: "/audio",
     epaper: "/epaper",
-    noticiasHub: (date: string) => `/NoticiasHub/${date}`,
-    noticiasArticle: (date: string, slug: string) => `/NoticiasHub/${date}/${slug}`,
-    noticiasFormat: (date: string, slug: string, format: string) => `/NoticiasHub/${date}/${slug}/${format}`,
+
+    // Notas Routes (replaces NoticiasHub)
+    notas: (date: string) => `/Notas/${date}`,
+    notasArticle: (date: string, slug: string) => `/Notas/${date}/${slug}`,
 
     resumenHub: (date: string) => `/ResumenHub/${date}`,
     resumenLas5: (date: string) => `/ResumenHub/${date}/Las5DelDia`,

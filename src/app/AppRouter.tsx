@@ -9,9 +9,10 @@ import { getMonterreyDate } from '../lib/dateUtils';
 
 // Lazy load all page components
 const HomeHubsPage = lazy(() => import('../modules/home/pages/HomeHubsPage').then(module => ({ default: module.HomeHubsPage })));
-const NoticiasHubPage = lazy(() => import('../modules/noticiasHub/pages/NoticiasHubPage').then(module => ({ default: module.NoticiasHubPage })));
-const NoticiasArticlePage = lazy(() => import('../modules/noticiasHub/pages/NoticiasArticlePage').then(module => ({ default: module.NoticiasArticlePage })));
-const NoticiasArticleFormatPage = lazy(() => import('../modules/noticiasHub/pages/NoticiasArticleFormatPage').then(module => ({ default: module.NoticiasArticleFormatPage })));
+
+// Notas Routes (replaces NoticiasHub)
+const NotasFeedPage = lazy(() => import('../modules/articles/pages/NotasFeedPage').then(module => ({ default: module.NotasFeedPage })));
+const UnifiedArticleView = lazy(() => import('../modules/articles/pages/UnifiedArticleView').then(module => ({ default: module.UnifiedArticleView })));
 
 const ResumenHubPage = lazy(() => import('../modules/resumenHub/pages/ResumenHubPage').then(module => ({ default: module.ResumenHubPage })));
 const ResumenLas5Page = lazy(() => import('../modules/resumenHub/pages/ResumenLas5Page').then(module => ({ default: module.ResumenLas5Page })));
@@ -132,11 +133,10 @@ export const AppRouter = () => {
                         <Route path={routes.forgotPassword} element={<ForgotPasswordPage />} />
                         <Route path={routes.authCallback} element={<AuthCallbackPage />} />
 
-                        {/* Noticias Hub Routes */}
-                        <Route path="/NoticiasHub" element={<RedirectToToday />} />
-                        <Route path="/NoticiasHub/:date" element={<NoticiasHubPage />} />
-                        <Route path="/NoticiasHub/:date/:slug" element={<NoticiasArticlePage />} />
-                        <Route path="/NoticiasHub/:date/:slug/:format" element={<NoticiasArticleFormatPage />} />
+                        {/* Notas Routes (replaces NoticiasHub) */}
+                        <Route path="/Notas" element={<RedirectToToday />} />
+                        <Route path="/Notas/:date" element={<NotasFeedPage />} />
+                        <Route path="/Notas/:date/:slug" element={<UnifiedArticleView />} />
 
                         {/* Resumen Hub Routes */}
                         <Route path="/ResumenHub" element={<RedirectToToday />} />
