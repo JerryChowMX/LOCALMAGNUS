@@ -106,6 +106,7 @@ export const HeaderCenteredStack: React.FC<HeaderCenteredStackProps> = ({
                     popperPlacement="bottom"
                     calendarClassName="magnus-datepicker"
                     locale="es"
+                    maxDate={new Date()}
                 />
             </div>
         </header>

@@ -11,7 +11,7 @@ export const useNoticiasDate = () => {
     const currentDate = date || getMonterreyDate();
 
     const handleDateChange = useCallback((newDate: string) => {
-        navigate(`/NoticiasHub/${newDate}`);
+        navigate(`/Notas/${newDate}`);
     }, [navigate]);
 
     return {

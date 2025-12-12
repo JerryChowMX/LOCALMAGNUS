@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { PageWrapper } from '../../../components/Layout/PageWrapper';
 import { Section, Grid } from '../../../components/Layout';
 import { Body } from '../../../components/Typography/Typography';
+import { EmptyState } from '../../../components/EmptyState/EmptyState';
 import { HeaderCenteredStack } from '../../../components/Header/HeaderCenteredStack';
 import { ArticleCard } from '../../noticiasHub/components/ArticleCard';
 import { useNoticiasDate } from '../../noticiasHub/hooks/useNoticiasDate';
@@ -58,7 +59,10 @@ export const NotasFeedPage: React.FC = () => {
                 )}
 
                 {!isLoading && !error && articles.length === 0 && (
-                    <Body>No hay artículos para esta fecha.</Body>
+                    <EmptyState
+                        title="¡Aún no hay noticias!"
+                        message="Parece que no hay artículos publicados para esta fecha. Usa el calendario para explorar otras fechas."
+                    />
                 )}
             </Section>
         </PageWrapper>

@@ -42,7 +42,7 @@ export const HomeHubsPage: React.FC = () => {
                     variant="glass"
                     size="lg"
                     fullWidth
-                    onClick={() => navigate(`/NoticiasHub/${today}`)}
+                    onClick={() => navigate(`/Notas/${today}`)}
                 >
                     Noticias del día
                 </Button>
