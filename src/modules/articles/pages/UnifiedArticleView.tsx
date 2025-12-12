@@ -8,6 +8,7 @@ import { AiChatBarCollapsed } from '../../../components/AiChatBar/AiChatBarColla
 import { AiChatBarExpanded } from '../../../components/AiChatBar/AiChatBarExpanded';
 import { AiCommentsExpanded } from '../../../components/AiChatBar/AiCommentsExpanded';
 import { HeaderContent } from '../../noticiasHub/components/HeaderContent';
+import { STRAPI_ORIGIN } from '../../../lib/env';
 
 // Article Components
 import { ArticleHero } from '../components/ArticleHero';
@@ -83,7 +84,7 @@ export const UnifiedArticleView = () => {
         publishedAt: article.publishedAt,
         updatedAt: article.publishedAt,
         image: article.hero_image ? {
-            url: article.hero_image.url,
+            url: `${STRAPI_ORIGIN}${article.hero_image.url}`,
             caption: '',
             alternativeText: article.hero_image.alternativeText
         } : { url: '' },
@@ -92,13 +93,22 @@ export const UnifiedArticleView = () => {
         content: article.blocks || [],
         audio_summary: article.audio_summary ? {
             id: 1,
-            audio_file: { url: article.audio_summary.audio_file?.url || '' },
+            audio_file: { url: `${STRAPI_ORIGIN}${article.audio_summary.audio_file?.url || ''}` },
             duration: article.audio_summary.duration_seconds,
             title: article.title
         } : undefined,
-        video_summary: undefined, // TODO: Add when video field exists in Strapi
-        ppt_summary: undefined,   // TODO: Add when PPT field exists in Strapi
-        infographic_summary: undefined // TODO: Add when infographic field exists in Strapi
+        video_summary: article.video_summary ? {
+            video_file: { url: `${STRAPI_ORIGIN}${article.video_summary.video_file?.url || ''}` },
+            thumbnail: article.video_summary.thumbnail ? { url: `${STRAPI_ORIGIN}${article.video_summary.thumbnail.url}` } : undefined,
+            duration_seconds: article.video_summary.duration_seconds
+        } : undefined,
+        ppt_summary: article.ppt_summary ? {
+            ppt_file: { url: `${STRAPI_ORIGIN}${article.ppt_summary.ppt_file?.url || ''}` },
+            slide_count: article.ppt_summary.slide_count
+        } : undefined,
+        infographic_summary: article.infographic_summary ? {
+            image_file: { url: `${STRAPI_ORIGIN}${article.infographic_summary.image_file?.url || ''}` }
+        } : undefined
     };
 
     // Calculate available formats

@@ -13,7 +13,7 @@ export const Infografia: FC<InfografiaProps> = ({ article }) => {
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
-    const imageUrl = article.infographic_summary?.image_url || article.image?.url || '';
+    const imageUrl = article.infographic_summary?.image_file?.url || article.image?.url || '';
 
     const handleZoomIn = () => setScale(prev => Math.min(prev + 0.5, 4));
     const handleZoomOut = () => {

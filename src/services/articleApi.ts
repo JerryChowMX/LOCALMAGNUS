@@ -48,7 +48,6 @@ function normalizeArticle(data: any): StrapiArticle {
     blocks: attrs.blocks || attrs.content || attrs.content_blocks || [],
     summary: attrs.summary || attrs.excerpt || '',
     audioUrl: attrs.audio?.url || attrs.audio_url || undefined,
-    executive_summary: attrs.executive_summary || undefined,
     audio_summary: attrs.audio_summary ? {
       audio_file: (attrs.audio_summary.audio_file || attrs.audio_summary.audio_file?.data) ? {
         url: attrs.audio_summary.audio_file?.url || attrs.audio_summary.audio_file?.data?.attributes?.url
@@ -58,6 +57,33 @@ function normalizeArticle(data: any): StrapiArticle {
       transcript: attrs.audio_summary.transcript,
       generated_at: attrs.audio_summary.generated_at,
       file_size: attrs.audio_summary.file_size
+    } : undefined,
+    video_summary: attrs.video_summary ? {
+      video_file: (attrs.video_summary.video_file || attrs.video_summary.video_file?.data) ? {
+        url: attrs.video_summary.video_file?.url || attrs.video_summary.video_file?.data?.attributes?.url
+      } : undefined,
+      thumbnail: (attrs.video_summary.thumbnail || attrs.video_summary.thumbnail?.data) ? {
+        url: attrs.video_summary.thumbnail?.url || attrs.video_summary.thumbnail?.data?.attributes?.url
+      } : undefined,
+      duration_seconds: attrs.video_summary.duration_seconds,
+      resolution: attrs.video_summary.resolution,
+      generated_at: attrs.video_summary.generated_at,
+      file_size: attrs.video_summary.file_size
+    } : undefined,
+    ppt_summary: attrs.ppt_summary ? {
+      ppt_file: (attrs.ppt_summary.ppt_file || attrs.ppt_summary.ppt_file?.data) ? {
+        url: attrs.ppt_summary.ppt_file?.url || attrs.ppt_summary.ppt_file?.data?.attributes?.url
+      } : undefined,
+      slide_count: attrs.ppt_summary.slide_count,
+      generated_at: attrs.ppt_summary.generated_at,
+      file_size: attrs.ppt_summary.file_size
+    } : undefined,
+    infographic_summary: attrs.infographic_summary ? {
+      image_file: (attrs.infographic_summary.image_file || attrs.infographic_summary.image_file?.data) ? {
+        url: attrs.infographic_summary.image_file?.url || attrs.infographic_summary.image_file?.data?.attributes?.url
+      } : undefined,
+      generated_at: attrs.infographic_summary.generated_at,
+      file_size: attrs.infographic_summary.file_size
     } : undefined,
     relatedArticles: (attrs.related_articles || attrs.related_articles?.data)?.map((item: any) => {
       const ra = item.attributes || item;
@@ -117,8 +143,10 @@ export const articleApi = {
       'populate[content_blocks][on][content.gallery][populate]': '*',
       'populate[content_blocks][on][content.quote][populate]': '*',
       'populate[content_blocks][on][content.rich-text][populate]': '*',
-      'populate[executive_summary][populate]': '*',
       'populate[audio_summary][populate]': '*',
+      'populate[video_summary][populate]': '*',
+      'populate[ppt_summary][populate]': '*',
+      'populate[infographic_summary][populate]': '*',
       'populate[hero_image][fields][0]': 'url',
       'populate[hero_image][fields][1]': 'alternativeText',
       'populate[hero_image][fields][2]': 'caption',

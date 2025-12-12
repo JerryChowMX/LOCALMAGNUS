@@ -37,27 +37,33 @@ export type ContentBlock =
     | VideoBlock; // Extend as needed
 
 export interface RichTextBlock {
-    __component: 'shared.rich-text';
-    blocks: any[]; // Strapi Blocks editor JSON structure
+    __component: 'shared.rich-text' | 'content.rich-text';
+    blocks?: any[]; // Strapi Blocks editor JSON structure
+    body?: any[]; // Alternative field name
 }
 
 export interface QuoteBlock {
-    __component: 'shared.quote';
-    quote: string;
+    __component: 'shared.quote' | 'content.quote';
+    quote?: string;
+    text?: string; // Alternative field name
     author: string;
 }
 
 export interface ImageBlock {
-    __component: 'shared.media';
-    file: {
+    __component: 'shared.media' | 'content.single-image';
+    file?: {
         url: string;
         caption?: string;
         alternativeText?: string;
-    }
+    };
+    image?: {
+        url: string;
+        caption?: string;
+    };
 }
 
 export interface VideoBlock {
-    __component: 'shared.video';
+    __component: 'shared.video' | 'content.embed';
     video_url?: string;
     video_file?: {
         url: string;
@@ -98,10 +104,17 @@ export interface PresentationSummary {
     pdf_file?: {
         url: string;
     };
+    ppt_file?: {
+        url: string;
+    };
+    slide_count?: number;
 }
 
 export interface InfographicSummary {
     id?: number;
-    image_url: string;
+    image_url?: string;
+    image_file?: {
+        url: string;
+    };
     caption?: string;
 }

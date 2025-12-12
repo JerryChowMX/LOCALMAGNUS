@@ -24,8 +24,8 @@
       "required": true
     },
     "excerpt": {
-      "type": "richtext",
-      "maxLength": 100
+      "type": "text",
+      "maxLength": 300
     },
     "hero_image": {
       "type": "media",
@@ -38,58 +38,6 @@
     "hero_image_caption": {
       "type": "string",
       "maxLength": 255
-    },
-    "reading_time": {
-      "type": "integer"
-    },
-    "state": {
-      "type": "enumeration",
-      "default": "draft",
-      "enum": [
-        "draft",
-        "review",
-        "published",
-        "scheduled",
-        "archived"
-      ]
-    },
-    "content_blocks": {
-      "type": "dynamiczone",
-      "components": [
-        "content.rich-text",
-        "content.quote",
-        "content.gallery",
-        "content.embed",
-        "content.audio",
-        "content.single-image",
-        "content.illustrations",
-        "content.infographics"
-      ]
-    },
-    "executive_summary": {
-      "type": "component",
-      "component": "ai.executive-summary",
-      "repeatable": false
-    },
-    "audio_summary": {
-      "type": "component",
-      "component": "ai.audio-summary",
-      "repeatable": false
-    },
-    "video_summary": {
-      "type": "component",
-      "component": "ai.video-summary",
-      "repeatable": false
-    },
-    "epaper_link": {
-      "type": "component",
-      "component": "ai.epaper-link",
-      "repeatable": false
-    },
-    "seo_meta": {
-      "type": "component",
-      "component": "seo.seo-meta",
-      "repeatable": false
     },
     "author": {
       "type": "relation",
@@ -109,28 +57,60 @@
       "target": "api::tag.tag",
       "inversedBy": "articles"
     },
+    "content_blocks": {
+      "type": "dynamiczone",
+      "components": [
+        "content.rich-text",
+        "content.quote",
+        "content.gallery",
+        "content.embed",
+        "content.audio",
+        "content.single-image",
+        "content.illustrations",
+        "content.infographics"
+      ]
+    },
+    "video_summary": {
+      "type": "component",
+      "component": "ai.video-summary",
+      "repeatable": false
+    },
+    "audio_summary": {
+      "type": "component",
+      "component": "ai.audio-summary",
+      "repeatable": false
+    },
+    "ppt_summary": {
+      "type": "component",
+      "component": "ai.ppt-summary",
+      "repeatable": false
+    },
+    "infographic_summary": {
+      "type": "component",
+      "component": "ai.infographic-summary",
+      "repeatable": false
+    },
     "related_articles": {
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::article.article"
     },
-    "view_count": {
-      "type": "integer",
-      "default": 0
+    "state": {
+      "type": "enumeration",
+      "default": "draft",
+      "enum": [
+        "draft",
+        "review",
+        "published",
+        "scheduled",
+        "archived"
+      ]
     },
-    "share_count": {
-      "type": "integer",
-      "default": 0
-    },
-    "trending_score": {
-      "type": "decimal"
+    "reading_time": {
+      "type": "integer"
     },
     "ai_metadata": {
       "type": "json",
-      "private": true
-    },
-    "editor_notes": {
-      "type": "text",
       "private": true
     }
   }

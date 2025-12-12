@@ -1,9 +1,9 @@
 {
     "collectionName": "components_ai_audio_summaries",
     "info": {
-        "displayName": "Audio Summary",
+        "displayName": "Podcast Summary",
         "icon": "headphones",
-        "description": "AI-generated audio version"
+        "description": "AI-generated podcast audio version"
     },
     "options": {},
     "attributes": {

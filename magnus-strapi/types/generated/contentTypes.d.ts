@@ -461,35 +461,32 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    editor_notes: Schema.Attribute.Text & Schema.Attribute.Private;
-    epaper_link: Schema.Attribute.Component<'ai.epaper-link', false>;
-    excerpt: Schema.Attribute.RichText &
+    excerpt: Schema.Attribute.Text &
       Schema.Attribute.SetMinMaxLength<{
-        maxLength: 100;
+        maxLength: 300;
       }>;
-    executive_summary: Schema.Attribute.Component<
-      'ai.executive-summary',
-      false
-    >;
     hero_image: Schema.Attribute.Media<'images'>;
     hero_image_caption: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 255;
       }>;
+    infographic_summary: Schema.Attribute.Component<
+      'ai.infographic-summary',
+      false
+    >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::article.article'
     > &
       Schema.Attribute.Private;
+    ppt_summary: Schema.Attribute.Component<'ai.ppt-summary', false>;
     publishedAt: Schema.Attribute.DateTime;
     reading_time: Schema.Attribute.Integer;
     related_articles: Schema.Attribute.Relation<
       'manyToMany',
       'api::article.article'
     >;
-    seo_meta: Schema.Attribute.Component<'seo.seo-meta', false>;
-    share_count: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     state: Schema.Attribute.Enumeration<
       ['draft', 'review', 'published', 'scheduled', 'archived']
@@ -502,12 +499,10 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 200;
       }>;
-    trending_score: Schema.Attribute.Decimal;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     video_summary: Schema.Attribute.Component<'ai.video-summary', false>;
-    view_count: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
   };
 }
 

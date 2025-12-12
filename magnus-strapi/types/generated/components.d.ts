@@ -3,8 +3,8 @@ import type { Schema, Struct } from '@strapi/strapi';
 export interface AiAudioSummary extends Struct.ComponentSchema {
   collectionName: 'components_ai_audio_summaries';
   info: {
-    description: 'AI-generated audio version';
-    displayName: 'Audio Summary';
+    description: 'AI-generated podcast audio version';
+    displayName: 'Podcast Summary';
     icon: 'headphones';
   };
   attributes: {
@@ -48,6 +48,35 @@ export interface AiExecutiveSummary extends Struct.ComponentSchema {
     summary_text: Schema.Attribute.Text & Schema.Attribute.Required;
     tokens_used: Schema.Attribute.Integer;
     version: Schema.Attribute.String;
+  };
+}
+
+export interface AiInfographicSummary extends Struct.ComponentSchema {
+  collectionName: 'components_ai_infographic_summaries';
+  info: {
+    description: 'Infographic visual summary';
+    displayName: 'Infograf\u00EDa Summary';
+    icon: 'picture';
+  };
+  attributes: {
+    file_size: Schema.Attribute.Integer;
+    generated_at: Schema.Attribute.DateTime;
+    image_file: Schema.Attribute.Media<'images'>;
+  };
+}
+
+export interface AiPptSummary extends Struct.ComponentSchema {
+  collectionName: 'components_ai_ppt_summaries';
+  info: {
+    description: 'PowerPoint/Presentation summary';
+    displayName: 'Presentaci\u00F3n Summary';
+    icon: 'slideshow';
+  };
+  attributes: {
+    file_size: Schema.Attribute.Integer;
+    generated_at: Schema.Attribute.DateTime;
+    ppt_file: Schema.Attribute.Media<'files'>;
+    slide_count: Schema.Attribute.Integer;
   };
 }
 
@@ -237,6 +266,8 @@ declare module '@strapi/strapi' {
       'ai.audio-summary': AiAudioSummary;
       'ai.epaper-link': AiEpaperLink;
       'ai.executive-summary': AiExecutiveSummary;
+      'ai.infographic-summary': AiInfographicSummary;
+      'ai.ppt-summary': AiPptSummary;
       'ai.video-summary': AiVideoSummary;
       'content.audio': ContentAudio;
       'content.embed': ContentEmbed;

@@ -78,11 +78,24 @@ export const Video: FC<VideoProps> = ({ article }) => {
         endSpeedBoost();
     }, [endSpeedBoost]);
 
-    const handleVideoClick = useCallback(() => {
+    const handleVideoClick = useCallback(async () => {
         if (isSpeedBoosted) return;
         const video = videoRef.current;
         if (!video) return;
-        video.paused ? video.play().catch(console.error) : video.pause();
+
+        if (video.paused) {
+            // Enter fullscreen when starting playback
+            if (!document.fullscreenElement && containerRef.current) {
+                try {
+                    await containerRef.current.requestFullscreen();
+                } catch (e) {
+                    console.error('Fullscreen error:', e);
+                }
+            }
+            video.play().catch(console.error);
+        } else {
+            video.pause();
+        }
     }, [isSpeedBoosted]);
 
     // Time update

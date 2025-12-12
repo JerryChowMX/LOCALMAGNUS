@@ -8,14 +8,36 @@ interface PresentacionProps {
 }
 
 export const Presentacion: FC<PresentacionProps> = ({ article }) => {
-    // If it's a PDF or we want to show the minimalist cover:
-    const [isDownloaded, setIsDownloaded] = useState(false);
+    const [isDownloading, setIsDownloading] = useState(false);
 
-    const handleDownload = (e: React.MouseEvent) => {
+    const handleDownload = async (e: React.MouseEvent) => {
         e.stopPropagation();
-        setIsDownloaded(true);
-        // Actual download logic would go here
+
+        const pdfUrl = article.ppt_summary?.ppt_file?.url;
+        if (!pdfUrl) {
+            console.error('No PDF URL available');
+            return;
+        }
+
+        setIsDownloading(true);
+
+        try {
+            // Open PDF in new tab (works for both viewing and downloading)
+            window.open(pdfUrl, '_blank');
+        } catch (error) {
+            console.error('Download error:', error);
+        } finally {
+            setIsDownloading(false);
+        }
     };
+
+    if (!article.ppt_summary?.ppt_file?.url) {
+        return (
+            <div className="article-format-view-container standard-article-content">
+                <p className="article-format-empty">Presentación no disponible</p>
+            </div>
+        );
+    }
 
     return (
         <div className="article-format-view-container standard-article-content">
@@ -30,20 +52,22 @@ export const Presentacion: FC<PresentacionProps> = ({ article }) => {
                     </svg>
                 </div>
                 <div className="pdf-minimal-title">
-                    {article.ppt_summary?.title || article.title}
+                    {article.title}
                 </div>
 
-
-                {!isDownloaded && (
-                    <button className="pdf-minimal-download-btn" onClick={handleDownload} style={{ animation: 'fadeIn 0.3s' }}>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                        </svg>
-                        <span>Descargar PDF</span>
-                    </button>
-                )}
+                <button
+                    className="pdf-minimal-download-btn"
+                    onClick={handleDownload}
+                    disabled={isDownloading}
+                    style={{ animation: 'fadeIn 0.3s' }}
+                >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span>{isDownloading ? 'Abriendo...' : 'Ver PDF'}</span>
+                </button>
             </div>
 
             {/* Spacer for bottom sheet */}

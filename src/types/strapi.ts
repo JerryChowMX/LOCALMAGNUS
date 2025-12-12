@@ -200,4 +200,31 @@ export interface StrapiArticle {
         ai_provider?: string;
         version?: string;
     };
+    video_summary?: {
+        video_file?: {
+            url: string;
+        };
+        thumbnail?: {
+            url: string;
+        };
+        duration_seconds?: number;
+        resolution?: string;
+        generated_at?: string;
+        file_size?: number;
+    };
+    ppt_summary?: {
+        ppt_file?: {
+            url: string;
+        };
+        slide_count?: number;
+        generated_at?: string;
+        file_size?: number;
+    };
+    infographic_summary?: {
+        image_file?: {
+            url: string;
+        };
+        generated_at?: string;
+        file_size?: number;
+    };
 }
