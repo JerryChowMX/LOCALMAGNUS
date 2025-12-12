@@ -53,12 +53,20 @@ export const PlaygroundPresentacionVideo = () => {
 
     return (
         <PageWrapper>
-            <div style={{ padding: 24 }}>
-                <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-                    <button onClick={() => window.history.back()} style={{ marginBottom: 24, background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 }}>← Back</button>
-
-                    <Heading level={2} style={{ marginBottom: 8 }}>Horizontal Video - Full Hero</Heading>
-                    <Text variant="body" style={{ marginBottom: 32, color: '#666' }}>Vertical hero entry point</Text>
+            <PlaygroundHeader />
+            <div className="playground-page-wrapper">
+                <div style={{ padding: '24px', maxWidth: '1200px', margin: '0 auto' }}>
+                    <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+                        <Text variant="caption" style={{ textTransform: 'uppercase', letterSpacing: '2px', color: '#E11D48', fontWeight: 'bold' }}>
+                            UX Lab
+                        </Text>
+                        <Heading level={1} style={{ marginBottom: '16px', fontSize: '32px' }}>
+                            Video Presentation UX
+                        </Heading>
+                        <p style={{ color: '#6B7280' }}>
+                            Horizontal video viewing optimized for presentations
+                        </p>
+                    </div>
 
                     <div>
                         {isPlaying ? (

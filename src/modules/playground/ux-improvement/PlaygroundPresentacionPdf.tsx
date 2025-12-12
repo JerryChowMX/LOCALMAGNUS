@@ -26,9 +26,7 @@ const OptionMinimalist = () => {
             <div className="pdf-minimal-title">
                 Informe Anual de Sustentabilidad 2024
             </div>
-            <div className="pdf-minimal-meta">
-                PDF &bull; 24 PÁGINAS &bull; 4.2 MB
-            </div>
+
 
             {!isDownloaded && (
                 <button className="pdf-minimal-download-btn" onClick={handleDownload} style={{ animation: 'fadeIn 0.3s' }}>

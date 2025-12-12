@@ -1,8 +1,9 @@
-import { useRef, useState, useEffect, FC } from 'react';
+import { useRef, useState, type FC } from 'react';
+import type { Article } from '../../types';
 import './FormatViews.css';
 
 interface PodcastProps {
-    article: any;
+    article: Article['attributes'];
 }
 
 export const Podcast: FC<PodcastProps> = ({ article }) => {
@@ -11,6 +12,8 @@ export const Podcast: FC<PodcastProps> = ({ article }) => {
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [playbackRate, setPlaybackRate] = useState(1);
+    const [isScrubbing, setIsScrubbing] = useState(false);
+    const [scrubTime, setScrubTime] = useState(0);
     const isDragging = useRef(false);
 
     if (!article.audio_summary) {
@@ -35,9 +38,10 @@ export const Podcast: FC<PodcastProps> = ({ article }) => {
     };
 
     const toggleSpeed = () => {
-        const speeds = [0.8, 1, 1.5, 1.8, 2]; // Expanded speeds
-        const nextSpeedIndex = (speeds.indexOf(playbackRate) + 1) % speeds.length;
-        const nextSpeed = speeds[nextSpeedIndex];
+        const speeds = [0.8, 1.0, 1.2, 1.8, 2.2];
+        const currentIndex = speeds.indexOf(playbackRate);
+        const nextIndex = currentIndex === -1 ? 1 : (currentIndex + 1) % speeds.length;
+        const nextSpeed = speeds[nextIndex];
 
         setPlaybackRate(nextSpeed);
         if (audioRef.current) {
@@ -64,123 +68,109 @@ export const Podcast: FC<PodcastProps> = ({ article }) => {
         return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     };
 
-    const calculateTimeFromEvent = (clientX: number, container: HTMLDivElement): number => {
-        if (!duration) return 0;
-        const rect = container.getBoundingClientRect();
-        const offsetX = clientX - rect.left;
-        const width = rect.width;
-        let percentage = offsetX / width;
-        percentage = Math.max(0, Math.min(1, percentage));
-        return percentage * duration;
-    };
-
-    const handleSeekClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (!audioRef.current) return;
-        const newTime = calculateTimeFromEvent(e.clientX, e.currentTarget);
-        audioRef.current.currentTime = newTime;
-        setCurrentTime(newTime);
+    // Scrubbing handlers (like video)
+    const getTimeFromEvent = (e: React.PointerEvent<HTMLDivElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        return percent * (duration || 1);
     };
 
     const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+        e.stopPropagation();
+        e.currentTarget.setPointerCapture(e.pointerId);
         isDragging.current = true;
-        (e.target as Element).setPointerCapture(e.pointerId);
+        setIsScrubbing(true);
+        setScrubTime(getTimeFromEvent(e));
     };
 
     const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
         if (!isDragging.current) return;
-        const newTime = calculateTimeFromEvent(e.clientX, e.currentTarget);
-        setCurrentTime(newTime);
+        e.stopPropagation();
+        setScrubTime(getTimeFromEvent(e));
     };
 
     const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
-        if (!isDragging.current || !audioRef.current) return;
+        if (!isDragging.current) return;
+        e.stopPropagation();
         isDragging.current = false;
 
-        const newTime = calculateTimeFromEvent(e.clientX, e.currentTarget);
-        audioRef.current.currentTime = newTime;
-        setCurrentTime(newTime);
-        (e.target as Element).releasePointerCapture(e.pointerId);
+        if (audioRef.current) {
+            audioRef.current.currentTime = scrubTime;
+            setCurrentTime(scrubTime);
+        }
+
+        setIsScrubbing(false);
+        e.currentTarget.releasePointerCapture(e.pointerId);
     };
 
-    // Responsive Time Display Logic
-    const getTimeDisplay = () => {
-        const totalDuration = duration || 180; // Fallback for loading
-        if (isPlaying) {
-            const timeLeft = totalDuration - currentTime;
-            return `${formatTime(currentTime)} / -${formatTime(timeLeft)}`;
-        } else {
-            return `${formatTime(currentTime)} / ${formatTime(totalDuration)}`;
-        }
-    };
+    // Progress percentage - use scrubTime when scrubbing
+    const progressPercent = isScrubbing
+        ? (scrubTime / (duration || 1)) * 100
+        : (currentTime / (duration || 1)) * 100;
 
     return (
         <div className="article-format-view-container standard-article-content">
-            <div className="podcast-editorial-container">
-                <div className="podcast-magnus-hero">
-                    <div className="magnus-blob"></div>
+            <div className="podcast-hero">
+                {/* Decorative blob */}
+                <div className="podcast-blob" />
 
-                    <div className="type-content">
-                        <div className="editorial-status">
-                            {isPlaying ? 'REPRODUCIENDO AHORA' : 'PODCAST EXCLUSIVO'}
-                        </div>
-                        <div className="editorial-title">
-                            "{article.title}"
-                        </div>
-                        <div className="editorial-meta">
-                            EPISODIO {article.id || '46'}
-                        </div>
+                {/* Content */}
+                <div className="podcast-content">
+                    <div className="podcast-episode-label">
+                        EPISODIO {article.audio_summary?.id || '46'}
                     </div>
-
-                    <div className="editorial-player-area">
-                        <div className="editorial-controls-row">
-                            <div className="editorial-controls-left">
-                                <div className="editorial-play-btn" onClick={togglePlay}>
-                                    {isPlaying ? '⏸' : '▶'}
-                                </div>
-                                <button className="editorial-speed-btn" onClick={toggleSpeed}>
-                                    {playbackRate}x
-                                </button>
-                            </div>
-
-                            <div className="editorial-time-text">
-                                {getTimeDisplay()}
-                            </div>
-                        </div>
-
-                        <div
-                            className="editorial-progress-container"
-                            onClick={handleSeekClick}
-                            onPointerDown={handlePointerDown}
-                            onPointerMove={handlePointerMove}
-                            onPointerUp={handlePointerUp}
-                            onPointerLeave={handlePointerUp} // Safety release
-                            style={{ touchAction: 'none' }} // Prevent scrolling while dragging
-                        >
-                            <div className="editorial-progress-bar-bg"></div>
-                            <div
-                                className="editorial-progress-bar"
-                                style={{ width: `${(currentTime / (duration || 1)) * 100}%` }}
-                            ></div>
-                            {/* The thumb (ball) */}
-                            <div
-                                className="editorial-progress-thumb"
-                                style={{ left: `${(currentTime / (duration || 1)) * 100}%` }}
-                            ></div>
-                        </div>
-                    </div>
-
-                    <audio
-                        ref={audioRef}
-                        src={article.audio_summary.audio_file.url}
-                        onTimeUpdate={handleTimeUpdate}
-                        onLoadedMetadata={handleLoadedMetadata}
-                        onEnded={() => setIsPlaying(false)}
-                    />
+                    <h2 className="podcast-title">
+                        "{article.title}"
+                    </h2>
                 </div>
+
+                {/* Player Controls */}
+                <div className="podcast-controls">
+                    <div className="podcast-controls-row">
+                        <div className="podcast-controls-left">
+                            <button className="podcast-play-btn" onClick={togglePlay}>
+                                {isPlaying ? '⏸' : '▶'}
+                            </button>
+                            <button className="podcast-speed-btn" onClick={toggleSpeed}>
+                                {playbackRate}x
+                            </button>
+                        </div>
+                        <div className="podcast-time">
+                            {formatTime(duration - currentTime)}
+                        </div>
+                    </div>
+
+                    {/* Progress Bar - Smooth scrubbing like video */}
+                    <div
+                        className={`podcast-progress-track ${isScrubbing ? 'scrubbing' : ''}`}
+                        onPointerDown={handlePointerDown}
+                        onPointerMove={handlePointerMove}
+                        onPointerUp={handlePointerUp}
+                        onPointerLeave={handlePointerUp}
+                        style={{ touchAction: 'none' }}
+                    >
+                        <div
+                            className="podcast-progress-fill"
+                            style={{ width: `${progressPercent}%` }}
+                        >
+                            <div className="podcast-progress-thumb" />
+                        </div>
+                    </div>
+                </div>
+
+                <audio
+                    ref={audioRef}
+                    src={article.audio_summary.audio_file.url}
+                    onTimeUpdate={handleTimeUpdate}
+                    onLoadedMetadata={handleLoadedMetadata}
+                    onEnded={() => setIsPlaying(false)}
+                    onPlay={() => setIsPlaying(true)}
+                    onPause={() => setIsPlaying(false)}
+                />
             </div>
 
             {/* Spacer */}
-            <div className="article-format-spacer"></div>
+            <div style={{ height: '100px' }} />
         </div>
     );
 };

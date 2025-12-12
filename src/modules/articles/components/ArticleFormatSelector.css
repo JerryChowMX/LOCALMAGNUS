@@ -1,6 +1,7 @@
 /* Main Container */
 .article-format-selector-section {
-    background: white;
+    background: var(--surface-base);
+    /* was white */
     width: 100%;
     box-sizing: border-box;
     /* Define padding variable for consistent alignment */
@@ -10,7 +11,8 @@
 /* Dividers */
 .article-format-divider {
     height: 1px;
-    background-color: #E5E7EB;
+    background-color: var(--border-color);
+    /* was #E5E7EB */
     width: 100%;
     margin: 20px 0;
 }
@@ -71,9 +73,12 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    border: 1px solid #E5E7EB;
-    background: white;
-    color: #6B7280;
+    border: 1px solid var(--border-color);
+    /* was #E5E7EB */
+    background: var(--surface-base);
+    /* was white */
+    color: var(--text-secondary);
+    /* was #6B7280 */
     cursor: pointer;
     padding: 0;
     transition: all 0.2s ease;
@@ -98,14 +103,18 @@
 }
 
 .article-format-nav-button:hover {
-    background-color: #F3F4F6;
-    border-color: #D1D5DB;
-    color: #111827;
+    background-color: var(--surface-subtle);
+    /* was #F3F4F6 */
+    border-color: var(--text-secondary);
+    /* was #D1D5DB */
+    color: var(--text-primary);
+    /* was #111827 */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
 
 .article-format-nav-button:active {
-    background-color: #E5E7EB;
+    background-color: var(--border-color);
+    /* was #E5E7EB */
     transform: translateY(-50%) scale(0.95);
 }
 
@@ -117,9 +126,12 @@
     border-radius: 0;
     font-size: 14px;
     font-weight: 400;
-    border: 1px solid #D1D5DB;
-    background: white;
-    color: #9CA3AF;
+    border: 1px solid var(--border-color);
+    /* was #D1D5DB */
+    background: var(--surface-base);
+    /* was white */
+    color: var(--text-secondary);
+    /* was #9CA3AF */
     cursor: pointer;
     transition: all 350ms ease;
     scroll-snap-align: start;
@@ -133,14 +145,18 @@
 }
 
 .article-format-tab.active {
-    border: 2px solid #000000;
-    color: #000000;
+    border: 2px solid var(--text-primary);
+    /* was #000000 */
+    color: var(--text-primary);
+    /* was #000000 */
     font-weight: 600;
 }
 
 .article-format-tab.inactive:hover {
-    border-color: #9CA3AF;
-    color: #6B7280;
+    border-color: var(--text-secondary);
+    /* was #9CA3AF */
+    color: var(--text-primary);
+    /* was #6B7280 */
 }
 
 /* Mobile Responsive */

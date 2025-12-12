@@ -5,39 +5,55 @@ import './components/PlaygroundStyles.css';
 import './components/VideoUx.css';
 
 // OPTION 1: THE PURE IMMERSIVE STORY (Winner)
-const Option1Immersive = () => (
-    <div className="video-immersive-card">
-        {/* Mock Video Content */}
-        <div style={{ color: '#444', fontSize: '120px', opacity: 0.2 }}>
-            <svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" /></svg>
-        </div>
+import { useRef, useMemo } from 'react';
+import { HoldToSpeedController } from '../../media/components/HoldToSpeedController';
+import type { VideoPlaybackController } from '../../media/hooks/useHoldPlaybackRate';
 
-        {/* Overlay Controls */}
-        <div className="video-immersive-overlay">
-            <div style={{ marginBottom: '16px' }}>
-                <span style={{
-                    background: '#FF6B35', color: 'white', padding: '4px 12px',
-                    borderRadius: '12px', fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase'
-                }}>
-                    Resumen de video
-                </span>
-            </div>
-            <Heading level={2} style={{ color: 'white', marginBottom: '8px', fontSize: '24px' }}>
-                Incendio en Arteaga
-            </Heading>
-            <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', lineHeight: '1.4' }}>
-                Bomberos combaten el fuego que ha consumido más de 50 hectáreas.
-            </p>
-        </div>
+const Option1Immersive = () => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
 
-        {/* Center Play Button */}
-        <div style={{ position: 'absolute' }}>
-            <div className="video-immersive-play">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z" /></svg>
-            </div>
+    // Adapt HTML5 video to our controller interface
+    const playbackController = useMemo<VideoPlaybackController>(() => {
+        // Logic handled inside hook via dynamic current access if needed, 
+        // strictly speaking useHoldPlaybackRate handles null controller gracefully, 
+        // but let's provide an object that always proxies to current ref
+        return {
+            getPlaybackRate: () => videoRef.current?.playbackRate ?? 1.0,
+            setPlaybackRate: (rate: number) => {
+                if (videoRef.current) videoRef.current.playbackRate = rate;
+            },
+            isPaused: () => videoRef.current?.paused ?? true,
+            togglePlay: () => {
+                if (videoRef.current) {
+                    videoRef.current.paused ? videoRef.current.play() : videoRef.current.pause();
+                }
+            }
+        };
+    }, []); // Empty dep array works if we proxy to ref.current, but ref might be null initially.
+    // Actually, useHoldPlaybackRate doesn't call controller methods immediately on render, only on event.
+    // So proxying is safe.
+
+    return (
+        <div className="video-immersive-card" ref={containerRef} style={{ overflow: 'hidden', position: 'relative' }}>
+            <video
+                ref={videoRef}
+                src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                playsInline
+                loop
+                controls
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+
+            <HoldToSpeedController
+                containerRef={containerRef}
+                controller={playbackController}
+                enabled={true}
+                rate={2.0}
+            />
         </div>
-    </div>
-);
+    );
+};
 
 export const PlaygroundVideoUx = () => {
     return (

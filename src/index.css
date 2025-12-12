@@ -4,6 +4,49 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
   -moz-osx-font-smoothing: grayscale;
+
+  /* --- DESIGN TOKENS --- */
+
+  /* Brand */
+  --magnus-blue: #0369A1;
+  --magnus-blue-light: #F0F9FF;
+  /* Backgrounds */
+  --magnus-orange: #FF6B35;
+
+  /* Text */
+  --text-primary: #1E293B;
+  --text-secondary: #64748B;
+  --text-inverse: #FFFFFF;
+
+  /* Surface */
+  --surface-base: #FFFFFF;
+  --surface-subtle: #F8FAFC;
+
+  /* Component Aliases (Legacy Support) */
+  --bg-primary: var(--surface-base);
+  --bg-secondary: var(--surface-subtle);
+  --border-subtle: var(--border-color);
+  --shadow-1: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  /* Borders */
+  --border-color: #E2E8F0;
+}
+
+[data-theme='dark'] {
+  /* Dark Mode Overrides */
+  --magnus-blue: #38BDF8;
+  /* Sky-400 for better contrast */
+  --magnus-blue-light: rgba(56, 189, 248, 0.1);
+
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+
+  --surface-base: #0F172A;
+  /* Slate-900 */
+  --surface-subtle: #1E293B;
+  /* Slate-800 */
+
+  --border-color: #334155;
+  /* Slate-700 */
 }

@@ -33,6 +33,8 @@ import {
     IconPencil,
     IconRefresh,
     IconCheck,
+    IconMaximize,
+    IconMinimize,
 } from '@tabler/icons-react';
 
 export const Icons = {
@@ -70,4 +72,6 @@ export const Icons = {
     edit: IconPencil,
     refresh: IconRefresh,
     check: IconCheck,
+    maximize: IconMaximize,
+    minimize: IconMinimize,
 };

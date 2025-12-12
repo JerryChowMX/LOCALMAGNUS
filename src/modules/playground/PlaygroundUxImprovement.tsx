@@ -55,6 +55,12 @@ export const PlaygroundUxImprovement = () => {
                     description="Slideshow and presentation format experiments."
                     route="/dev/playground/ux-improvement/presentacion-ux"
                 />
+
+                <UxCard
+                    title="Infografia UX Lab"
+                    description="Infographic visualization and interaction concepts."
+                    route="/dev/playground/ux-improvement/infografia-ux"
+                />
             </div>
         </PageWrapper>
     );

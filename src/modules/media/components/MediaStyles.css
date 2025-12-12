@@ -1,0 +1,120 @@
+/* Container for the overlay - assumes relative parent */
+.hold-speed-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    /* zoneRightPct handled via inline style width, or fixed class if preferred */
+    z-index: 10;
+    /* Above video, below controls if possible */
+    touch-action: none;
+    /* Crucial: prevent browser scrolling/zooming while interacting */
+    pointer-events: none;
+    /* Let clicks pass through to video for play/pause */
+    /* background: rgba(255, 0, 0, 0.1); Debugging: Enable to see hit zone */
+}
+
+/* The badge itself */
+.hold-speed-badge {
+    position: absolute;
+    top: 32px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.95);
+
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    color: rgba(255, 255, 255, 0.95);
+    padding: 10px 20px;
+    border-radius: 100px;
+
+    font-family: var(--font-family-body, system-ui, sans-serif);
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+}
+
+.hold-speed-badge.active {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+}
+
+/* Glassmorphism Speed Control */
+.speed-control-panel {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+
+    z-index: 20;
+    opacity: 0;
+    /* Hidden by default */
+    transition: opacity 0.3s ease;
+    pointer-events: auto;
+    /* Ensure clickable */
+}
+
+/* Show on hover of parent container (needs exact class match) or always visible if requested. 
+   For now, strictly show on hover of the panel itself or parent. */
+.speed-control-panel:hover {
+    opacity: 1;
+}
+
+/* Helper to force show if needed */
+.speed-control-panel.visible {
+    opacity: 1;
+}
+
+.speed-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-family: var(--font-family-body, sans-serif);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.speed-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.speed-btn.active {
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional: Icon inside badge */
+.hold-speed-icon {
+    width: 12px;
+    height: 12px;
+    fill: currentColor;
+}

@@ -1,8 +1,9 @@
 import type { FC } from 'react';
+import type { Article } from '../../types';
 import './FormatViews.css';
 
 interface InfografiaProps {
-    article: any;
+    article: Article['attributes'];
 }
 
 export const Infografia: FC<InfografiaProps> = ({ article }) => {

@@ -12,12 +12,9 @@ const OptionBalancedSpeed = () => (
             <div className="magnus-blob"></div>
 
             <div className="type-content">
-                <div className="type-status" style={{ color: '#0284C7' }}>REPRODUCIENDO AHORA</div>
+                <div className="type-status" style={{ color: '#0284C7' }}>EPISODIO 46</div>
                 <div className="type-title-serif-magnus">
                     "Futuro Digital: La revolución de la inteligencia artificial."
-                </div>
-                <div style={{ fontFamily: 'monospace', color: '#0369A1', fontSize: '14px', marginTop: '16px' }}>
-                    EPISODIO 46
                 </div>
             </div>
 
@@ -30,7 +27,7 @@ const OptionBalancedSpeed = () => (
                         <button style={{
                             background: 'none',
                             border: '1px solid #0369A1',
-                            borderRadius: '50%',
+                            borderRadius: '0px',
                             width: '40px',
                             height: '40px',
                             display: 'flex',

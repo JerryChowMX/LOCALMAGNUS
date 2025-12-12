@@ -79,6 +79,7 @@ const PlaygroundPodcastUx = lazy(() => import('../modules/playground/ux-improvem
 const PlaygroundPresentacionUx = lazy(() => import('../modules/playground/ux-improvement/PlaygroundPresentacionUx').then(module => ({ default: module.PlaygroundPresentacionUx })));
 const PlaygroundPresentacionPdf = lazy(() => import('../modules/playground/ux-improvement/PlaygroundPresentacionPdf').then(module => ({ default: module.PlaygroundPresentacionPdf })));
 const PlaygroundPresentacionVideo = lazy(() => import('../modules/playground/ux-improvement/PlaygroundPresentacionVideo').then(module => ({ default: module.PlaygroundPresentacionVideo })));
+const PlaygroundInfografiaUx = lazy(() => import('../modules/playground/ux-improvement/PlaygroundInfografiaUx').then(module => ({ default: module.PlaygroundInfografiaUx })));
 const StrapiTestPage = lazy(() => import('../modules/noticiasHub/pages/StrapiTestPage'));
 
 const StandardOneRoute = lazy(() => import('./routes/article/StandardOneRoute').then(module => ({ default: module.StandardOneRoute })));
@@ -211,6 +212,7 @@ export const AppRouter = () => {
                         <Route path="/dev/playground/ux-improvement/presentacion-ux" element={<PlaygroundPresentacionUx />} />
                         <Route path="/dev/playground/ux-improvement/presentacion-ux/pdf" element={<PlaygroundPresentacionPdf />} />
                         <Route path="/dev/playground/ux-improvement/presentacion-ux/video" element={<PlaygroundPresentacionVideo />} />
+                        <Route path="/dev/playground/ux-improvement/infografia-ux" element={<PlaygroundInfografiaUx />} />
 
                         {/* Staging Routes */}
                         <Route path="/articulo/:slug" element={<StandardOneRoute />} />

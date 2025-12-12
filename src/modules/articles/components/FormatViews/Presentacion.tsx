@@ -1,9 +1,10 @@
 import { useState, type FC } from 'react';
+import type { Article } from '../../types';
 import './FormatViews.css';
 import '../../../playground/ux-improvement/components/PresentacionPdf.css';
 
 interface PresentacionProps {
-    article: any;
+    article: Article['attributes'];
 }
 
 export const Presentacion: FC<PresentacionProps> = ({ article }) => {
@@ -18,7 +19,7 @@ export const Presentacion: FC<PresentacionProps> = ({ article }) => {
 
     return (
         <div className="article-format-view-container standard-article-content">
-            <div className="pdf-card-base pdf-opt-minimal" style={{ marginTop: '40px' }}>
+            <div className="pdf-card-base pdf-opt-minimal">
                 <div className="pdf-minimal-icon-circle">
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -29,11 +30,9 @@ export const Presentacion: FC<PresentacionProps> = ({ article }) => {
                     </svg>
                 </div>
                 <div className="pdf-minimal-title">
-                    {article.title || "Informe Anual 2024"}
+                    {article.ppt_summary?.title || article.title}
                 </div>
-                <div className="pdf-minimal-meta">
-                    PDF &bull; DOCUMENTO OFICIAL &bull; 4.2 MB
-                </div>
+
 
                 {!isDownloaded && (
                     <button className="pdf-minimal-download-btn" onClick={handleDownload} style={{ animation: 'fadeIn 0.3s' }}>

@@ -1,20 +1,4 @@
-export interface Article {
-    id: number;
-    attributes: {
-        title: string;
-        summary: string;
-        content: string;
-        image: {
-            url: string;
-        };
-        publishedAt: string;
-        author?: {
-            name: string;
-            avatar?: string;
-        };
-        category?: string;
-    };
-}
+import type { Article } from '../types';
 
 export interface Meta {
     pagination: {
@@ -34,16 +18,33 @@ const MOCK_ARTICLES: Article[] = Array.from({ length: 20 }).map((_, index) => ({
     id: index + 1,
     attributes: {
         title: `Article Title ${index + 1}`,
-        summary: `This is a summary for article ${index + 1}. It describes the content briefly.`,
-        content: `Full content for article ${index + 1}...`,
+        summary: `This is a summary for article ${index + 1}.`,
+        content: [
+            {
+                __component: 'shared.rich-text',
+                blocks: [
+                    { type: 'paragraph', children: [{ text: `Content paragraph for article ${index + 1}...` }] }
+                ]
+            }
+        ],
         image: {
             url: `https://picsum.photos/seed/${index + 1}/800/600`,
+            caption: "Random Placeholder",
         },
         publishedAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         author: {
             name: "John Doe",
         },
-        category: index % 2 === 0 ? "Politics" : "Technology",
+        category: {
+            name: index % 2 === 0 ? "Politics" : "Technology",
+            slug: index % 2 === 0 ? "politics" : "technology"
+        },
+        // Mock formats for testing
+        video_summary: index % 3 === 0 ? {
+            video_file: { url: "https://www.w3schools.com/html/mov_bbb.mp4" },
+            title: "Mock Video Title"
+        } : undefined,
     },
 }));
 
