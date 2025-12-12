@@ -1,9 +1,9 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { PageWrapper } from '../../components/Layout/PageWrapper';
 import { Heading, Text } from '../../components/Typography/Typography';
-import { HeaderContent } from '../../modules/noticiasHub/components/HeaderContent';
 import { routes } from '../../app/routes';
 import { getMonterreyDate } from '../../lib/dateUtils';
+import { PlaygroundHeader } from './components/PlaygroundHeader';
 
 // Simple list component for playground menu
 const PlaygroundLink = ({ to, title, description }: { to: string, title: string, description: string }) => (
@@ -16,13 +16,12 @@ const PlaygroundLink = ({ to, title, description }: { to: string, title: string,
 );
 
 export const PlaygroundComponents = () => {
-    const navigate = useNavigate();
     const today = getMonterreyDate();
 
     return (
         <PageWrapper>
+            <PlaygroundHeader />
             <div style={{ maxWidth: '480px', margin: '0 auto', width: '100%', minHeight: '100vh', backgroundColor: '#F9FAFB' }}>
-                <HeaderContent onBack={() => navigate('/dev/playground')} />
                 <div style={{ padding: '24px' }}>
                     <Heading level={1} style={{ fontSize: '1.5rem', marginBottom: '8px' }}>Components Lab</Heading>
                     <Text variant="body" style={{ color: '#6B7280', marginBottom: '24px' }}>

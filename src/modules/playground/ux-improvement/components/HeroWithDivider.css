@@ -1,0 +1,6 @@
+/* Hero container with divider - for playground */
+.hero-with-divider {
+    border-bottom: 1px solid #E5E7EB;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+}

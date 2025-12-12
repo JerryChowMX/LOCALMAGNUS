@@ -72,6 +72,13 @@ const PlaygroundAudioSummary = lazy(() => import('../modules/playground/componen
 const PlaygroundComments = lazy(() => import('../modules/playground/components/comments/PlaygroundComments').then(module => ({ default: module.PlaygroundComments })));
 const PlaygroundNoticiasArticleLanding = lazy(() => import('../modules/playground/PlaygroundNoticiasArticleLanding').then(module => ({ default: module.PlaygroundNoticiasArticleLanding })));
 const PlaygroundAiChatBar = lazy(() => import('../modules/playground/components/articlecomponents/PlaygroundAiChatBar').then(module => ({ default: module.PlaygroundAiChatBar })));
+const PlaygroundUxImprovement = lazy(() => import('../modules/playground/PlaygroundUxImprovement').then(module => ({ default: module.PlaygroundUxImprovement })));
+const PlaygroundUxNoticiasFlow = lazy(() => import('../modules/playground/ux-improvement/PlaygroundUxNoticiasFlow').then(module => ({ default: module.PlaygroundUxNoticiasFlow })));
+const PlaygroundVideoUx = lazy(() => import('../modules/playground/ux-improvement/PlaygroundVideoUx').then(module => ({ default: module.PlaygroundVideoUx })));
+const PlaygroundPodcastUx = lazy(() => import('../modules/playground/ux-improvement/PlaygroundPodcastUx').then(module => ({ default: module.PlaygroundPodcastUx })));
+const PlaygroundPresentacionUx = lazy(() => import('../modules/playground/ux-improvement/PlaygroundPresentacionUx').then(module => ({ default: module.PlaygroundPresentacionUx })));
+const PlaygroundPresentacionPdf = lazy(() => import('../modules/playground/ux-improvement/PlaygroundPresentacionPdf').then(module => ({ default: module.PlaygroundPresentacionPdf })));
+const PlaygroundPresentacionVideo = lazy(() => import('../modules/playground/ux-improvement/PlaygroundPresentacionVideo').then(module => ({ default: module.PlaygroundPresentacionVideo })));
 const StrapiTestPage = lazy(() => import('../modules/noticiasHub/pages/StrapiTestPage'));
 
 const StandardOneRoute = lazy(() => import('./routes/article/StandardOneRoute').then(module => ({ default: module.StandardOneRoute })));
@@ -197,6 +204,13 @@ export const AppRouter = () => {
                         <Route path={routes.PLAYGROUND_ARTICLE_COMMENTS_ENTRY} element={<PlaygroundArticleCommentsEntry />} />
                         <Route path={routes.PLAYGROUND_NOTICIAS_ARTICLE_LANDING} element={<PlaygroundNoticiasArticleLanding />} />
                         <Route path={routes.PLAYGROUND_AI_CHAT_BAR} element={<PlaygroundAiChatBar />} />
+                        <Route path={routes.PLAYGROUND_UX_IMPROVEMENT} element={<PlaygroundUxImprovement />} />
+                        <Route path={routes.PLAYGROUND_UX_NOTICIAS_FLOW} element={<PlaygroundUxNoticiasFlow />} />
+                        <Route path="/dev/playground/ux-improvement/video-ux" element={<PlaygroundVideoUx />} />
+                        <Route path="/dev/playground/ux-improvement/podcast-ux" element={<PlaygroundPodcastUx />} />
+                        <Route path="/dev/playground/ux-improvement/presentacion-ux" element={<PlaygroundPresentacionUx />} />
+                        <Route path="/dev/playground/ux-improvement/presentacion-ux/pdf" element={<PlaygroundPresentacionPdf />} />
+                        <Route path="/dev/playground/ux-improvement/presentacion-ux/video" element={<PlaygroundPresentacionVideo />} />
 
                         {/* Staging Routes */}
                         <Route path="/articulo/:slug" element={<StandardOneRoute />} />

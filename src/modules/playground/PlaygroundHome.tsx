@@ -2,11 +2,13 @@ import { PageWrapper } from '../../components/Layout/PageWrapper';
 import { Heading, Text } from '../../components/Typography/Typography';
 import { Link } from 'react-router-dom';
 import { routes } from '../../app/routes';
+import { PlaygroundHeader } from './components/PlaygroundHeader';
 
 export const PlaygroundHome = () => {
     return (
         <PageWrapper>
-            <div style={{ maxWidth: '480px', margin: '0 auto', width: '100%' }}>
+            <PlaygroundHeader />
+            <div style={{ maxWidth: '480px', margin: '0 auto', width: '100%', padding: '24px' }}>
                 <Heading level={1} style={{ marginBottom: '16px' }}>Home Feed Playground</Heading>
                 <Text variant="body" style={{ marginBottom: '24px' }}>
                     This sandbox will be used to design the home feed cards, sections, and daily summaries without relying on Strapi.

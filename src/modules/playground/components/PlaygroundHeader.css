@@ -1,0 +1,62 @@
+.playground-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 1000;
+
+    /* Glassmorphism effect */
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.playground-header-back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: rgba(15, 23, 42, 0.05);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #0F172A;
+}
+
+.playground-header-back:hover {
+    background: rgba(15, 23, 42, 0.1);
+    transform: translateX(-2px);
+}
+
+.playground-header-back:active {
+    transform: scale(0.95);
+}
+
+.playground-header-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 18px;
+    font-weight: 600;
+    color: #0F172A;
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+.playground-header-spacer {
+    width: 40px;
+}
+
+/* Ensure content doesn't go under the header */
+body {
+    padding-top: 64px;
+}

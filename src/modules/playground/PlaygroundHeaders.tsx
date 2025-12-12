@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { PageWrapper } from '../../components/Layout/PageWrapper';
 import { Heading, Text } from '../../components/Typography/Typography';
 import { HeaderCenteredStack } from '../../components/Header/HeaderCenteredStack';
+import { PlaygroundHeader } from './components/PlaygroundHeader';
 
 export const PlaygroundHeaders = () => {
     const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
@@ -12,6 +13,7 @@ export const PlaygroundHeaders = () => {
 
     return (
         <PageWrapper>
+            <PlaygroundHeader />
             <div style={{ maxWidth: '480px', margin: '0 auto', width: '100%', paddingBottom: '100px', backgroundColor: '#F9FAFB' }}>
 
                 <div style={{ padding: '24px' }}>

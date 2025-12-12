@@ -1,0 +1,71 @@
+/* Video UX Styles */
+.video-ux-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.video-ux-controls {
+    display: flex;
+    gap: 12px;
+    margin: 32px 0 40px;
+    justify-content: center;
+}
+
+.video-ux-btn {
+    padding: 12px 24px;
+    border-radius: 99px;
+    background: white;
+    border: 1px solid #E5E7EB;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #374151;
+}
+
+.video-ux-btn.active {
+    background: #FF6B35;
+    color: white;
+    border-color: #FF6B35;
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
+}
+
+/* BASE IMMERSIVE CARD */
+.video-immersive-card {
+    background: #000;
+    border-radius: 0;
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 9/16;
+    max-height: 80vh;
+    margin: 0 auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-immersive-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+    padding: 40px 24px 24px;
+    color: white;
+    pointer-events: none;
+    /* Let clicks pass through to drawer triggers */
+}
+
+.video-immersive-play {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}

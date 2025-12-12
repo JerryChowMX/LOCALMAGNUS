@@ -1,0 +1,46 @@
+/* Format selector section wrapper */
+.format-selector-section {
+    background: white;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Top divider - 20px margin above and below */
+.format-selector-divider-top {
+    height: 1px;
+    background-color: #E5E7EB;
+    margin: 20px 0;
+    width: 100%;
+}
+
+/* Label above tabs - Flex to ensures proper alignment context */
+.format-selector-label {
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 14px;
+    margin: 0 0 10px 0 !important;
+    /* Force no margin */
+    padding: 0 20px !important;
+    /* Force padding matching tabs */
+    font-weight: 400;
+    line-height: 1.5;
+    box-sizing: border-box;
+    display: block;
+    text-indent: 0;
+    /* Align text start */
+}
+
+/* Bottom divider - 20px margin above and below */
+.format-selector-divider-bottom {
+    height: 1px;
+    background-color: #E5E7EB;
+    margin: 20px 0;
+    width: 100%;
+}
+
+/* Mobile responsive alignment */
+@media (max-width: 768px) {
+    .format-selector-label {
+        padding: 0 16px !important;
+    }
+}

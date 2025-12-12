@@ -1,0 +1,98 @@
+/* PRESENACION PDF STYLES */
+
+.pdf-playground-container {
+    padding: 24px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* --- SHARED --- */
+.pdf-card-base {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.pdf-card-base:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* --- OPTION 1: MINIMALIST COVER (Selected) --- */
+.pdf-opt-minimal {
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 1px solid #E2E8F0;
+    text-align: center;
+    min-height: 450px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.pdf-minimal-icon-circle {
+    width: 80px;
+    height: 80px;
+    background: #FFF1F2;
+    /* Light Red tint for PDF */
+    border-radius: 50%;
+    margin: 0 auto 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #E11D48;
+}
+
+.pdf-minimal-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #1E293B;
+    margin-bottom: 12px;
+    line-height: 1.3;
+}
+
+.pdf-minimal-meta {
+    font-family: monospace;
+    color: #64748B;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 32px;
+}
+
+.pdf-minimal-download-btn {
+    background: white;
+    border: 1px solid #E2E8F0;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1E293B;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin: 0 auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.pdf-minimal-download-btn:hover {
+    background: #F8FAFC;
+    border-color: #CBD5E1;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.pdf-minimal-download-btn:active {
+    transform: translateY(0);
+}

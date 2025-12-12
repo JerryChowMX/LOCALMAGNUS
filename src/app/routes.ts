@@ -66,6 +66,8 @@ export const routes = {
 
     PLAYGROUND_AI_CHAT_BAR: '/dev/playground/components/articlecomponents/aichatbar',
     PLAYGROUND_HEADERS: '/dev/playground/home/headers',
+    PLAYGROUND_UX_IMPROVEMENT: '/dev/playground/ux-improvement',
+    PLAYGROUND_UX_NOTICIAS_FLOW: '/dev/playground/ux-improvement/noticias-flow',
 
     // Strapi Integration Test
     strapiTest: '/dev/strapi-test',

@@ -2,6 +2,7 @@ import { PageWrapper } from '../../components/Layout/PageWrapper';
 import { Heading, Text } from '../../components/Typography/Typography';
 import { routes } from '../../app/routes';
 import { useNavigate } from 'react-router-dom';
+import { PlaygroundHeader } from './components/PlaygroundHeader';
 
 const PlaygroundCard = ({ title, description, route }: { title: string; description: string; route: string }) => {
     const navigate = useNavigate();
@@ -26,7 +27,8 @@ const PlaygroundCard = ({ title, description, route }: { title: string; descript
 export const PlaygroundMenu = () => {
     return (
         <PageWrapper>
-            <div style={{ maxWidth: '480px', margin: '0 auto', width: '100%' }}>
+            <PlaygroundHeader showBackButton={false} />
+            <div style={{ maxWidth: '480px', margin: '0 auto', width: '100%', padding: '24px' }}>
                 <Heading level={1} style={{ marginBottom: '8px' }}>MAGNUS Playground</Heading>
                 <Text variant="body" style={{ marginBottom: '24px' }}>Sandboxes for design & development</Text>
 
@@ -46,6 +48,12 @@ export const PlaygroundMenu = () => {
                     title="Components Lab"
                     description="Isolated UI components: buttons, cards, media players, etc."
                     route={routes.playgroundComponents}
+                />
+
+                <PlaygroundCard
+                    title="UX improvement"
+                    description="Testing and refining UX improvements."
+                    route={routes.PLAYGROUND_UX_IMPROVEMENT}
                 />
             </div>
         </PageWrapper>

@@ -4,22 +4,16 @@ import { Heading, Text } from '../../components/Typography/Typography';
 import { AudioPlayer } from '../../components/AudioPlayer/AudioPlayer';
 import { AiChatBarCollapsed } from '../../components/AiChatBar/AiChatBarCollapsed';
 import { AiChatBarExpanded } from '../../components/AiChatBar/AiChatBarExpanded';
-import { HeaderContent } from '../../modules/noticiasHub/components/HeaderContent';
 import { ImageSlider } from '../../components/Media/ImageSlider';
-import { useNavigate } from 'react-router-dom';
+import { PlaygroundHeader } from './components/PlaygroundHeader';
 
 export const PlaygroundArticleStandard = () => {
-    const navigate = useNavigate();
     const [isChatOpen, setIsChatOpen] = useState(false);
 
     return (
         <PageWrapper>
+            <PlaygroundHeader />
             <div style={{ maxWidth: '480px', margin: '0 auto', width: '100%', backgroundColor: '#fff', minHeight: '100vh', position: 'relative' }}>
-
-                {/* Header - Default Share Icon */}
-                <HeaderContent
-                    onBack={() => navigate('/dev/playground/article')}
-                />
 
                 {/* 1. Meta info and title */}
                 <div style={{ textAlign: 'center', paddingTop: '24px', paddingBottom: '16px' }}>

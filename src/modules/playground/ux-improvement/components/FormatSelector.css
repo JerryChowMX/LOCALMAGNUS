@@ -1,0 +1,68 @@
+.format-selector {
+    display: flex;
+    gap: 12px;
+    padding: 0 20px;
+    /* Left and Right padding */
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    /* Firefox */
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+}
+
+.format-selector::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari */
+}
+
+.format-button {
+    flex-shrink: 0;
+    /* Don't shrink */
+    flex-grow: 0;
+    /* Don't grow */
+    padding: 20px 32px;
+    border-radius: 0;
+    /* No rounded corners */
+    font-size: 14px;
+    font-weight: 400;
+    border: 1px solid #D1D5DB;
+    background: white;
+    color: #9CA3AF;
+    cursor: pointer;
+    transition: all 350ms ease;
+    scroll-snap-align: start;
+    min-height: 44px;
+    white-space: nowrap;
+    font-family: inherit;
+    text-align: center;
+    box-sizing: border-box;
+    margin: 0;
+    /* Force reset margins */
+    outline: none;
+}
+
+.format-button.active {
+    border: 2px solid #FF6B35;
+    color: #FF6B35;
+    font-weight: 600;
+}
+
+.format-button.inactive:hover {
+    border-color: #9CA3AF;
+    color: #6B7280;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .format-selector {
+        padding: 0 16px;
+    }
+
+    .format-button {
+        font-size: 13px;
+        padding: 16px 24px;
+    }
+}
