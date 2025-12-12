@@ -133,7 +133,7 @@ export const articleApi = {
     return { articles: rawData.map(normalizeArticle) };
   },
 
-  async getArticleBySlug(slug: string): Promise<StrapiArticle | null> {
+  async getArticleBySlug(slug: string, options?: { status?: 'draft' | 'published' }): Promise<StrapiArticle | null> {
     const params = new URLSearchParams({
       'filters[slug][$eq]': slug,
       'populate[content_blocks][on][content.single-image][populate]': '*',
@@ -158,6 +158,11 @@ export const articleApi = {
       'populate[related_articles][populate][0]': 'hero_image',
       'populate[related_articles][populate][1]': 'category'
     });
+
+    // Add status parameter for draft preview support
+    if (options?.status) {
+      params.append('status', options.status);
+    }
 
     const response = await strapiClient.get<StrapiCollectionResponse<StrapiArticleAttributes>>(
       `/articles?${params.toString()}`

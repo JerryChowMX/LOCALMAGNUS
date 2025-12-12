@@ -21,6 +21,7 @@ import { Infografia } from '../components/FormatViews/Infografia';
 
 // Hooks & Utils
 import { useStrapiArticle } from '../../../hooks/useStrapiArticles';
+import { usePreviewMode } from '../../../hooks/usePreviewMode';
 import { routes } from '../../../app/routes';
 
 // Styles
@@ -29,7 +30,14 @@ import '../templates/StandardOneArticle.css';
 export const UnifiedArticleView = () => {
     const { date, slug } = useParams<{ date: string; slug: string }>();
     const navigate = useNavigate();
-    const { article, isLoading, error } = useStrapiArticle(slug || '');
+
+    // Preview mode detection
+    const { isPreview, previewStatus } = usePreviewMode();
+
+    // Fetch article with preview status support
+    const { article, isLoading, error } = useStrapiArticle(slug || '', {
+        status: isPreview ? previewStatus : undefined
+    });
 
     const [isChatOpen, setIsChatOpen] = useState(false);
     const [isCommentsOpen, setIsCommentsOpen] = useState(false);
@@ -124,6 +132,25 @@ export const UnifiedArticleView = () => {
         <PageWrapper>
             <div className="playground-page-wrapper">
                 <HeaderContent onBack={handleBack} />
+
+                {/* Preview Mode Banner */}
+                {isPreview && (
+                    <div style={{
+                        background: previewStatus === 'draft' ? '#FEF3C7' : '#D1FAE5',
+                        border: `1px solid ${previewStatus === 'draft' ? '#F59E0B' : '#10B981'}`,
+                        borderRadius: '8px',
+                        padding: '12px 16px',
+                        margin: '16px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        fontSize: '14px',
+                        fontWeight: 500
+                    }}>
+                        👁️ <strong>Modo Vista Previa</strong> —
+                        {previewStatus === 'draft' ? ' Borrador' : ' Publicado'}
+                    </div>
+                )}
 
                 <div className="standard-article-container">
                     <div className="standard-article-header">

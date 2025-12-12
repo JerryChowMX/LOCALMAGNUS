@@ -104,7 +104,7 @@ export const useStrapiArticles = (page = 1, pageSize = 10, date?: string) => {
     return { data, isLoading, error };
 };
 
-export const useStrapiArticle = (slug: string) => {
+export const useStrapiArticle = (slug: string, options?: { status?: 'draft' | 'published' }) => {
     const [data, setData] = useState<StrapiArticle | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
@@ -116,7 +116,7 @@ export const useStrapiArticle = (slug: string) => {
             try {
                 setIsLoading(true);
                 setError(null);
-                const article = await articleApi.getArticleBySlug(slug);
+                const article = await articleApi.getArticleBySlug(slug, options);
                 setData(article);
             } catch (err) {
                 setError(err instanceof Error ? err : new Error('Failed to load article from Strapi'));
@@ -126,7 +126,7 @@ export const useStrapiArticle = (slug: string) => {
         };
 
         fetchArticle();
-    }, [slug]);
+    }, [slug, options?.status]);
 
     return { article: data, isLoading, error };
 };
