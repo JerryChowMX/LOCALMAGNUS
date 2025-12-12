@@ -34,6 +34,31 @@
 
   /* Podcast */
   --podcast-blob-color: #E0F2FE;
+
+  /* --- Spacing System --- */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+  --spacing-2xl: 32px;
+  --spacing-3xl: 48px;
+
+  /* --- Glassmorphism --- */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-blur: 16px;
+  --overlay-bg: rgba(0, 0, 0, 0.2);
+
+  /* --- Shadows --- */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-3: 0 12px 32px rgba(0, 0, 0, 0.12);
+
+  /* --- Aliases & Legacy Support --- */
+  --color-brand-orange: var(--magnus-orange);
+  --color-accent: var(--magnus-blue);
 }
 
 [data-theme='dark'] {
@@ -55,4 +80,13 @@
 
   /* Podcast - Deep blue glow */
   --podcast-blob-color: rgba(56, 189, 248, 0.2);
+
+  /* Glassmorphism - Dark Mode */
+  --glass-bg: rgba(30, 41, 59, 0.7);
+  /* Slate-800 with opacity */
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --overlay-bg: rgba(0, 0, 0, 0.6);
+
+  /* Shadows - Dark Mode */
+  --shadow-3: 0 12px 32px rgba(0, 0, 0, 0.5);
 }

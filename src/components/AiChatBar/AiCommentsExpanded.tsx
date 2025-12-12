@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { CommentsSection } from '../../components/Comments/CommentsSection';
 import type { Comment } from '../../components/Comments/types';
-import './styles.css';
+import './AiChatBar.css';
 
 interface AiCommentsExpandedProps {
     onClose: () => void;

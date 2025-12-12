@@ -1,6 +1,6 @@
 import React from 'react';
 import { SparklesIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/solid';
-import './AiChatBarCollapsed.css';
+import './AiChatBar.css';
 
 interface AiChatBarCollapsedProps {
     onChatClick?: () => void;
@@ -13,25 +13,25 @@ interface AiChatBarCollapsedProps {
 export const AiChatBarCollapsed: React.FC<AiChatBarCollapsedProps> = ({
     onChatClick,
     onCommentsClick,
-    commentCount = 12,
+    commentCount = 12, // Kept in props interface but not used in render per previous request
     style,
     className
 }) => {
     return (
-        <div className={`chatBarContainer ${className || ''}`} style={style}>
-            {/* Chat Section with Tech Glow Gradient */}
-            <button className="chatButton" onClick={onChatClick}>
-                <div className="chatIconWrapper">
+        <div className={`ai-chat-bar-container ${className || ''}`} style={style}>
+            {/* Chat Section */}
+            <button className="ai-chat-button" onClick={onChatClick}>
+                <div className="ai-chat-icon-wrapper">
                     <SparklesIcon style={{ width: '20px', height: '20px' }} />
                 </div>
                 <span className="chatLabel">Chatear</span>
             </button>
 
             {/* Divider */}
-            <div className="divider"></div>
+            <div className="ai-chat-divider"></div>
 
             {/* Comments Section */}
-            <button className="commentsButton" onClick={onCommentsClick}>
+            <button className="ai-comments-button" onClick={onCommentsClick}>
                 <ChatBubbleLeftRightIcon style={{ width: '20px', height: '20px' }} />
                 <span>Comentar</span>
             </button>

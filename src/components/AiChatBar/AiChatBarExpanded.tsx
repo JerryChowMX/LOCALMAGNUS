@@ -2,8 +2,7 @@ import React from 'react';
 import { Display } from '../Typography/Typography';
 import { useAiChat } from '../../hooks/useAiChat';
 import type { AiChatUsedProps } from '../../lib/analytics';
-import './styles.css';
-import './AiChatBarExpanded.css';
+import './AiChatBar.css';
 
 interface AiChatBarExpandedProps {
     onClose: () => void;
@@ -83,7 +82,7 @@ export const AiChatBarExpanded: React.FC<AiChatBarExpandedProps> = ({ onClose, c
                         </div>
                     )}
 
-                    <div className="ai-chat-bar-collapsed ai-chat-input-wrapper">
+                    <div className="ai-chat-input-wrapper">
                         <input
                             type="text"
                             value={input}
