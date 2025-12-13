@@ -2,7 +2,7 @@
     position: relative;
     width: 100%;
     aspect-ratio: 3/4;
-    border-radius: var(--radius-lg);
+    border-radius: 0;
     overflow: hidden;
     cursor: pointer;
     background-size: cover;

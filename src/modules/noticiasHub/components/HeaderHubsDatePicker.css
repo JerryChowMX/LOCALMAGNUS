@@ -3,7 +3,7 @@
 .magnus-datepicker {
     font-family: var(--font-family-body);
     border: 1px solid rgba(255, 255, 255, 0.3) !important;
-    border-radius: 16px !important;
+    border-radius: 0 !important;
 
     /* Glassmorphism */
     background: rgba(255, 255, 255, 0.85) !important;
@@ -62,7 +62,7 @@
 /* Days */
 .magnus-datepicker .react-datepicker__day {
     color: #111827;
-    border-radius: 10px !important;
+    border-radius: 0 !important;
     font-weight: 600;
     font-size: 0.9rem;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -108,12 +108,20 @@
 
 /* Navigation Arrows */
 .magnus-datepicker .react-datepicker__navigation {
-    top: 24px;
+    top: 20px;
     width: 32px;
     height: 32px;
-    border-radius: 8px;
+    border-radius: 0;
     background: rgba(255, 255, 255, 0.5);
     transition: all 0.2s ease;
+}
+
+.magnus-datepicker .react-datepicker__navigation--previous {
+    left: 24px;
+}
+
+.magnus-datepicker .react-datepicker__navigation--next {
+    right: 24px;
 }
 
 .magnus-datepicker .react-datepicker__navigation:hover {
