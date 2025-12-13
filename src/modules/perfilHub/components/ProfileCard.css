@@ -176,7 +176,7 @@
 .profile-card__edit-desc-btn {
     background: none;
     border: none;
-    color: var(--color-accent);
+    color: var(--text-secondary);
     font-size: var(--font-size-caption);
     font-weight: 600;
     cursor: pointer;
@@ -185,9 +185,12 @@
     gap: 4px;
     padding: 4px 8px;
     border-radius: 0;
+    opacity: 0.7;
+    transition: opacity 0.2s;
 }
 
 .profile-card__edit-desc-btn:hover {
+    opacity: 1;
     background-color: var(--bg-tertiary);
 }
 
@@ -254,7 +257,7 @@
     line-height: 1.6;
     text-align: left;
     white-space: pre-wrap;
-    border-left: 2px solid var(--border-secondary);
+    border-left: 2px solid var(--color-accent);
     padding-left: 12px;
 }
 

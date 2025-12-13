@@ -158,7 +158,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({ user, onLogin, onUpdat
                             className="profile-card__edit-desc-btn"
                             onClick={() => setIsEditingDescription(true)}
                         >
-                            <Icons.edit size={14} stroke={1.5} /> Editar
+                            <Icons.edit size={14} stroke={1.5} />
                         </button>
                     )}
                 </div>
