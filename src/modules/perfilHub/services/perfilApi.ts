@@ -4,15 +4,35 @@ import type { UserProfile, AppSettings } from '../../../types/perfil';
 import { MOCK_PROFILE, MOCK_SETTINGS } from '../mocks/profile.mock';
 
 // Helper to map Strapi User to UserProfile
-const mapStrapiUser = (user: any): UserProfile => ({
-    id: user.id.toString(),
-    name: user.username,
-    email: user.email,
-    avatarUrl: user.avatar?.url ? `${import.meta.env.VITE_STRAPI_URL.replace('/api', '')}${user.avatar.url}` : undefined,
-    plan: 'Plan Gratuito', // Default for now
-    memberSince: user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'Reciente',
-    description: user.description
-});
+const mapStrapiUser = (user: any): UserProfile => {
+    const strapiUrl = import.meta.env.VITE_STRAPI_URL?.replace('/api', '') || 'http://localhost:1337';
+
+    // Handle different avatar structures
+    let avatarUrl: string | undefined;
+    if (user.avatar) {
+        // Direct url property
+        if (user.avatar.url) {
+            avatarUrl = user.avatar.url.startsWith('http')
+                ? user.avatar.url
+                : `${strapiUrl}${user.avatar.url}`;
+        }
+        // Nested data structure (Strapi v4/v5)
+        else if (user.avatar.data?.attributes?.url) {
+            const url = user.avatar.data.attributes.url;
+            avatarUrl = url.startsWith('http') ? url : `${strapiUrl}${url}`;
+        }
+    }
+
+    return {
+        id: user.id.toString(),
+        name: user.username,
+        email: user.email,
+        avatarUrl,
+        plan: 'Plan Gratuito',
+        memberSince: user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'Reciente',
+        description: user.description
+    };
+};
 
 export const perfilApi = {
     updateUserProfile: async (data: Partial<UserProfile> & { avatarFile?: File }) => {
@@ -21,19 +41,37 @@ export const perfilApi = {
                 let avatarId: number | undefined;
 
                 if (data.avatarFile) {
+                    console.log('[perfilApi] Uploading avatar file...');
                     const uploadResult = await strapiClient.upload(data.avatarFile);
+                    console.log('[perfilApi] Upload result:', uploadResult);
                     avatarId = uploadResult.id;
                 }
 
+                // Build update payload
                 const updatePayload: any = {};
                 if (data.name) updatePayload.username = data.name;
-                if (data.description) updatePayload.description = data.description;
-                if (avatarId) updatePayload.avatar = avatarId;
+                if (data.description !== undefined) updatePayload.description = data.description;
 
-                await strapiClient.put<any>(`/users/${data.id}`, updatePayload);
+                // For Strapi v5 Users-permissions, try setting avatar directly by ID
+                if (avatarId) {
+                    updatePayload.avatar = avatarId;
+                }
 
-                // Fetch fresh data to get populated avatar using /me to avoid permission issues with /:id
-                const updatedUser = await strapiClient.get<any>('/users/me?populate=*');
+                if (Object.keys(updatePayload).length > 0) {
+                    console.log('[perfilApi] Updating user with payload:', updatePayload, 'for user ID:', data.id);
+                    try {
+                        await strapiClient.put<any>(`/users/${data.id}`, updatePayload);
+                        console.log('[perfilApi] User update completed');
+                    } catch (err) {
+                        console.error('[perfilApi] User update failed:', err);
+                        throw err;
+                    }
+                }
+
+                // Fetch fresh data to get populated avatar
+                const updatedUser = await strapiClient.get<any>('/users/me?populate=avatar');
+                console.log('[perfilApi] Fetched updated user:', updatedUser);
+                console.log('[perfilApi] User avatar field:', updatedUser.avatar);
                 return mapStrapiUser(updatedUser);
             },
             { ...MOCK_PROFILE, ...data }, // Optimistic mock update

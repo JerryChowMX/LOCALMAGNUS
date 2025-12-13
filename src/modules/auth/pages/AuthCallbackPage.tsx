@@ -2,8 +2,43 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { PageWrapper } from '../../../components/Layout/PageWrapper';
-import { Section } from '../../../components/Layout/Section';
-import { Heading, Text } from '../../../components/Typography/Typography';
+import { Icons } from '../../../components/Icons';
+import './AuthCallbackPage.css';
+
+// Error message translations
+const ERROR_MESSAGES: Record<string, { title: string; message: string }> = {
+    access_denied: {
+        title: 'Acceso Denegado',
+        message: 'Por favor, intenta de nuevo.'
+    },
+    invalid_request: {
+        title: 'Solicitud Inválida',
+        message: 'Hubo un problema con la solicitud de autenticación. Por favor, intenta de nuevo.'
+    },
+    unauthorized_client: {
+        title: 'Cliente No Autorizado',
+        message: 'Esta aplicación no está autorizada para realizar esta operación.'
+    },
+    server_error: {
+        title: 'Error del Servidor',
+        message: 'Ocurrió un error en el servidor de autenticación. Por favor, intenta más tarde.'
+    },
+    temporarily_unavailable: {
+        title: 'Servicio No Disponible',
+        message: 'El servicio de autenticación no está disponible temporalmente. Por favor, intenta más tarde.'
+    },
+    default: {
+        title: 'Error de Autenticación',
+        message: 'Ocurrió un error durante el inicio de sesión. Por favor, intenta de nuevo.'
+    }
+};
+
+// Provider display names
+const PROVIDER_NAMES: Record<string, string> = {
+    google: 'Google',
+    apple: 'Apple',
+    facebook: 'Facebook'
+};
 
 export const AuthCallbackPage: React.FC = () => {
     const location = useLocation();
@@ -11,20 +46,37 @@ export const AuthCallbackPage: React.FC = () => {
     const { provider } = useParams<{ provider: string }>();
     const { socialLogin } = useAuth();
     const [error, setError] = useState<string | null>(null);
+    const [errorCode, setErrorCode] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const handleCallback = async () => {
             if (!provider) {
-                setError('No provider specified');
+                setError('No se especificó el proveedor de autenticación');
+                setErrorCode('default');
+                setIsLoading(false);
                 return;
             }
 
             const searchParams = new URLSearchParams(location.search);
+
+            // Check for OAuth error in URL first
+            const urlError = searchParams.get('error');
+            if (urlError) {
+                setErrorCode(urlError);
+                const errorInfo = ERROR_MESSAGES[urlError] || ERROR_MESSAGES.default;
+                setError(errorInfo.message);
+                setIsLoading(false);
+                return;
+            }
+
             const accessToken = searchParams.get('access_token');
             const idToken = searchParams.get('id_token');
 
             if (!accessToken && !idToken) {
-                setError('No authentication token received');
+                setError('No se recibió un token de autenticación');
+                setErrorCode('default');
+                setIsLoading(false);
                 return;
             }
 
@@ -41,8 +93,7 @@ export const AuthCallbackPage: React.FC = () => {
                     if (data.jwt) {
                         jwt = data.jwt;
                     } else {
-                        // Capture exchange error
-                        throw new Error(`Token exchange failed: ${data.error?.message || JSON.stringify(data)}`);
+                        throw new Error(data.error?.message || 'Error al intercambiar el token');
                     }
                 }
 
@@ -50,45 +101,64 @@ export const AuthCallbackPage: React.FC = () => {
                     await socialLogin(jwt);
                     navigate('/PerfilHub', { replace: true });
                 } else {
-                    setError('Authentication flow failed: No JWT could be obtained.');
+                    setError('No se pudo obtener el token de sesión');
+                    setErrorCode('default');
                 }
 
             } catch (err: any) {
                 console.error('Auth callback error', err);
-                const jwt = new URLSearchParams(location.search).get('access_token') || '';
-                const tokenPrefix = jwt.substring(0, 5);
-                const params = Array.from(new URLSearchParams(location.search).keys()).join(', ');
-
-                const errorMessage = err.message || 'Unknown error';
-                setError(`Auth Failed. Params: [${params}]. Prefix: ${tokenPrefix}. Msg: ${errorMessage}`);
+                setError(err.message || 'Error desconocido durante la autenticación');
+                setErrorCode('default');
+            } finally {
+                setIsLoading(false);
             }
         };
 
         handleCallback();
     }, [location, provider, socialLogin, navigate]);
 
+    const handleReturnToLogin = () => {
+        navigate('/login');
+    };
+
+    const providerName = PROVIDER_NAMES[provider || ''] || provider || 'el proveedor';
+    const errorInfo = ERROR_MESSAGES[errorCode || 'default'] || ERROR_MESSAGES.default;
+
+    // Error state
     if (error) {
         return (
             <PageWrapper>
-                <Section padding="lg">
-                    <Heading level={2}>Authentication Error</Heading>
-                    <Text variant="body" color="error">{error}</Text>
-                    <Text variant="caption" className="cursor-pointer" onClick={() => navigate('/login')}>
-                        Return to Login
-                    </Text>
-                </Section>
+                <div className="auth-callback">
+                    <div className="auth-callback__icon auth-callback__icon--error">
+                        <Icons.alertCircle size={80} stroke={1.5} />
+                    </div>
+                    <h1 className="auth-callback__title">{errorInfo.title}</h1>
+                    <p className="auth-callback__message">{error}</p>
+                    <button
+                        type="button"
+                        className="auth-callback__button"
+                        onClick={handleReturnToLogin}
+                    >
+                        <Icons.arrowLeft size={20} />
+                        Volver al inicio de sesión
+                    </button>
+                </div>
             </PageWrapper>
         );
     }
 
+    // Loading state
     return (
         <PageWrapper>
-            <Section padding="lg">
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem' }}>
-                    <Heading level={3}>Authenticating with {provider}...</Heading>
-                    <Text variant="body">Please wait while we log you in.</Text>
+            <div className="auth-callback">
+                <div className="auth-callback__icon auth-callback__icon--loading">
+                    <div className="auth-callback__spinner" />
                 </div>
-            </Section>
+                <h1 className="auth-callback__title">Iniciando sesión con {providerName}</h1>
+                <p className="auth-callback__message">
+                    Por favor espera mientras completamos tu inicio de sesión...
+                </p>
+            </div>
         </PageWrapper>
     );
 };

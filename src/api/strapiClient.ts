@@ -153,11 +153,20 @@ class StrapiClient {
 
     /**
      * Upload a file to Strapi
+     * @param file The file to upload
+     * @param linkTo Optional - link the file to an entity during upload
      */
-    async upload(file: File): Promise<any> {
+    async upload(file: File, linkTo?: { ref: string; refId: string | number; field: string }): Promise<any> {
         const url = `${this.baseUrl}/upload`;
         const formData = new FormData();
         formData.append('files', file);
+
+        // If linking to an entity, add the reference info
+        if (linkTo) {
+            formData.append('ref', linkTo.ref);
+            formData.append('refId', linkTo.refId.toString());
+            formData.append('field', linkTo.field);
+        }
 
         const headers: Record<string, string> = {
             ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}),

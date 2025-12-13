@@ -30,8 +30,13 @@ export const PerfilHubPage: React.FC = () => {
     };
 
     const handleUpdateProfile = async (data: Partial<UserProfile>, file?: File) => {
+        if (!user?.id) {
+            console.error('Cannot update profile: No user ID');
+            throw new Error('No user logged in');
+        }
+
         try {
-            const updated = await updateProfile(data, file);
+            const updated = await updateProfile({ ...data, id: user.id }, file);
             if (updated) {
                 // Update global auth state
                 updateUser({

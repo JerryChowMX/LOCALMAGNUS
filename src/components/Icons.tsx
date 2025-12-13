@@ -35,6 +35,7 @@ import {
     IconCheck,
     IconMaximize,
     IconMinimize,
+    IconAlertCircle,
 } from '@tabler/icons-react';
 
 export const Icons = {
@@ -74,4 +75,6 @@ export const Icons = {
     check: IconCheck,
     maximize: IconMaximize,
     minimize: IconMinimize,
+    alertCircle: IconAlertCircle,
+    arrowLeft: IconArrowLeft,
 };

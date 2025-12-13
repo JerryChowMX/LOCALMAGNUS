@@ -53,16 +53,17 @@ export const useProfile = () => {
         }
     };
 
-    const updateProfile = async (data: Partial<UserProfile>, avatarFile?: File) => {
-        if (!profile?.id) {
-            console.error('Cannot update profile: No profile ID loaded');
-            throw new Error('No profile loaded');
+    const updateProfile = async (data: Partial<UserProfile> & { id?: string }, avatarFile?: File) => {
+        const userId = data.id || profile?.id;
+        if (!userId) {
+            console.error('Cannot update profile: No profile ID provided or loaded');
+            throw new Error('No profile ID available');
         }
 
         try {
             const { data: updatedProfile } = await perfilApi.updateUserProfile({
                 ...data,
-                id: profile.id,
+                id: userId,
                 avatarFile
             });
             setProfile(updatedProfile);
