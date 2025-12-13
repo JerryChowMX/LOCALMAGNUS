@@ -13,7 +13,6 @@ interface AiChatBarCollapsedProps {
 export const AiChatBarCollapsed: React.FC<AiChatBarCollapsedProps> = ({
     onChatClick,
     onCommentsClick,
-    commentCount = 12, // Kept in props interface but not used in render per previous request
     style,
     className
 }) => {

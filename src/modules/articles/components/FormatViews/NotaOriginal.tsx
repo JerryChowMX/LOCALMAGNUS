@@ -97,7 +97,7 @@ export const NotaOriginal: FC<NotaOriginalProps> = ({ article }) => {
                     return (
                         <ArticleRichText
                             key={index}
-                            blocks={block.blocks || block.body || []}
+                            blocks={(block as any).blocks || (block as any).body || []}
                         />
                     );
                 }
@@ -107,8 +107,8 @@ export const NotaOriginal: FC<NotaOriginalProps> = ({ article }) => {
                     return (
                         <ArticleQuote
                             key={index}
-                            quote={block.quote || block.text || (block as any).quote_text || ''}
-                            author={block.author || (block as any).author_title || ''}
+                            quote={(block as any).quote || (block as any).text || (block as any).quote_text || ''}
+                            author={(block as any).author || (block as any).author_title || ''}
                         />
                     );
                 }

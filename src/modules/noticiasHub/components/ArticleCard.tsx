@@ -16,7 +16,6 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
     title,
     imageUrl,
     publishedAt,
-    section,
     variant = "light",
     onClick
 }) => {

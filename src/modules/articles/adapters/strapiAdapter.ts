@@ -34,7 +34,7 @@ export const adaptStrapiArticleToClient = (data: any): Article => {
                 url: attributes.image.data.attributes.url,
                 caption: attributes.image.data.attributes.caption,
                 alternativeText: attributes.image.data.attributes.alternativeText,
-            } : (attributes.image?.url ? attributes.image : { url: "" || "/placeholder.jpg" }),
+            } : (attributes.image?.url ? attributes.image : { url: "/placeholder.jpg" }),
             // Fallback for when 'image' is already flat (e.g. from Mock) or missing.
 
             // Flatten Author (Relation)

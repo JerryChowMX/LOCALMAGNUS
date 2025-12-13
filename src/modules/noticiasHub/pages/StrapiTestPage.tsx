@@ -14,7 +14,7 @@ const StrapiTestPage = () => {
         setSetupLog(['Starting setup...']);
         try {
             // 1. Create or Get Author
-            let authorId;
+            let authorId: string | number | undefined;
             const authors: any = await strapiClient.get('/authors?filters[name][$eq]=Ana Martínez');
             if (authors.data && authors.data.length > 0) {
                 authorId = authors.data[0].id || authors.data[0].documentId;
@@ -116,7 +116,7 @@ const StrapiTestPage = () => {
                                 {article.hero_image && (
                                     <img
                                         src={`http://localhost:1337${article.hero_image.url}`}
-                                        alt={article.hero_image.alternativeText || article.description || article.title}
+                                        alt={article.hero_image.alternativeText || article.title}
                                         className="w-full h-48 object-cover"
                                     />
                                 )}

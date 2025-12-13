@@ -1,5 +1,5 @@
 import { strapiClient } from "../api/strapiClient";
-import type { StrapiArticleAttributes, StrapiCollectionResponse, StrapiData, StrapiArticle } from "../types/strapi";
+import type { StrapiArticleAttributes, StrapiCollectionResponse, StrapiArticle } from "../types/strapi";
 
 // Helper to normalize Strapi response to frontend-friendly format
 function normalizeArticle(data: any): StrapiArticle {

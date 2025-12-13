@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Article } from '../api/articlesApi';
+import type { Article } from '../types';
 import { Tag } from './Tag';
 import { Stack } from '../../../components/Layout/Stack';
 import { Headline, Body, Caption } from '../../../components/Typography/Typography';
@@ -29,7 +29,7 @@ export const NewsCard: React.FC<NewsCardProps> = ({
             </div>
             <div className="news-card__content">
                 <Stack spacing="sm">
-                    {category && <Tag label={category} />}
+                    {category && <Tag label={category.name} />}
                     <Headline level={variant === 'featured' ? 2 : 3} className="news-card__title">
                         {title}
                     </Headline>

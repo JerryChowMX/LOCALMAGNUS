@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { fetchArticles } from '../api/articlesApi';
-import type { Article, Meta } from '../api/articlesApi';
+import type { Meta } from '../api/articlesApi';
+import type { Article } from '../types';
 
 export const useArticles = (page: number = 1, pageSize: number = 10) => {
     const [articles, setArticles] = useState<Article[]>([]);

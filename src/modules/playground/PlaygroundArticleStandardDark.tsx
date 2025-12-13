@@ -119,7 +119,7 @@ export const PlaygroundArticleStandardDark = () => {
             </div>
 
             {/* 3. AI Chat Bar (Fixed at the bottom via CSS default) */}
-            <AiChatBarCollapsed onClick={() => setIsChatOpen(true)} />
+            <AiChatBarCollapsed onChatClick={() => setIsChatOpen(true)} />
 
             {/* Expanded Chat Modal */}
             {

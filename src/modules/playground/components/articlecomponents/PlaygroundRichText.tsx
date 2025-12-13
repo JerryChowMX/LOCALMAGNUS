@@ -1,6 +1,6 @@
 import { PageWrapper } from '../../../../components/Layout/PageWrapper';
 import { HeaderContent } from '../../../../modules/noticiasHub/components/HeaderContent';
-import { Heading, Text } from '../../../../components/Typography/Typography';
+import { Heading } from '../../../../components/Typography/Typography';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '../../../../app/routes';
 

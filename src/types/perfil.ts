@@ -5,6 +5,7 @@ export interface UserProfile {
     avatarUrl?: string;
     plan?: string;
     memberSince?: string;
+    description?: string;
 }
 
 export interface AppSettings {

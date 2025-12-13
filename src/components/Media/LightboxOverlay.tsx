@@ -10,7 +10,7 @@ export const LightboxOverlay: React.FC = () => {
     const [isDragging, setIsDragging] = useState(false);
     const dragStart = useRef({ x: 0, y: 0 });
     const imageRef = useRef<HTMLImageElement>(null);
-    const requestRef = useRef<number>();
+    const requestRef = useRef<number | undefined>(undefined);
 
     // Reset state when opening new image
     useEffect(() => {

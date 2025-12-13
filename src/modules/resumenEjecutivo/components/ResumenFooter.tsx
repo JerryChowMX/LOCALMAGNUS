@@ -1,7 +1,7 @@
 // ... imports
 import { useLightbox } from '../../../context/LightboxContext';
 import styles from './ResumenComponents.module.css';
-import { Heading, Text } from '../../../components/Typography/Typography';
+import { Heading } from '../../../components/Typography/Typography';
 
 export interface ResumenFooterProps {
     thumbnailUrl: string;
@@ -14,7 +14,7 @@ export const ResumenFooter = ({ thumbnailUrl, articleTitle, onReadMore }: Resume
 
     const handleImageClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-        openLightbox(thumbnailUrl, articleTitle, articleTitle);
+        openLightbox([{ src: thumbnailUrl, caption: articleTitle, alt: articleTitle }], 0);
     };
 
     return (

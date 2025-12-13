@@ -53,9 +53,9 @@ export const PlaygroundComponents = () => {
                     />
 
                     <PlaygroundLink
-                        to={routes.noticiasHub(today)}
-                        title={`NoticiasHub/${today}`}
-                        description="Direct link to today's NoticiasHub."
+                        to={routes.notas(today)}
+                        title={`Notas/${today}`}
+                        description="Direct link to today's Notas feed."
                     />
 
                     <PlaygroundLink
