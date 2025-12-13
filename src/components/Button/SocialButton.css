@@ -33,10 +33,9 @@
     color: var(--text-primary);
 }
 
-/* Google icon - ensure visibility in both light and dark mode */
+/* Google icon - black in light mode, white in dark mode */
 .social-button--google .social-button__icon {
-    color: #4285F4;
-    /* Google blue - always visible */
+    color: #000000;
 }
 
 /* For dark mode, ensure good contrast */
