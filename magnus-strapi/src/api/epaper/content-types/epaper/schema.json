@@ -1,0 +1,49 @@
+{
+    "kind": "collectionType",
+    "collectionName": "epapers",
+    "info": {
+        "singularName": "epaper",
+        "pluralName": "epapers",
+        "displayName": "EPaper",
+        "description": "Daily newspaper PDF editions"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "edition_date": {
+            "type": "date",
+            "required": true,
+            "unique": true
+        },
+        "title": {
+            "type": "string",
+            "maxLength": 130,
+            "default": "Edición del día"
+        },
+        "cover_image": {
+            "type": "media",
+            "multiple": false,
+            "required": false,
+            "allowedTypes": [
+                "images"
+            ]
+        },
+        "pdf_file": {
+            "type": "media",
+            "multiple": false,
+            "required": true,
+            "allowedTypes": [
+                "files"
+            ]
+        },
+        "page_count": {
+            "type": "integer"
+        },
+        "description": {
+            "type": "text",
+            "maxLength": 500
+        }
+    }
+}

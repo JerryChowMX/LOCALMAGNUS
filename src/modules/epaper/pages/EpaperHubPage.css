@@ -7,6 +7,43 @@
 }
 
 .epaper-single-edition-container .epaper-card {
-    max-width: 400px;
+    max-width: 500px;
     width: 100%;
+}
+
+/* Instructions Section */
+.epaper-instructions {
+    text-align: center;
+    padding: var(--spacing-xl) var(--spacing-md);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.epaper-instructions__tap {
+    font-family: 'Blinker', sans-serif;
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-xl) 0;
+    opacity: 0.9;
+}
+
+.epaper-instructions__features {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.epaper-instructions__feature {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    font-family: 'Blinker', sans-serif;
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+}
+
+.epaper-instructions__icon {
+    font-size: 1.25rem;
 }

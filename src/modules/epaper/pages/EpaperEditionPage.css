@@ -1,3 +1,136 @@
-.epaper-edition-viewer {
+.epaper-viewer__loading,
+.epaper-viewer__error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+    gap: var(--spacing-lg);
+    color: var(--text-secondary);
+    font-family: 'Blinker', sans-serif;
+}
+
+.epaper-viewer__spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border-secondary);
+    border-top-color: var(--color-accent);
+    border-radius: 50%;
+    animation: epaper-spin 1s linear infinite;
+}
+
+@keyframes epaper-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.epaper-viewer__error button {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    background: var(--color-accent);
+    color: white;
+    border: none;
+    border-radius: 0;
+    font-family: 'Blinker', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Chat Overlay Container */
+.epaper-chat-container {
+    position: fixed;
+    bottom: 30px;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    /* transform removed to prevent stacking context trap for fixed children */
     width: 100%;
+    max-width: 800px;
+    z-index: 2000;
+    /* High z-index to ensure expanded chat sits above everything */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+    /* Let clicks pass through area around bar */
+}
+
+/* Re-enable pointer events for interactive children */
+.epaper-chat-container>* {
+    pointer-events: auto;
+}
+
+/* OVERRIDE: Force AiChatBar to participate in flex flow */
+.epaper-chat-container .ai-chat-bar-container {
+    position: relative !important;
+    bottom: auto !important;
+    left: auto !important;
+    transform: none !important;
+    z-index: auto !important;
+    margin-bottom: 0 !important;
+}
+
+/* Toggle Text */
+.epaper-toggle-text {
+    display: block;
+    width: auto;
+    padding: 4px 12px;
+    margin-top: 8px;
+    /* Space between bar and text */
+
+    background: transparent;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+    /* Use filter for better text shadow on transparent bg */
+    border: none;
+
+    font-family: 'Blinker', sans-serif;
+    font-size: var(--font-size-caption);
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    border-radius: 4px;
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.epaper-toggle-text:hover {
+    background: transparent;
+    color: white;
+    transform: scale(1.05);
+}
+
+/* Mostrar button when chat bar is hidden - fixed at bottom center */
+.epaper-toggle-text--bottom {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+}
+
+/* Fullscreen Container Wrapper */
+.epaper-fullscreen-container {
+    width: 100%;
+    position: relative;
+}
+
+.epaper-fullscreen-container:fullscreen {
+    background: #1a1a1a;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* When wrapper is fullscreen, pdf viewer should take full height and center content */
+.epaper-fullscreen-container:fullscreen .pdf-viewer {
+    height: 100vh !important;
+}
+
+.epaper-fullscreen-container:fullscreen .pdf-viewer__content {
+    justify-content: center;
+    padding-top: 0;
+    padding-bottom: 0;
 }

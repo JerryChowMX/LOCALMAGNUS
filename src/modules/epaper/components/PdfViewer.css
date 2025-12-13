@@ -1,13 +1,270 @@
-.pdf-viewer-container {
+.pdf-viewer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
-    height: 80vh;
-    background: #333;
+    height: calc(100vh - 60px);
+    /* Always use full height minus header */
+    position: relative;
+    overflow: hidden;
+    transition: height 0.3s ease;
+}
+
+/* Fullscreen mode modifier - effectively same height now */
+.pdf-viewer--fullscreen {
+    height: calc(100vh - 60px);
+}
+
+/* Loading State */
+.pdf-viewer__loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+    z-index: 10;
+}
+
+.pdf-viewer__progress-container {
+    width: 200px;
+    height: 4px;
+    background: var(--border-secondary);
+    overflow: hidden;
+}
+
+.pdf-viewer__progress-bar {
+    height: 100%;
+    background: var(--color-accent);
+    transition: width 0.3s ease;
+}
+
+.pdf-viewer__progress-text {
+    font-family: 'Blinker', sans-serif;
+    font-size: var(--font-size-caption);
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* Error State */
+.pdf-viewer__error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    gap: var(--spacing-md);
+    color: var(--text-secondary);
+    font-family: 'Blinker', sans-serif;
+}
+
+.pdf-viewer__retry-btn {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    background: var(--color-accent);
+    color: white;
+    border: none;
+    border-radius: 0;
+    font-family: 'Blinker', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Content Container - PDF with overlayed navigation */
+/* Content Container - PDF with overlayed navigation */
+.pdf-viewer__content {
+    display: flex;
+    flex-direction: column;
+    /* Stack vertically */
+    align-items: center;
+    /* Center horizontally */
+    justify-content: flex-start;
+    /* Align top */
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow-y: auto;
+    /* Vertical scroll */
+    overflow-x: hidden;
+    padding-top: 20px;
+    padding-bottom: 120px;
+    /* Space for chat bar */
+}
+
+/* PDF Document wrapper */
+.pdf-viewer__document {
+    /* Top aligned now */
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    transition: opacity 0.3s ease;
+}
+
+.pdf-viewer__document canvas {
+    max-width: 100%;
+    height: auto !important;
+}
+
+/* Glassmorphic Chevron Navigation - Fixed to viewport */
+.pdf-viewer__nav-chevron {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 48px;
+    height: 80px;
+
+    /* Transparent */
+    background: transparent;
+    border: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+
+    /* No rounded corners per Magnus rules */
+    border-radius: 0;
+
+    /* Typography */
+    font-size: 32px;
+    font-weight: 300;
+    color: rgba(0, 0, 0, 0.7);
+
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.pdf-viewer-placeholder {
+.pdf-viewer__nav-chevron--left {
+    left: var(--spacing-sm);
+    /* Add padding from edge */
+}
+
+.pdf-viewer__nav-chevron--right {
+    right: var(--spacing-sm);
+    /* Add padding from edge */
+}
+
+.pdf-viewer__nav-chevron:hover:not(:disabled) {
+    color: black;
+    transform: translateY(-50%) scale(1.2);
+    /* Scale up slightly and keep centered */
+    background: transparent;
+}
+
+
+
+.pdf-viewer__nav-chevron:disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+}
+
+/* Dark mode adjustments - Only change color if needed, no background */
+[data-theme="dark"] .pdf-viewer__nav-chevron {
+    background: transparent;
+    border-color: transparent;
+}
+
+[data-theme="dark"] .pdf-viewer__nav-chevron:hover:not(:disabled) {
+    background: transparent;
+}
+
+/* Page Indicator - Fixed at bottom of viewport */
+/* Page Indicator - Discreet at bottom */
+/* Page Indicator - Hidden by default, shown in fullscreen */
+.pdf-viewer__page-indicator {
+    display: none;
+    /* Hidden by default per user request */
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+
+    padding: 4px 12px;
+
+    /* Minimal style */
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: none;
+
+    font-family: 'Blinker', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 1px;
+}
+
+/* Show only in fullscreen - Check ancestor or self */
+.pdf-viewer:fullscreen .pdf-viewer__page-indicator,
+:fullscreen .pdf-viewer__page-indicator,
+.epaper-fullscreen-container:fullscreen .pdf-viewer__page-indicator {
+    display: block;
+}
+
+
+
+[data-theme="dark"] .pdf-viewer__page-indicator {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+    .pdf-viewer__nav-chevron {
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+    }
+
+    .pdf-viewer__content {
+        gap: var(--spacing-xs);
+    }
+}
+
+/* Fullscreen Toggle Button */
+.pdf-viewer__fullscreen-btn {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    z-index: 100;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+
+    /* Glassmorphism */
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    /* No rounded corners per Magnus rules */
+    border-radius: 0;
+
     color: white;
-    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pdf-viewer__fullscreen-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+    transform: scale(1.05);
+}
+
+/* Adjust position when looking at fullscreen output */
+.pdf-viewer:fullscreen .pdf-viewer__fullscreen-btn {
+    top: 20px;
+    right: 20px;
+}
+
+/* When element is in browser fullscreen */
+.pdf-viewer:fullscreen {
+    height: 100vh;
+    background: #1a1a1a;
+    justify-content: center;
 }

@@ -14,11 +14,13 @@
     "@tabler/icons-react": "^3.35.0",
     "@types/react-datepicker": "^6.2.0",
     "lucide-react": "^0.555.0",
+    "pdfjs-dist": "^5.4.449",
     "posthog-js": "^1.301.2",
     "react": "^19.2.0",
     "react-datepicker": "^8.10.0",
     "react-dom": "^19.2.0",
     "react-markdown": "^10.1.0",
+    "react-pdf": "^10.2.0",
     "react-router-dom": "^7.10.0",
     "remark-gfm": "^4.0.1"
   },
