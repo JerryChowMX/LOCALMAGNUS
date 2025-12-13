@@ -26,6 +26,13 @@
     letter-spacing: 0.5px;
 }
 
+/* Dark mode override for forgot password link */
+[data-theme="dark"] .login-form__forgot-link,
+[data-theme="dark"] .login-form__forgot-link span,
+[data-theme="dark"] .login-form__forgot-link * {
+    color: #0284C7 !important;
+}
+
 .login-form__forgot-link:hover {
     text-decoration: underline;
 }
@@ -36,7 +43,7 @@
     text-align: center;
     background: var(--bg-error);
     padding: var(--spacing-sm);
-    border-radius: var(--radius-sm);
+    border-radius: 0;
 }
 
 .login-form__submit {
@@ -45,7 +52,7 @@
     background-color: var(--color-brand-orange);
     color: white;
     border: none;
-    border-radius: var(--radius-btn);
+    border-radius: 0;
     font-family: var(--font-family-display);
     font-size: var(--font-size-body);
     font-weight: bold;
@@ -81,4 +88,11 @@
     font-weight: 600;
     cursor: pointer;
     text-transform: uppercase;
+}
+
+/* Dark mode - use Magnus blue for links */
+[data-theme="dark"] .login-form__forgot-link,
+[data-theme="dark"] .login-form__register-link,
+[data-theme="dark"] .login-form__register-link span {
+    color: #0284C7 !important;
 }

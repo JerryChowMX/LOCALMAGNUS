@@ -126,7 +126,7 @@ export const ArticleRichText = ({ blocks }: ArticleRichTextProps) => {
     }
 
     return (
-        <div style={{ marginBottom: '40px' }}>
+        <div>
             {blocks.map((block, index) => {
                 // If it's a paragraph, we assume it might contain Markdown
                 if (block.type === 'paragraph') {

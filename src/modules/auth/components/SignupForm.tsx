@@ -57,11 +57,8 @@ export const SignupForm: React.FC = () => {
                 fullName: formData.fullName
             });
 
-            // On success, redirect to login or home (since register auto-logs in now)
-            // Let's go to PerfilHub or wherever login goes
-            navigate(routes.login, {
-                state: { message: 'Cuenta creada exitosamente.' }
-            });
+            // Registration auto-logs in the user (Strapi returns JWT), redirect to profile
+            navigate(routes.perfilHub);
         } catch (err: any) {
             // Display the actual error message from the backend
             setError(err.message || 'Error al crear la cuenta. El correo podría estar ya registrado.');

@@ -206,7 +206,7 @@ export const StandardOneArticle: FC<StandardOneArticleProps> = ({ article }) => 
                                 componentType === 'content.audio'
                             ) {
                                 return (
-                                    <div key={index} style={{ marginBottom: '24px' }}>
+                                    <div key={index}>
                                         <AudioPlayer
                                             src={getImageUrl(block.audioUrl)}
                                             title={block.title}
@@ -254,7 +254,7 @@ export const StandardOneArticle: FC<StandardOneArticleProps> = ({ article }) => 
                                 // RENDER INFOGRAPHIC
                                 if (componentType?.includes('infographic') || componentType === 'ComponentArticleInfographic') {
                                     return (
-                                        <div key={index} style={{ marginBottom: '40px' }}>
+                                        <div key={index}>
                                             <Infographic
                                                 imageUrl={imageUrl}
                                                 caption={caption}
@@ -267,7 +267,7 @@ export const StandardOneArticle: FC<StandardOneArticleProps> = ({ article }) => 
                                 // RENDER ILLUSTRATION
                                 if (componentType?.includes('illustration') || componentType === 'ComponentArticleIllustration') {
                                     return (
-                                        <div key={index} style={{ marginBottom: '40px' }}>
+                                        <div key={index}>
                                             <Illustration
                                                 imageUrl={imageUrl}
                                                 caption={caption}
@@ -279,7 +279,7 @@ export const StandardOneArticle: FC<StandardOneArticleProps> = ({ article }) => 
 
                                 // RENDER SINGLE IMAGE (Standard Border Design)
                                 return (
-                                    <div key={index} style={{ marginBottom: '40px' }}>
+                                    <div key={index}>
                                         <SingleImage
                                             imageUrl={imageUrl}
                                             caption={caption}

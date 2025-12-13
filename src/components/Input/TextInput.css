@@ -29,7 +29,7 @@
     /* Light gray/white depending on theme, but spec says light gray var(--color-surface-2) */
     border: 1px solid #D1D5DB;
     /* Visible gray border */
-    border-radius: var(--radius-lg);
+    border-radius: 0;
     color: var(--text-primary);
     transition: all 0.2s ease;
 }

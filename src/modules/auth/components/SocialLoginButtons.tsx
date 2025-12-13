@@ -5,7 +5,9 @@ import './SocialLoginButtons.css';
 export const SocialLoginButtons: React.FC = () => {
     const handleGoogleLogin = () => {
         // Redirect to Strapi's Google auth provider
-        window.location.href = `${import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337/api'}/connect/google`;
+        // Strapi OAuth endpoint is at /api/connect/google
+        const strapiBase = (import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337/api').replace(/\/api\/?$/, '');
+        window.location.href = `${strapiBase}/api/connect/google`;
     };
 
     return (

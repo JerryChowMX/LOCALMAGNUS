@@ -62,7 +62,7 @@
     padding: var(--spacing-sm) var(--spacing-md);
     background-color: var(--color-error-bg, #fee);
     color: var(--color-error, #c00);
-    border-radius: var(--radius-md);
+    border-radius: 0;
     font-size: var(--font-size-sm);
     text-align: center;
 }
@@ -102,4 +102,10 @@
 .signup-form__login-link:hover {
     opacity: 0.8;
     text-decoration: underline;
+}
+
+/* Dark mode - use Magnus blue for links */
+[data-theme="dark"] .signup-form__login-link,
+[data-theme="dark"] .signup-form__login-link span {
+    color: var(--magnus-blue, #0284C7) !important;
 }

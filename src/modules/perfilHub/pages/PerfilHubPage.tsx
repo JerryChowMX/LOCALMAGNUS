@@ -14,7 +14,6 @@ import { useProfile } from '../hooks/useProfile';
 import { useAuth } from '../../../hooks/useAuth';
 import { Body } from '../../../components/Typography/Typography';
 import { useUserPreferences } from '../../../context/ThemeContext';
-import { SimulationBanner } from '../../../components/Alerts/SimulationBanner';
 import { getAnalyticsConsent, setAnalyticsConsent } from '../../../lib/analytics';
 import type { UserProfile } from '../../../types/perfil';
 import './PerfilHubPage.css';
@@ -22,7 +21,7 @@ import './PerfilHubPage.css';
 export const PerfilHubPage: React.FC = () => {
     const navigate = useNavigate();
     const { user, logout, updateUser } = useAuth();
-    const { settings, updateSettings, updateProfile, isLoading, error, isFallback } = useProfile();
+    const { settings, updateSettings, updateProfile, isLoading, error } = useProfile();
     const { theme, toggleTheme, fontSize, setFontSize } = useUserPreferences();
     const [analyticsEnabled, setAnalyticsEnabled] = React.useState(getAnalyticsConsent());
 
@@ -83,7 +82,6 @@ export const PerfilHubPage: React.FC = () => {
             />
 
             <div className="perfil-hub-page__content">
-                {isFallback && <SimulationBanner />}
 
                 <Section padding="md">
                     <Stack spacing="lg">

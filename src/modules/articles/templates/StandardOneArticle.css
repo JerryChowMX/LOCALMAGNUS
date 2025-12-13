@@ -71,6 +71,14 @@
     padding: 0;
 }
 
+.standard-article-content>* {
+    margin-bottom: 40px;
+}
+
+.standard-article-content>*:last-child {
+    margin-bottom: 0;
+}
+
 .standard-article-audio-wrapper {
     margin-bottom: 24px;
     text-align: left;
