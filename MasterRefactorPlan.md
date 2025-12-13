@@ -31,9 +31,9 @@ Consolidate findings from 8 comprehensive audits into a prioritized action plan 
 *Goal: Remove noise and confusion.*
 
 - [x] **Audit Completion**: All 8 reports generated.
-- [ ] **Delete Dead Code**: Remove `src/modules/noticiasHub` pages and legacy layout components.
-- [ ] **Prune Routes**: Remove `/articles` placeholders from `AppRouter.tsx`.
-- [ ] **Fix Strapi Types**: Unify `StrapiArticle` definition to `src/types/strapi.ts`.
+- [x] **Delete Dead Code**: Remove `src/modules/noticiasHub` pages and legacy layout components.
+- [x] **Prune Routes**: Remove `/articles` placeholders from `AppRouter.tsx`.
+- [x] **Fix Strapi Types**: Unify `StrapiArticle` definition to `src/types/strapi.ts`.
 
 ### Phase 2: Architecture Hardening (Medium Risk)
 *Goal: Fix structural issues.*

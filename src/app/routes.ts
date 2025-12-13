@@ -8,8 +8,7 @@ export const routes = {
     forgotPassword: "/forgot-password",
     authCallback: "/connect/:provider/redirect",
 
-    articleList: "/articles",
-    articleDetail: (slug: string) => `/articles/${slug}`,
+
     audio: "/audio",
     epaper: "/epaper",
 

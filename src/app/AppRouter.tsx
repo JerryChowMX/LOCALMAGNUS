@@ -1,8 +1,8 @@
 import { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { routes } from './routes';
-import { PageWrapper } from '../components/Layout/PageWrapper';
-import { Heading, Text } from '../components/Typography/Typography';
+
+
 import { AuthProvider } from '../context/AuthContext';
 import { ProtectedRoute } from '../components/Auth/ProtectedRoute';
 import { getMonterreyDate } from '../lib/dateUtils';
@@ -85,19 +85,7 @@ const StrapiTestPage = lazy(() => import('../modules/noticiasHub/pages/StrapiTes
 
 const StandardOneRoute = lazy(() => import('./routes/article/StandardOneRoute').then(module => ({ default: module.StandardOneRoute })));
 
-const Articles = () => (
-    <PageWrapper>
-        <Heading level={2}>Latest Articles</Heading>
-        <Text variant="body">Article list will go here.</Text>
-    </PageWrapper>
-);
 
-const ArticleDetail = () => (
-    <PageWrapper>
-        <Heading level={2}>Article Headline</Heading>
-        <Text variant="body">Article content...</Text>
-    </PageWrapper>
-);
 
 // Fallback loader
 const RouteLoader = () => (
@@ -126,8 +114,7 @@ export const AppRouter = () => {
                 <Suspense fallback={<RouteLoader />}>
                     <Routes>
                         <Route path={routes.home} element={<HomeHubsPage />} />
-                        <Route path={routes.articleList} element={<Articles />} />
-                        <Route path="/articles/:slug" element={<ArticleDetail />} />
+
                         <Route path="/login" element={<LoginPage />} />
                         <Route path={routes.signup} element={<SignupPage />} />
                         <Route path={routes.forgotPassword} element={<ForgotPasswordPage />} />

@@ -11,7 +11,7 @@ import { useStrapiArticles } from '../../../hooks/useStrapiArticles';
 import { STRAPI_ORIGIN } from '../../../lib/env';
 import { Divider } from '../../../components/Divider/Divider';
 import { routes } from '../../../app/routes';
-import '../../noticiasHub/pages/NoticiasHubPage.css';
+import './NotasFeedPage.css';
 
 const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=2070&auto=format&fit=crop";
 
