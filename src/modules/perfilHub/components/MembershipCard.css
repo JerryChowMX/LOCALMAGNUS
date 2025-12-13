@@ -1,6 +1,6 @@
 .membership-card {
     background-color: var(--bg-secondary);
-    border-radius: var(--radius-lg);
+    border-radius: 0;
     padding: var(--spacing-lg);
     border: 1px solid var(--border-secondary);
 }

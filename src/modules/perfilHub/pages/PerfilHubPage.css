@@ -36,7 +36,7 @@
     background-color: var(--bg-error);
     color: var(--text-error);
     border: 1px solid var(--border-error);
-    border-radius: var(--radius-md);
+    border-radius: 0;
     font-weight: 600;
     font-size: var(--font-size-body);
     cursor: pointer;

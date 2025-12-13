@@ -16,7 +16,7 @@
 
 .settings-section__content {
     background-color: var(--bg-secondary);
-    border-radius: var(--radius-md);
+    border-radius: 0;
     overflow: hidden;
     border: 1px solid var(--border-secondary);
 }

@@ -7,7 +7,7 @@ const MOCK_USER: User = {
     id: 'user-123',
     name: 'Usuario Demo',
     email: 'demo@magnus.com',
-    avatarUrl: 'https://i.pravatar.cc/150?u=demo'
+    avatarUrl: undefined // No random avatar
 };
 
 const MOCK_AUTH_RESPONSE: AuthResponse = {
@@ -46,7 +46,7 @@ export const authApi = {
                         id: response.user.id.toString(),
                         name: response.user.username,
                         email: response.user.email,
-                        avatarUrl: `https://i.pravatar.cc/150?u=${response.user.email}`
+                        avatarUrl: undefined // User will upload their own avatar
                     },
                     token: response.jwt,
                     refreshToken: response.jwt
@@ -85,7 +85,7 @@ export const authApi = {
                         id: response.user.id.toString(),
                         name: response.user.username,
                         email: response.user.email,
-                        avatarUrl: `https://i.pravatar.cc/150?u=${response.user.email}`
+                        avatarUrl: undefined // User will upload their own avatar
                     },
                     token: response.jwt,
                     refreshToken: response.jwt
@@ -120,21 +120,26 @@ export const authApi = {
     getCurrentUser: async () => {
         return withMockFallback<User>(
             async () => {
-                // Strapi endpoint for getting current user
+                // Strapi endpoint for getting current user with avatar populated
                 const response = await strapiClient.get<{
                     id: number;
                     username: string;
                     email: string;
                     confirmed: boolean;
                     blocked: boolean;
+                    avatar?: { url: string };
                 }>('/users/me');
+
+                const strapiUrl = import.meta.env.VITE_STRAPI_URL?.replace('/api', '') || 'http://localhost:1337';
 
                 // Transform Strapi user to our User format
                 return {
                     id: response.id.toString(),
                     name: response.username,
                     email: response.email,
-                    avatarUrl: `https://i.pravatar.cc/150?u=${response.email}`
+                    avatarUrl: response.avatar?.url
+                        ? `${strapiUrl}${response.avatar.url}`
+                        : undefined
                 };
             },
             MOCK_USER,

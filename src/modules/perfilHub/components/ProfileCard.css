@@ -3,7 +3,7 @@
     flex-direction: column;
     padding: var(--spacing-lg) var(--spacing-md);
     background-color: var(--bg-secondary);
-    border-radius: var(--radius-lg);
+    border-radius: 0;
     gap: var(--spacing-sm);
     border: 1px solid var(--border-secondary);
 }
@@ -11,14 +11,14 @@
 .profile-card__image-container {
     width: 100%;
     aspect-ratio: 1 / 1;
-    border-radius: var(--radius-md);
+    border-radius: 0;
     overflow: hidden;
     position: relative;
     background-color: var(--bg-tertiary);
     display: flex;
     align-items: center;
     justify-content: center;
-    group: relative; /* Setup for hover effects if we used tailwind, but here we use standard CSS */
+    /* Container for hover effects */
 }
 
 /* Show edit button on hover or always if mobile? Let's make it always visible but subtle, prominent on hover */
@@ -35,12 +35,14 @@
 .profile-card__edit-button {
     position: absolute;
     bottom: 12px;
-    right: 12px; /* Bottom right looks better for camera icon usually */
+    right: 12px;
+    /* Bottom right looks better for camera icon usually */
     top: auto;
     background: rgba(0, 0, 0, 0.6);
     color: white;
     border: none;
-    border-radius: 50%; /* Circle looks more modern */
+    border-radius: 50%;
+    /* Circle looks more modern */
     width: 36px;
     height: 36px;
     display: flex;
@@ -72,7 +74,8 @@
 }
 
 .profile-card__name-display h2 {
-    font-size: var(--font-size-h2); /* Slightly smaller than h1 for better balance */
+    font-size: var(--font-size-h2);
+    /* Slightly smaller than h1 for better balance */
     font-weight: 700;
     color: var(--text-primary);
     margin: 0;
@@ -181,7 +184,7 @@
     align-items: center;
     gap: 4px;
     padding: 4px 8px;
-    border-radius: 4px;
+    border-radius: 0;
 }
 
 .profile-card__edit-desc-btn:hover {
@@ -193,7 +196,7 @@
     min-height: 80px;
     padding: var(--spacing-sm);
     border: 1px solid var(--border-primary);
-    border-radius: var(--radius-md);
+    border-radius: 0;
     background-color: var(--bg-primary);
     color: var(--text-primary);
     font-family: inherit;
@@ -225,7 +228,7 @@
     color: white;
     border: none;
     padding: 6px 16px;
-    border-radius: 20px;
+    border-radius: 0;
     font-size: var(--font-size-caption);
     font-weight: 600;
     cursor: pointer;
