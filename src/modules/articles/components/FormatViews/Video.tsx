@@ -193,6 +193,7 @@ export const Video: FC<VideoProps> = ({ article }) => {
                     playsInline
                     loop
                     preload="auto"
+                    poster={article.video_summary.thumbnail?.url || article.image?.url}
                     className={`video-element ${isFullscreen ? 'video-element-fullscreen' : ''}`}
                     src={article.video_summary.video_file.url}
                     onTimeUpdate={handleTimeUpdate}
