@@ -1,3 +1,9 @@
+/**
+ * @DEAD_CODE: UNUSED_COMPONENT - Identified 2025-12-12
+ * This component is not imported anywhere in the codebase.
+ * Appears to be early scaffolding that was never integrated.
+ * Safe to delete after confirmation.
+ */
 import React from 'react';
 import './ScreenHeader.css';
 

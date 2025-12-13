@@ -1,3 +1,9 @@
+/**
+ * @DEAD_CODE: UNUSED_COMPONENT - Identified 2025-12-12
+ * This component is not imported anywhere in the codebase.
+ * FormatSelectionGrid or ResumenArticleFormatsList are used instead.
+ * Safe to delete after confirmation.
+ */
 import React from 'react';
 import { Stack } from '../../../components/Layout';
 import { Button } from '../../../components/Button/Button';

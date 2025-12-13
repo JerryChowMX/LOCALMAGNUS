@@ -1,3 +1,9 @@
+/**
+ * @DEAD_CODE: REPLACED_BY_NEW_COMPONENT - Identified 2025-12-12
+ * This component was replaced by HeaderCenteredStack.
+ * Not imported anywhere in the codebase.
+ * Safe to delete after confirmation.
+ */
 import React, { forwardRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import DatePicker, { registerLocale } from 'react-datepicker';

@@ -1,3 +1,9 @@
+/**
+ * @DEAD_CODE: NO_ROUTE - Identified 2025-12-12
+ * This page is not lazy-loaded in AppRouter.tsx and has no route.
+ * Appears to be early scaffolding that was never integrated.
+ * Safe to delete after confirmation.
+ */
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchArticleById } from '../api/articlesApi';

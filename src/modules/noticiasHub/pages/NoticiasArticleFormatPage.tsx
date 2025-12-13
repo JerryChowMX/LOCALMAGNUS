@@ -1,3 +1,9 @@
+/**
+ * @DEAD_CODE: LEGACY_NOTICIAS_HUB - Identified 2025-12-12
+ * This page was replaced by UnifiedArticleView which handles format switching internally.
+ * No route exists in AppRouter.tsx pointing to this component.
+ * Safe to delete after confirmation.
+ */
 import React, { useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { PageWrapper } from '../../../components/Layout/PageWrapper';
