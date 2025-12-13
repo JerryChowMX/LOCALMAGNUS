@@ -92,6 +92,15 @@
     /* Space for chat bar */
 }
 
+/* Disable native scroll when zoom library handles navigation */
+.pdf-viewer__content--zoomable {
+    overflow: hidden !important;
+    padding: 0 !important;
+    /* Remove padding to let zoom use full canvas */
+    justify-content: center;
+    /* Center the zoom wrapper */
+}
+
 /* PDF Document wrapper */
 .pdf-viewer__document {
     /* Top aligned now */
