@@ -6,6 +6,23 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Padding variants */
+.card--padding-none {
+    padding: 0;
+}
+
+.card--padding-sm {
+    padding: var(--spacing-sm);
+}
+
+.card--padding-md {
+    padding: var(--spacing-md);
+}
+
+.card--padding-lg {
+    padding: var(--spacing-lg);
+}
+
 .card--interactive:active {
     transform: scale(0.98);
     opacity: 0.9;

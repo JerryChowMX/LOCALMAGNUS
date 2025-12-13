@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { PageWrapper } from '../../../components/Layout/PageWrapper';
 import { useStrapiArticles } from '../../../hooks/useStrapiArticles';
-import type { StrapiArticle } from '../../../hooks/useStrapiArticles';
+import type { StrapiArticle } from '../../../types/strapi';
 import { strapiClient } from '../../../api/strapiClient';
 
 const StrapiTestPage = () => {

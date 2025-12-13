@@ -16,22 +16,13 @@ export const Card: React.FC<CardProps> = ({
 }) => {
     const isInteractive = !!onClick;
 
-    const getPaddingClass = (p: string) => {
-        switch (p) {
-            case 'sm': return '8px';
-            case 'md': return '16px';
-            case 'lg': return '24px';
-            default: return '0';
-        }
-    };
-
     return (
         <div
-            className={`card ${isInteractive ? 'card--interactive' : ''} ${className}`}
+            className={`card card--padding-${padding} ${isInteractive ? 'card--interactive' : ''} ${className}`}
             onClick={onClick}
-            style={{ padding: getPaddingClass(padding) }}
         >
             {children}
         </div>
     );
 };
+

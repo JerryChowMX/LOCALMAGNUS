@@ -38,10 +38,10 @@ Consolidate findings from 8 comprehensive audits into a prioritized action plan 
 ### Phase 2: Architecture Hardening (Medium Risk)
 *Goal: Fix structural issues.*
 
-- [ ] **Extract Playground Router**: Move 40+ dev routes out of `AppRouter.tsx` into `PlaygroundRouter.tsx`.
-- [ ] **Add 404 Page**: Handle unknown routes gracefully.
-- [ ] **CSS Refactor (AudioPlayer)**: Move inline styles to `AudioPlayer.css` and use BEM classes.
-- [ ] **CSS Refactor (Card)**: Fix inline padding styles.
+- [x] **Extract Playground Router**: Move 40+ dev routes out of `AppRouter.tsx` into `PlaygroundRouter.tsx`.
+- [x] **Add 404 Page**: Handle unknown routes gracefully.
+- [x] **CSS Refactor (AudioPlayer)**: Move inline styles to `AudioPlayer.css` and use BEM classes.
+- [x] **CSS Refactor (Card)**: Fix inline padding styles.
 
 ### Phase 3: Feature Completeness (New Dev)
 *Goal: Fill functionality gaps.*
