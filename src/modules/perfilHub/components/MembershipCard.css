@@ -66,3 +66,26 @@
 .membership-card__btn-manage:hover {
     opacity: 0.9;
 }
+
+/* Non-paying / Free tier state */
+.membership-card--free {
+    border-style: dashed;
+}
+
+.membership-card__description {
+    font-family: 'Blinker', sans-serif;
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    margin: 0 0 var(--spacing-lg) 0;
+    line-height: 1.6;
+}
+
+.membership-card__btn-subscribe {
+    background-color: var(--color-accent) !important;
+    border-color: var(--color-accent) !important;
+    color: white !important;
+}
+
+.membership-card__btn-subscribe:hover {
+    opacity: 0.9;
+}

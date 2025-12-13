@@ -5,7 +5,7 @@
 }
 
 .settings-section__title {
-    padding: 0 var(--spacing-md) var(--spacing-xs);
+    padding: 0 0 var(--spacing-xs) 0;
     font-family: 'Blinker', sans-serif;
     font-weight: 600;
     font-size: var(--font-size-caption);

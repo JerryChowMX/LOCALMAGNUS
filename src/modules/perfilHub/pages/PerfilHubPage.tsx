@@ -107,7 +107,8 @@ export const PerfilHubPage: React.FC = () => {
                         {/* Membership Section */}
                         <SettingsSection title="Tu membresía">
                             <MembershipCard
-                                planName={"Plan Anual"} // TODO: Add plan to user model
+                                isPaying={true} // TODO: Connect to actual user subscription status
+                                planName={"Plan Anual"}
                                 renewalDate="15/04/2026"
                                 benefits={[
                                     "Acceso ilimitado a contenido",
