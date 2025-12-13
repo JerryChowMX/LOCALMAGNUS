@@ -7,8 +7,11 @@ import './HomeHubsPage.css';
 
 import { getMonterreyDate } from '../../../lib/dateUtils';
 
+import { useAuth } from '../../../context/AuthContext';
+
 export const HomeHubsPage: React.FC = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const today = getMonterreyDate();
     const dateOptions: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long' };
     const formattedDate = new Date().toLocaleDateString('es-ES', dateOptions);
@@ -26,7 +29,7 @@ export const HomeHubsPage: React.FC = () => {
             {/* 2. Welcome Block */}
             <div className="home-hubs__welcome">
                 <Heading level={3} className="home-hubs__greeting">
-                    Bienvenido de vuelta, <span className="home-hubs__username">Gerardo</span>
+                    Bienvenido de vuelta, <span className="home-hubs__username">{user?.name || 'Lector'}</span>
                 </Heading>
                 <Caption className="home-hubs__date">{displayDate}</Caption>
             </div>
