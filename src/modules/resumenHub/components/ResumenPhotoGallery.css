@@ -7,7 +7,7 @@
 .resumen-photo-item {
     aspect-ratio: 1;
     overflow: hidden;
-    border-radius: var(--radius-sm);
+    border-radius: 0;
     cursor: pointer;
 }
 

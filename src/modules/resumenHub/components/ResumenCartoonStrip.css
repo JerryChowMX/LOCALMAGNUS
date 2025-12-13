@@ -7,12 +7,12 @@
 .resumen-cartoon-item {
     background-color: var(--color-surface);
     padding: var(--spacing-md);
-    border-radius: var(--radius-md);
+    border-radius: 0;
     text-align: center;
 }
 
 .resumen-cartoon-item img {
     max-width: 100%;
     height: auto;
-    border-radius: var(--radius-sm);
+    border-radius: 0;
 }

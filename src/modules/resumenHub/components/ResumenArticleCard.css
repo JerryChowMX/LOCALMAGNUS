@@ -4,7 +4,7 @@
     aspect-ratio: 16 / 9;
     background-size: cover;
     background-position: center;
-    border-radius: var(--radius-md);
+    border-radius: 0;
     overflow: hidden;
     cursor: pointer;
     box-shadow: var(--shadow-sm);
@@ -29,7 +29,7 @@
     background-color: var(--color-primary);
     color: white;
     padding: 2px 8px;
-    border-radius: var(--radius-sm);
+    border-radius: 0;
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-bold);
     text-transform: uppercase;

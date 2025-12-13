@@ -5,7 +5,7 @@
     gap: var(--spacing-lg);
     padding: var(--spacing-lg);
     background-color: var(--surface-color);
-    border-radius: var(--radius-lg);
+    border-radius: 0;
     text-align: center;
 }
 
@@ -15,7 +15,7 @@
     /* Larger image */
     aspect-ratio: 1;
     object-fit: cover;
-    border-radius: var(--radius-md);
+    border-radius: 0;
     box-shadow: var(--shadow-md);
 }
 
