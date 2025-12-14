@@ -520,18 +520,9 @@ export interface ApiAuthorAuthor extends Struct.CollectionTypeSchema {
   };
   attributes: {
     articles: Schema.Attribute.Relation<'oneToMany', 'api::article.article'>;
-    bio: Schema.Attribute.RichText &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 1000;
-      }>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    email: Schema.Attribute.Email;
-    linkedin: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 200;
-      }>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -543,22 +534,11 @@ export interface ApiAuthorAuthor extends Struct.CollectionTypeSchema {
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 100;
       }>;
-    profile_picture: Schema.Attribute.Media<'images'>;
     publishedAt: Schema.Attribute.DateTime;
-    role: Schema.Attribute.Enumeration<
-      ['Reporter', 'Editor', 'Columnist', 'Guest', 'Contributor']
-    > &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<'Reporter'>;
     slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
-    twitter: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 100;
-      }>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    verified: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
   };
 }
 

@@ -96,12 +96,12 @@ function normalizeArticle(data: any): StrapiArticle {
     summary: attrs.summary || attrs.excerpt || '',
     audioUrl: attrs.audio?.url || attrs.audio_url || undefined,
     audio_summary: attrs.audio_summary ? {
+      episode_label: attrs.audio_summary.episode_label,
+      podcast_title: attrs.audio_summary.podcast_title,
       audio_file: (attrs.audio_summary.audio_file || attrs.audio_summary.audio_file?.data) ? {
         url: attrs.audio_summary.audio_file?.url || attrs.audio_summary.audio_file?.data?.attributes?.url
       } : undefined,
-      duration_seconds: attrs.audio_summary.duration_seconds,
       voice: attrs.audio_summary.voice,
-      transcript: attrs.audio_summary.transcript,
       generated_at: attrs.audio_summary.generated_at,
       file_size: attrs.audio_summary.file_size
     } : undefined,
@@ -196,7 +196,7 @@ export const articleApi = {
       'populate[ppt_summary][populate]': '*',
       'populate[infographic_summary][populate]': '*',
       'populate[hero_image][populate]': '*',
-      'populate[author][populate]': '*',
+      'populate[author][fields]': 'name',
       'populate[category][populate]': '*',
       'populate[tags][populate]': '*',
       'populate[related_articles][populate][hero_image][populate]': '*',

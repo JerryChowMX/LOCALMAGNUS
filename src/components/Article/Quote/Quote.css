@@ -37,7 +37,7 @@
 
 .quote-text-element {
     grid-area: 1 / 1;
-    font-size: 1.125rem;
+    font-size: var(--font-size-body);
     line-height: 1.7;
     color: var(--text-secondary);
     margin: 0 0 16px 0;
@@ -76,7 +76,7 @@
 .quote-author-name {
     font-family: var(--font-family-display), sans-serif;
     font-weight: 700;
-    font-size: 1.5rem;
+    font-size: var(--font-size-h3);
     color: var(--text-primary);
 }
 

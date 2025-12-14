@@ -21,7 +21,7 @@
 .article-format-label {
     color: var(--text-secondary);
     font-family: inherit;
-    font-size: 14px;
+    font-size: var(--font-size-caption);
     margin: 0 0 10px 0 !important;
     /* Pinned to the left border as requested (0px padding) */
     padding: 0 0 !important;
@@ -124,7 +124,7 @@
     flex-grow: 0;
     padding: 20px 32px;
     border-radius: 0;
-    font-size: 14px;
+    font-size: var(--font-size-caption);
     font-weight: 400;
     border: 1px solid var(--border-color);
     /* was #D1D5DB */

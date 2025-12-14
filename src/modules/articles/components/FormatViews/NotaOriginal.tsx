@@ -14,55 +14,19 @@ interface NotaOriginalProps {
 // MAGNUS Typography components for ReactMarkdown
 const magnusComponents = {
     h1: ({ children }: any) => (
-        <h1 style={{
-            fontFamily: '"Blinker", sans-serif',
-            fontWeight: 700,
-            fontSize: '2.5rem',
-            lineHeight: 1.2,
-            color: 'var(--text-primary)',
-            marginBottom: '20px',
-            marginTop: '32px'
-        }}>{children}</h1>
+        <h1 className="article-content-h1">{children}</h1>
     ),
     h2: ({ children }: any) => (
-        <h2 style={{
-            fontFamily: '"Blinker", sans-serif',
-            fontWeight: 700,
-            fontSize: '2rem',
-            lineHeight: 1.3,
-            color: 'var(--text-primary)',
-            marginBottom: '16px',
-            marginTop: '28px'
-        }}>{children}</h2>
+        <h2 className="article-content-h2">{children}</h2>
     ),
     h3: ({ children }: any) => (
-        <h3 style={{
-            fontFamily: '"Blinker", sans-serif',
-            fontWeight: 700,
-            fontSize: '1.5rem',
-            lineHeight: 1.4,
-            color: 'var(--text-primary)',
-            marginBottom: '12px',
-            marginTop: '24px'
-        }}>{children}</h3>
+        <h3 className="article-content-h3">{children}</h3>
     ),
     p: ({ children }: any) => (
-        <p style={{
-            fontFamily: '"Inter", sans-serif',
-            fontSize: '1.0625rem',
-            lineHeight: 1.7,
-            color: 'var(--text-secondary)',
-            marginBottom: '16px'
-        }}>{children}</p>
+        <p className="article-content-p">{children}</p>
     ),
     li: ({ children }: any) => (
-        <li style={{
-            fontFamily: '"Inter", sans-serif',
-            fontSize: '1.0625rem',
-            lineHeight: 1.7,
-            color: 'var(--text-secondary)',
-            marginBottom: '8px'
-        }}>{children}</li>
+        <li className="article-content-li">{children}</li>
     ),
     strong: ({ children }: any) => (
         <strong style={{ fontWeight: 700 }}>{children}</strong>

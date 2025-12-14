@@ -9,45 +9,13 @@ export interface AiAudioSummary extends Struct.ComponentSchema {
   };
   attributes: {
     audio_file: Schema.Attribute.Media<'audios'>;
-    duration_seconds: Schema.Attribute.Integer;
+    episode_label: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'EPISODIO'>;
     file_size: Schema.Attribute.Integer;
     generated_at: Schema.Attribute.DateTime;
-    transcript: Schema.Attribute.Text;
+    podcast_title: Schema.Attribute.String;
     voice: Schema.Attribute.Enumeration<['male', 'female', 'neural']> &
       Schema.Attribute.DefaultTo<'neural'>;
-  };
-}
-
-export interface AiEpaperLink extends Struct.ComponentSchema {
-  collectionName: 'components_ai_epaper_links';
-  info: {
-    description: 'Link to printed edition';
-    displayName: 'E-Paper Link';
-    icon: 'file-pdf';
-  };
-  attributes: {
-    edition_date: Schema.Attribute.Date;
-    page_number: Schema.Attribute.Integer;
-    pdf_url: Schema.Attribute.Media<'files'>;
-    section: Schema.Attribute.String;
-  };
-}
-
-export interface AiExecutiveSummary extends Struct.ComponentSchema {
-  collectionName: 'components_ai_executive_summaries';
-  info: {
-    description: 'AI-generated text summary';
-    displayName: 'Executive Summary';
-    icon: 'align-justify';
-  };
-  attributes: {
-    ai_provider: Schema.Attribute.Enumeration<['openai', 'mistral', 'custom']> &
-      Schema.Attribute.DefaultTo<'openai'>;
-    bullet_points: Schema.Attribute.Component<'content.quote', true>;
-    generated_at: Schema.Attribute.DateTime;
-    summary_text: Schema.Attribute.Text & Schema.Attribute.Required;
-    tokens_used: Schema.Attribute.Integer;
-    version: Schema.Attribute.String;
   };
 }
 
@@ -264,8 +232,6 @@ declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'ai.audio-summary': AiAudioSummary;
-      'ai.epaper-link': AiEpaperLink;
-      'ai.executive-summary': AiExecutiveSummary;
       'ai.infographic-summary': AiInfographicSummary;
       'ai.ppt-summary': AiPptSummary;
       'ai.video-summary': AiVideoSummary;

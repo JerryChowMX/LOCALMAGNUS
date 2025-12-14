@@ -130,10 +130,10 @@ export interface StrapiArticleAttributes {
         version?: string;
     };
     audio_summary?: {
+        episode_label?: string;
+        podcast_title?: string;
         audio_file?: StrapiMedia;
-        duration_seconds?: number;
         voice?: string;
-        transcript?: string;
         generated_at?: string;
         file_size?: number;
     };
@@ -172,12 +172,12 @@ export interface StrapiArticle {
     summary?: string;
     audioUrl?: string;
     audio_summary?: {
+        episode_label?: string;
+        podcast_title?: string;
         audio_file?: {
             url: string;
         };
-        duration_seconds?: number;
         voice?: string;
-        transcript?: string;
         generated_at?: string;
         file_size?: number;
     };

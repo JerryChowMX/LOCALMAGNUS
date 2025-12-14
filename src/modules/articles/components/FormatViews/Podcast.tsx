@@ -117,10 +117,10 @@ export const Podcast: FC<PodcastProps> = ({ article }) => {
                 {/* Content */}
                 <div className="podcast-content">
                     <div className="podcast-episode-label">
-                        EPISODIO {article.audio_summary?.id || '46'}
+                        {article.audio_summary?.episode_label || 'EPISODIO'}
                     </div>
                     <h2 className="podcast-title">
-                        "{article.title}"
+                        "{article.audio_summary?.podcast_title || article.title}"
                     </h2>
                 </div>
 

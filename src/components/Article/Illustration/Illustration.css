@@ -24,7 +24,7 @@
 
 .illustration-caption-text {
     color: var(--text-secondary, #6B7280);
-    font-size: 0.875rem;
+    font-size: var(--font-size-caption);
     font-style: italic;
     display: block;
     margin-bottom: 6px;
@@ -33,5 +33,5 @@
 
 .illustration-artist-text {
     color: var(--text-muted, #9CA3AF);
-    font-size: 0.75rem;
+    font-size: var(--font-size-caption);
 }

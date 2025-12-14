@@ -86,11 +86,12 @@ export interface VideoSummary {
 
 export interface AudioSummary {
     id?: number;
+    episode_label?: string;
+    podcast_title?: string;
     audio_file: {
         url: string;
         mime?: string;
     };
-    duration?: number;
     title?: string;
 }
 

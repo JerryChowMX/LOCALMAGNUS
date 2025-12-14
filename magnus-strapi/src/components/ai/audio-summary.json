@@ -7,6 +7,15 @@
     },
     "options": {},
     "attributes": {
+        "episode_label": {
+            "type": "string",
+            "default": "EPISODIO",
+            "description": "Label shown above podcast title (e.g., EPISODIO 1, RESUMEN, ESCUCHA)"
+        },
+        "podcast_title": {
+            "type": "string",
+            "description": "Custom title for the podcast (if different from article title)"
+        },
         "audio_file": {
             "type": "media",
             "multiple": false,
@@ -14,9 +23,6 @@
             "allowedTypes": [
                 "audios"
             ]
-        },
-        "duration_seconds": {
-            "type": "integer"
         },
         "voice": {
             "type": "enumeration",
@@ -26,9 +32,6 @@
                 "neural"
             ],
             "default": "neural"
-        },
-        "transcript": {
-            "type": "text"
         },
         "generated_at": {
             "type": "datetime"

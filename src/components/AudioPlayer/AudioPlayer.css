@@ -5,7 +5,7 @@
 
 .audio-player__title {
     margin-bottom: var(--spacing-md);
-    font-size: 1rem;
+    font-size: var(--font-size-body);
     font-weight: var(--font-weight-semibold);
     color: var(--text-primary);
     text-align: center;
@@ -51,7 +51,7 @@
     color: var(--text-primary);
     font-weight: var(--font-weight-semibold);
     font-family: var(--font-family-display);
-    font-size: 0.9rem;
+    font-size: var(--font-size-caption);
     white-space: nowrap;
     min-width: 50px;
     text-align: center;
@@ -132,7 +132,7 @@
 }
 
 .audio-player__speed-btn {
-    font-size: 0.8rem;
+    font-size: var(--font-size-caption);
     color: var(--text-secondary);
     cursor: pointer;
     font-weight: var(--font-weight-medium);

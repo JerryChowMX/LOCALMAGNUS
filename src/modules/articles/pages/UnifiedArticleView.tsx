@@ -101,8 +101,9 @@ export const UnifiedArticleView = () => {
         content: article.blocks || [],
         audio_summary: article.audio_summary ? {
             id: 1,
+            episode_label: article.audio_summary.episode_label,
+            podcast_title: article.audio_summary.podcast_title,
             audio_file: { url: `${STRAPI_ORIGIN}${article.audio_summary.audio_file?.url || ''}` },
-            duration: article.audio_summary.duration_seconds,
             title: article.title
         } : undefined,
         video_summary: article.video_summary ? {
