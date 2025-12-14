@@ -12,18 +12,7 @@ const HomeHubsPage = lazy(() => import('../modules/home/pages/HomeHubsPage').the
 const NotasFeedPage = lazy(() => import('../modules/articles/pages/NotasFeedPage').then(module => ({ default: module.NotasFeedPage })));
 const UnifiedArticleView = lazy(() => import('../modules/articles/pages/UnifiedArticleView').then(module => ({ default: module.UnifiedArticleView })));
 
-// Resumen Hub
-const ResumenHubPage = lazy(() => import('../modules/resumenHub/pages/ResumenHubPage').then(module => ({ default: module.ResumenHubPage })));
-const ResumenLas5Page = lazy(() => import('../modules/resumenHub/pages/ResumenLas5Page').then(module => ({ default: module.ResumenLas5Page })));
-const ResumenLas5ArticlePage = lazy(() => import('../modules/resumenHub/pages/ResumenLas5ArticlePage').then(module => ({ default: module.ResumenLas5ArticlePage })));
-const ResumenLas5ArticleFormatPage = lazy(() => import('../modules/resumenHub/pages/ResumenLas5ArticleFormatPage').then(module => ({ default: module.ResumenLas5ArticleFormatPage })));
-const ResumenOpinionPage = lazy(() => import('../modules/resumenHub/pages/ResumenOpinionPage').then(module => ({ default: module.ResumenOpinionPage })));
-const ResumenOpinionArticlePage = lazy(() => import('../modules/resumenHub/pages/ResumenOpinionArticlePage').then(module => ({ default: module.ResumenOpinionArticlePage })));
-const ResumenOpinionArticleFormatPage = lazy(() => import('../modules/resumenHub/pages/ResumenOpinionArticleFormatPage').then(module => ({ default: module.ResumenOpinionArticleFormatPage })));
-const ResumenPodcastPage = lazy(() => import('../modules/resumenHub/pages/ResumenPodcastPage').then(module => ({ default: module.ResumenPodcastPage })));
-const ResumenFotosPage = lazy(() => import('../modules/resumenHub/pages/ResumenFotosPage').then(module => ({ default: module.ResumenFotosPage })));
-const ResumenCartonesPage = lazy(() => import('../modules/resumenHub/pages/ResumenCartonesPage').then(module => ({ default: module.ResumenCartonesPage })));
-const ResumenJuegosRedirectPage = lazy(() => import('../modules/resumenHub/pages/ResumenJuegosRedirectPage').then(module => ({ default: module.ResumenJuegosRedirectPage })));
+// Resumen Ejecutivo (keeping this separate module)
 const ResumenEjecutivoPage = lazy(() => import('../modules/resumenEjecutivo/pages/ResumenEjecutivoPage').then(module => ({ default: module.ResumenEjecutivoPage })));
 
 // EPaper
@@ -80,20 +69,6 @@ export const AppRouter = () => {
                         <Route path="/Notas" element={<RedirectToToday />} />
                         <Route path="/Notas/:date" element={<NotasFeedPage />} />
                         <Route path="/Notas/:date/:slug" element={<UnifiedArticleView />} />
-
-                        {/* Resumen Hub Routes */}
-                        <Route path="/ResumenHub" element={<RedirectToToday />} />
-                        <Route path="/ResumenHub/:date" element={<ResumenHubPage />} />
-                        <Route path="/ResumenHub/:date/Las5DelDia" element={<ResumenLas5Page />} />
-                        <Route path="/ResumenHub/:date/Las5DelDia/:slug" element={<ResumenLas5ArticlePage />} />
-                        <Route path="/ResumenHub/:date/Las5DelDia/:slug/:format" element={<ResumenLas5ArticleFormatPage />} />
-                        <Route path="/ResumenHub/:date/LaOpinionDelDia" element={<ResumenOpinionPage />} />
-                        <Route path="/ResumenHub/:date/LaOpinionDelDia/:slug" element={<ResumenOpinionArticlePage />} />
-                        <Route path="/ResumenHub/:date/LaOpinionDelDia/:slug/:format" element={<ResumenOpinionArticleFormatPage />} />
-                        <Route path="/ResumenHub/:date/ElPodcastDelDia" element={<ResumenPodcastPage />} />
-                        <Route path="/ResumenHub/:date/LasFotosDelDia" element={<ResumenFotosPage />} />
-                        <Route path="/ResumenHub/:date/LosCartonesDelDia" element={<ResumenCartonesPage />} />
-                        <Route path="/ResumenHub/:date/LosJuegosDelDia" element={<ResumenJuegosRedirectPage />} />
 
                         {/* EPaper Routes */}
                         <Route path="/EPaper" element={<RedirectToToday />} />

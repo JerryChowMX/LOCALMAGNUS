@@ -16,17 +16,8 @@ export const routes = {
     notas: (date: string) => `/Notas/${date}`,
     notasArticle: (date: string, slug: string) => `/Notas/${date}/${slug}`,
 
-    resumenHub: (date: string) => `/ResumenHub/${date}`,
-    resumenLas5: (date: string) => `/ResumenHub/${date}/Las5DelDia`,
-    resumenLas5Article: (date: string, slug: string) => `/ResumenHub/${date}/Las5DelDia/${slug}`,
-    resumenLas5Format: (date: string, slug: string, format: string) => `/ResumenHub/${date}/Las5DelDia/${slug}/${format}`,
-    resumenOpinion: (date: string) => `/ResumenHub/${date}/LaOpinionDelDia`,
-    resumenOpinionArticle: (date: string, slug: string) => `/ResumenHub/${date}/LaOpinionDelDia/${slug}`,
-    resumenOpinionFormat: (date: string, slug: string, format: string) => `/ResumenHub/${date}/LaOpinionDelDia/${slug}/${format}`,
-    resumenPodcast: (date: string) => `/ResumenHub/${date}/ElPodcastDelDia`,
-    resumenFotos: (date: string) => `/ResumenHub/${date}/LasFotosDelDia`,
-    resumenCartones: (date: string) => `/ResumenHub/${date}/LosCartonesDelDia`,
-    resumenJuegos: (date: string) => `/ResumenHub/${date}/LosJuegosDelDia`,
+    // Videos del Día (placeholder for future development)
+    // videosDelDia: (date: string) => `/VideosDelDia/${date}`,
 
     epaperHub: (date: string) => `/EPaper/${date}`,
     epaperEdition: (date: string, editionNumber: string) => `/EPaper/${date}/${editionNumber}`,

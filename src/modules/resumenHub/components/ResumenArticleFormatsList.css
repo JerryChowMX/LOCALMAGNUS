@@ -1,6 +1,0 @@
-.resumen-article-formats-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-md);
-    width: 100%;
-}

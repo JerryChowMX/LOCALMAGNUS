@@ -50,14 +50,7 @@ export const HomeHubsPage: React.FC = () => {
                     Noticias del día
                 </Button>
 
-                <Button
-                    variant="glass"
-                    size="lg"
-                    fullWidth
-                    onClick={() => navigate(`/ResumenHub/${today}`)}
-                >
-                    Resumen del día
-                </Button>
+                {/* Videos del día - Coming soon */}
 
                 <Button
                     variant="glass"
