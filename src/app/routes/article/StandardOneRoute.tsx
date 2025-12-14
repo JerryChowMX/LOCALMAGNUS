@@ -19,7 +19,6 @@ export function StandardOneRoute() {
             try {
                 setLoading(true);
                 setError(null);
-                console.log(`[Staging] Fetching article: ${slug}`);
                 const data = await fetchStandardArticle(slug);
 
                 if (!data) {

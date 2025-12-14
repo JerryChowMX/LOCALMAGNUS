@@ -75,20 +75,15 @@ export const epaperApi = {
      */
     getByDate: async (date: string): Promise<EpaperEdition | null> => {
         try {
-            console.log('[epaperApi] Fetching EPaper for date:', date);
             const url = `/epapers?filters[edition_date][$eq]=${date}&populate=*&status=published`;
-            console.log('[epaperApi] API URL:', url);
 
             // Use public fetch (no auth token) for EPaper content
             const response = await publicFetch<StrapiEpaperResponse>(url);
-            console.log('[epaperApi] Response:', response);
 
             if (response.data && response.data.length > 0) {
                 const edition = mapEpaperEdition(response.data[0]);
-                console.log('[epaperApi] Mapped edition:', edition);
                 return edition;
             }
-            console.log('[epaperApi] No edition found for date:', date);
             return null;
         } catch (error) {
             console.error('[epaperApi] Error fetching by date:', error);

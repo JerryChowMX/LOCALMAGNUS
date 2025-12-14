@@ -133,9 +133,6 @@ export const authApi = {
                 // Strapi endpoint for getting current user with avatar populated
                 const response = await strapiClient.get<any>('/users/me?populate=avatar');
 
-                console.log('[authApi] getCurrentUser response:', response);
-                console.log('[authApi] avatar field:', response.avatar);
-
                 const strapiUrl = import.meta.env.VITE_STRAPI_URL?.replace('/api', '') || 'http://localhost:1337';
 
                 // Handle Strapi v5 structure - avatar could be object with url or nested data
@@ -153,8 +150,6 @@ export const authApi = {
                         avatarUrl = url.startsWith('http') ? url : `${strapiUrl}${url}`;
                     }
                 }
-
-                console.log('[authApi] resolved avatarUrl:', avatarUrl);
 
                 // Transform Strapi user to our User format
                 return {

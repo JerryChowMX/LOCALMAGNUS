@@ -41,9 +41,7 @@ export const perfilApi = {
                 let avatarId: number | undefined;
 
                 if (data.avatarFile) {
-                    console.log('[perfilApi] Uploading avatar file...');
                     const uploadResult = await strapiClient.upload(data.avatarFile);
-                    console.log('[perfilApi] Upload result:', uploadResult);
                     avatarId = uploadResult.id;
                 }
 
@@ -58,10 +56,8 @@ export const perfilApi = {
                 }
 
                 if (Object.keys(updatePayload).length > 0) {
-                    console.log('[perfilApi] Updating user with payload:', updatePayload, 'for user ID:', data.id);
                     try {
                         await strapiClient.put<any>(`/users/${data.id}`, updatePayload);
-                        console.log('[perfilApi] User update completed');
                     } catch (err) {
                         console.error('[perfilApi] User update failed:', err);
                         throw err;
@@ -70,8 +66,6 @@ export const perfilApi = {
 
                 // Fetch fresh data to get populated avatar
                 const updatedUser = await strapiClient.get<any>('/users/me?populate=avatar');
-                console.log('[perfilApi] Fetched updated user:', updatedUser);
-                console.log('[perfilApi] User avatar field:', updatedUser.avatar);
                 return mapStrapiUser(updatedUser);
             },
             { ...MOCK_PROFILE, ...data }, // Optimistic mock update

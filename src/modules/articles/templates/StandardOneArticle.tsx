@@ -30,8 +30,6 @@ interface StandardOneArticleProps {
 }
 
 export const StandardOneArticle: FC<StandardOneArticleProps> = ({ article }) => {
-    console.log('StandardOneArticle rendering with:', article);
-    console.log('Content Blocks:', article.contentBlocks);
     const navigate = useNavigate();
     const [isChatOpen, setIsChatOpen] = useState(false);
     const [isCommentsOpen, setIsCommentsOpen] = useState(false);
@@ -132,7 +130,6 @@ export const StandardOneArticle: FC<StandardOneArticleProps> = ({ article }) => 
                         {contentBlocks.map((block, index) => {
                             // Normalize the board component name to handle various Strapi formats (e.g. 'article.quote', 'ComponentArticleQuote')
                             const componentType = block.__component || block.__typename || block.type;
-                            console.log('Rendering Block:', componentType, block);
 
                             // 1. RICH TEXT
                             if (

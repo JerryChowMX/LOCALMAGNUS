@@ -85,7 +85,6 @@ export const AuthCallbackPage: React.FC = () => {
 
                 // If no JWT but we have an access_token, we likely need to exchange it
                 if (!jwt && accessToken) {
-                    console.log('Exchanging access_token for Strapi JWT...');
                     const strapiUrl = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337/api';
                     const res = await fetch(`${strapiUrl}/auth/${provider}/callback?access_token=${accessToken}`);
                     const data = await res.json();
