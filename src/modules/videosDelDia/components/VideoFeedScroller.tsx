@@ -82,6 +82,28 @@ export const VideoFeedScroller: React.FC<VideoFeedScrollerProps> = ({
         }
     }, [likedVideos]);
 
+    // Handle Share (Mobile Only)
+    const handleShare = useCallback(async (video: VideoPost) => {
+        if (navigator.share) {
+            try {
+                // Construct a shareable URL (either specific video deep link or just the current page)
+                // For now, using the current page + hash or query param if supported, otherwise just current URL
+                const shareUrl = window.location.href; // Or construct specific URL
+
+                await navigator.share({
+                    title: video.title,
+                    text: video.dek || `Mira este video: ${video.title}`,
+                    url: shareUrl,
+                });
+            } catch (error) {
+                // User cancelled or share failed
+                console.log('Share failed or cancelled', error);
+            }
+        } else {
+            console.log('Share not supported on this device/browser');
+        }
+    }, []);
+
     // Setup IntersectionObserver for active video detection
     useEffect(() => {
         const options: IntersectionObserverInit = {
@@ -262,7 +284,7 @@ export const VideoFeedScroller: React.FC<VideoFeedScrollerProps> = ({
                                                 window.open(video.originalArticleUrl, '_blank');
                                             }
                                         } : undefined}
-                                        onShare={() => console.log('Share clicked')}
+                                        onShare={() => handleShare(video)}
                                     />
                                 </VideoPlayer>
                             </>
