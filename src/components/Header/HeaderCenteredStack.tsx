@@ -104,7 +104,7 @@ export const HeaderCenteredStack: React.FC<HeaderCenteredStackProps> = ({
                     customInput={<DatePickerCustomInput />}
                     dateFormat="yyyy-MM-dd"
                     popperPlacement="bottom"
-                    popperClassName="magnus-datepicker-portal"
+                    calendarClassName="magnus-datepicker"
                     locale="es"
                     maxDate={new Date()}
                 />
