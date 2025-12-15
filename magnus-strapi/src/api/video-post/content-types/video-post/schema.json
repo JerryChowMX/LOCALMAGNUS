@@ -48,6 +48,10 @@
         },
         "duration_seconds": {
             "type": "integer"
+        },
+        "video_date": {
+            "type": "date",
+            "required": true
         }
     }
 }

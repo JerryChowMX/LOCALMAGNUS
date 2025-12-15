@@ -47,7 +47,7 @@ const normalizeVideoPost = (raw: VideoPostRaw): VideoPost => {
         priority: raw.priority || 0,
         durationSeconds: raw.duration_seconds,
         publishedAt: raw.publishedAt,
-        article_date: raw.article_date,
+        video_date: raw.video_date,
     };
 };
 
@@ -59,9 +59,9 @@ export const getVideosByDate = async (
     page: number = 1,
     pageSize: number = 10
 ): Promise<{ videos: VideoPost[]; hasMore: boolean; total: number }> => {
-    // Use exact match on article_date (edition date) instead of publishedAt range
+    // Use exact match on video_date (edition date) instead of publishedAt range
     const params = new URLSearchParams({
-        'filters[article_date][$eq]': date,
+        'filters[video_date][$eq]': date,
         'sort[0]': 'priority:desc',
         'sort[1]': 'publishedAt:desc',
         'sort[2]': 'id:desc',

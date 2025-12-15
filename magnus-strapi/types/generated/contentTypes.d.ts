@@ -710,6 +710,7 @@ export interface ApiVideoPostVideoPost extends Struct.CollectionTypeSchema {
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     video: Schema.Attribute.Media<'videos'> & Schema.Attribute.Required;
+    video_date: Schema.Attribute.Date & Schema.Attribute.Required;
   };
 }
 
