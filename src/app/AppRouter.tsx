@@ -15,6 +15,9 @@ const UnifiedArticleView = lazy(() => import('../modules/articles/pages/UnifiedA
 // Resumen Ejecutivo (keeping this separate module)
 const ResumenEjecutivoPage = lazy(() => import('../modules/resumenEjecutivo/pages/ResumenEjecutivoPage').then(module => ({ default: module.ResumenEjecutivoPage })));
 
+// Videos del Día
+const VideosDelDiaPage = lazy(() => import('../modules/videosDelDia/pages/VideosDelDiaPage').then(module => ({ default: module.VideosDelDiaPage })));
+
 // EPaper
 const EpaperHubPage = lazy(() => import('../modules/epaper/pages/EpaperHubPage').then(module => ({ default: module.EpaperHubPage })));
 const EpaperEditionPage = lazy(() => import('../modules/epaper/pages/EpaperEditionPage').then(module => ({ default: module.EpaperEditionPage })));
@@ -69,6 +72,10 @@ export const AppRouter = () => {
                         <Route path="/Notas" element={<RedirectToToday />} />
                         <Route path="/Notas/:date" element={<NotasFeedPage />} />
                         <Route path="/Notas/:date/:slug" element={<UnifiedArticleView />} />
+
+                        {/* Videos del Día Routes */}
+                        <Route path="/VideosDelDia" element={<RedirectToToday />} />
+                        <Route path="/VideosDelDia/:date" element={<VideosDelDiaPage />} />
 
                         {/* EPaper Routes */}
                         <Route path="/EPaper" element={<RedirectToToday />} />

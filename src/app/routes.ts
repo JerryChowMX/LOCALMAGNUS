@@ -16,8 +16,8 @@ export const routes = {
     notas: (date: string) => `/Notas/${date}`,
     notasArticle: (date: string, slug: string) => `/Notas/${date}/${slug}`,
 
-    // Videos del Día (placeholder for future development)
-    // videosDelDia: (date: string) => `/VideosDelDia/${date}`,
+    // Videos del Día
+    videosDelDia: (date: string) => `/VideosDelDia/${date}`,
 
     epaperHub: (date: string) => `/EPaper/${date}`,
     epaperEdition: (date: string, editionNumber: string) => `/EPaper/${date}/${editionNumber}`,

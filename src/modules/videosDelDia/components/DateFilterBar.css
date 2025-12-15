@@ -1,0 +1,61 @@
+.date-filter-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), transparent);
+    pointer-events: none;
+}
+
+.date-filter-bar__back,
+.date-filter-bar__arrow {
+    pointer-events: auto;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.date-filter-bar__back:hover,
+.date-filter-bar__arrow:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.date-filter-bar__arrow:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.date-filter-bar__date-controls {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0.25rem;
+    border-radius: 24px;
+}
+
+.date-filter-bar__date {
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0 0.75rem;
+    text-transform: capitalize;
+}
+
+.date-filter-bar__spacer {
+    width: 40px;
+}
