@@ -11,6 +11,7 @@ interface CommentsSectionProps {
     onReply: (parentId: string, content: string) => void;
     onLike: (id: string) => void;
     onDislike: (id: string) => void;
+    onClose?: () => void;
     title?: string;
     className?: string;
     style?: React.CSSProperties;
@@ -22,6 +23,7 @@ export const CommentsSection = ({
     onReply,
     onLike,
     onDislike,
+    onClose,
     title = 'Comentarios',
     className = '',
     style
@@ -36,14 +38,17 @@ export const CommentsSection = ({
     };
 
     return (
-        <div className={`magnus-comments-wrapper ${className}`} style={style}>
+        <div className={`magnus-comments-wrapper ${className}`} style={style} onClick={onClose}>
             {/* Glass Chat Container */}
-            <div className="magnus-comments-panel">
+            <div className="magnus-comments-panel" onClick={e => e.stopPropagation()}>
                 {/* Fixed Header */}
                 <div className="magnus-comments-header">
-                    <Heading level={3} style={{ fontSize: '1.25rem', marginBottom: '0', textAlign: 'center' }}>
-                        {title} ({comments.length})
+                    <Heading level={3} style={{ fontSize: '1.25rem', marginBottom: '0', textAlign: 'left' }}>
+                        {title}
                     </Heading>
+                    {onClose && (
+                        <button onClick={onClose} className="magnus-comments-close">&times;</button>
+                    )}
                 </div>
 
                 {/* Scrollable Body */}

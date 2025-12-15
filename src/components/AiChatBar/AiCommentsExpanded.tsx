@@ -160,50 +160,15 @@ export const AiCommentsExpanded: React.FC<AiCommentsExpandedProps> = ({ onClose 
     };
 
     return (
-        <div className="ai-chat-modal-overlay" onClick={onClose}>
-            {/* 
-                Stop propagation to prevent closing when clicking inside content.
-                Using style to ensure it fits nicely in the modal overlay structure.
-            */}
-            <div onClick={e => e.stopPropagation()} style={{ width: '90%', maxWidth: '600px', height: '80vh', display: 'flex' }}>
-                <CommentsSection
-                    comments={comments}
-                    onAddComment={handleAddComment}
-                    onReply={handleReply}
-                    onLike={handleLike}
-                    onDislike={handleDislike}
-                    title="Comentarios"
-                    style={{ width: '100%', height: '100%' }}
-                />
-                {/* Close Button customized or overlay can just handle outside click. 
-                     The design doesn't show a close button on the comments panel specifically, 
-                     but standard UX usually has one or relies on clicking outside. 
-                     We'll add a separate close button or rely on clicking outside. 
-                     Let's add a close button absolutely positioned or rely on outside click for now as designed.
-                 */}
-                <button
-                    onClick={onClose}
-                    style={{
-                        position: 'absolute',
-                        top: '20px',
-                        right: '20px',
-                        background: 'rgba(0,0,0,0.5)',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '0',
-                        width: '32px',
-                        height: '32px',
-                        cursor: 'pointer',
-                        zIndex: 2002,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '20px'
-                    }}
-                >
-                    &times;
-                </button>
-            </div>
-        </div>
+        <CommentsSection
+            comments={comments}
+            onAddComment={handleAddComment}
+            onReply={handleReply}
+            onLike={handleLike}
+            onDislike={handleDislike}
+            onClose={onClose}
+            title="Comentarios"
+            style={{ zIndex: 2000 }} // Ensure z-index is high enough if needed (though CSS handles it)
+        />
     );
 };
