@@ -38,6 +38,13 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
     const preloadValue = isActive || shouldPreload ? 'auto' : 'metadata';
 
+    // Reset pause state when becoming active (enables autoplay on scroll)
+    useEffect(() => {
+        if (isActive) {
+            setIsPaused(false);
+        }
+    }, [isActive]);
+
     // Handle play/pause based on active state
     useEffect(() => {
         const video = videoRef.current;
