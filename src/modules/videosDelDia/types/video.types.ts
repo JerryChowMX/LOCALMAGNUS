@@ -15,6 +15,7 @@ export interface VideoPost {
     publishedAt: string;
     video_date?: string;
     likeCount: number;
+    originalArticleUrl?: string; // Derived from related article slug
 }
 
 export interface VideoPostRaw {
@@ -36,6 +37,10 @@ export interface VideoPostRaw {
     publishedAt: string;
     video_date?: string;
     like_count?: number;
+    related_article?: {
+        slug: string;
+        [key: string]: any;
+    } | null;
 }
 
 export interface VideoFeedState {

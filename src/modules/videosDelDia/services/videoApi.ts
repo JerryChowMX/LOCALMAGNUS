@@ -7,22 +7,7 @@ import type { VideoPost, VideoPostRaw } from '../types/video.types';
 const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337/api';
 const STRAPI_ORIGIN = import.meta.env.VITE_STRAPI_URL?.replace('/api', '') || 'http://localhost:1337';
 
-/**
- * Get timezone-aware day boundaries for Monterrey (UTC-6)
- */
-const getMonterreyDayBoundaries = (dateString: string): { start: string; end: string } => {
-    // dateString format: YYYY-MM-DD
-    // Monterrey is UTC-6, so midnight local = 06:00 UTC
-    const start = `${dateString}T06:00:00.000Z`;
 
-    // Calculate next day
-    const date = new Date(dateString);
-    date.setDate(date.getDate() + 1);
-    const nextDay = date.toISOString().split('T')[0];
-    const end = `${nextDay}T06:00:00.000Z`;
-
-    return { start, end };
-};
 
 /**
  * Normalize raw Strapi video post to clean VideoPost
@@ -34,6 +19,14 @@ const normalizeVideoPost = (raw: VideoPostRaw): VideoPost => {
 
     const posterUrl = raw.poster?.url
         ? (raw.poster.url.startsWith('http') ? raw.poster.url : `${STRAPI_ORIGIN}${raw.poster.url}`)
+        : undefined;
+
+    // Get URL from related article if available, otherwise fallback (or undefined)
+    const relatedSlug = raw.related_article?.slug;
+    const relatedDate = raw.related_article?.article_date || raw.publishedAt?.split('T')[0];
+
+    const originalArticleUrl = relatedSlug && relatedDate
+        ? `/Notas/${relatedDate}/${relatedSlug}`
         : undefined;
 
     return {
@@ -49,6 +42,7 @@ const normalizeVideoPost = (raw: VideoPostRaw): VideoPost => {
         publishedAt: raw.publishedAt,
         video_date: raw.video_date,
         likeCount: raw.like_count || 0,
+        originalArticleUrl,
     };
 };
 

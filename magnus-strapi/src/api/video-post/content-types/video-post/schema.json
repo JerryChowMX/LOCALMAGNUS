@@ -56,6 +56,11 @@
         "like_count": {
             "type": "integer",
             "default": 0
+        },
+        "related_article": {
+            "type": "relation",
+            "relation": "oneToOne",
+            "target": "api::article.article"
         }
     }
 }

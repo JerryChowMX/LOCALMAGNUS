@@ -7,6 +7,7 @@ interface VideoSideBarProps {
     isLiked: boolean;
     onLike?: () => void;
     onComment?: () => void;
+    onReadArticle?: () => void;
     onShare?: () => void;
 }
 
@@ -15,6 +16,7 @@ export const VideoSideBar: React.FC<VideoSideBarProps> = ({
     isLiked,
     onLike,
     onComment,
+    onReadArticle,
     onShare,
 }) => {
     return (
@@ -36,6 +38,13 @@ export const VideoSideBar: React.FC<VideoSideBarProps> = ({
             <button className="video-side-bar__btn" onClick={(e) => { e.stopPropagation(); onComment?.(); }}>
                 <Icons.comment size={28} strokeWidth={1.5} />
             </button>
+
+            {/* Read Article Button - Only shows if handler provided */}
+            {onReadArticle && (
+                <button className="video-side-bar__btn" onClick={(e) => { e.stopPropagation(); onReadArticle(); }}>
+                    <Icons.book size={28} strokeWidth={1.5} />
+                </button>
+            )}
 
             {/* Share Button */}
             <button className="video-side-bar__btn" onClick={(e) => { e.stopPropagation(); onShare?.(); }}>

@@ -701,6 +701,10 @@ export interface ApiVideoPostVideoPost extends Struct.CollectionTypeSchema {
     poster: Schema.Attribute.Media<'images'>;
     priority: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     publishedAt: Schema.Attribute.DateTime;
+    related_article: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::article.article'
+    >;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     title: Schema.Attribute.String &
       Schema.Attribute.Required &

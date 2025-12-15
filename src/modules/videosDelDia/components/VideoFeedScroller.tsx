@@ -253,6 +253,15 @@ export const VideoFeedScroller: React.FC<VideoFeedScrollerProps> = ({
                                         isLiked={likedVideos.has(video.documentId)}
                                         onLike={() => handleLike(video)}
                                         onComment={() => console.log('Comment clicked')}
+                                        onReadArticle={video.originalArticleUrl ? () => {
+                                            if (video.originalArticleUrl?.startsWith('/')) {
+                                                // Internal navigation
+                                                window.location.href = video.originalArticleUrl;
+                                            } else {
+                                                // External navigation
+                                                window.open(video.originalArticleUrl, '_blank');
+                                            }
+                                        } : undefined}
                                         onShare={() => console.log('Share clicked')}
                                     />
                                 </VideoPlayer>
