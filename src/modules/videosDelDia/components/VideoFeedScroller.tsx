@@ -1,10 +1,12 @@
 /**
  * VideoFeedScroller - Infinite scroll with snap-to-video behavior
  * Uses IntersectionObserver for viewport detection
+ * Supports collapsible description overlay (title only → expand for dek)
  */
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { VideoPlayer } from './VideoPlayer';
+import { Icons } from '../../../components/Icons';
 import type { VideoPost } from '../types/video.types';
 import './VideoFeedScroller.css';
 
@@ -24,8 +26,20 @@ export const VideoFeedScroller: React.FC<VideoFeedScrollerProps> = ({
     const containerRef = useRef<HTMLDivElement>(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const [isScrubbing, setIsScrubbing] = useState(false);
+    const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
     const observerRef = useRef<IntersectionObserver | null>(null);
     const videoRefs = useRef<Map<number, HTMLDivElement>>(new Map());
+
+    // Track if video was playing before expand (to resume on collapse)
+    const wasPlayingRef = useRef(false);
+
+    // Track active index in ref to avoid stale closures in observer
+    const activeIndexRef = useRef(0);
+
+    // Sync ref with state
+    useEffect(() => {
+        activeIndexRef.current = activeIndex;
+    }, [activeIndex]);
 
     // Setup IntersectionObserver for active video detection
     useEffect(() => {
@@ -39,7 +53,12 @@ export const VideoFeedScroller: React.FC<VideoFeedScrollerProps> = ({
                 if (entry.isIntersecting) {
                     const index = Number(entry.target.getAttribute('data-index'));
                     if (!isNaN(index)) {
-                        setActiveIndex(index);
+                        // Only update if index changed prevents redundant collapse of expanded state
+                        if (index !== activeIndexRef.current) {
+                            setActiveIndex(index);
+                            // Collapse description when scrolling to new video
+                            setExpandedIndex(null);
+                        }
                     }
                 }
             });
@@ -76,8 +95,20 @@ export const VideoFeedScroller: React.FC<VideoFeedScrollerProps> = ({
         if (containerRef.current && videos.length > 0) {
             containerRef.current.scrollTop = 0;
             setActiveIndex(0);
+            setExpandedIndex(null);
         }
     }, [videos.length === 0]); // Only reset when going from 0 to some
+
+    // Expand description (title tap or "More" tap)
+    const handleExpand = useCallback((index: number) => {
+        setExpandedIndex(index);
+        wasPlayingRef.current = true; // Video will be paused via isPaused prop
+    }, []);
+
+    // Collapse description
+    const handleCollapse = useCallback(() => {
+        setExpandedIndex(null);
+    }, []);
 
     if (isLoading && videos.length === 0) {
         return (
@@ -104,6 +135,8 @@ export const VideoFeedScroller: React.FC<VideoFeedScrollerProps> = ({
             {videos.map((video, index) => {
                 // Only render videos in a reasonable range (memory optimization)
                 const isInRange = Math.abs(index - activeIndex) <= 3;
+                const isActive = index === activeIndex;
+                const isExpanded = expandedIndex === index;
 
                 return (
                     <div
@@ -117,16 +150,62 @@ export const VideoFeedScroller: React.FC<VideoFeedScrollerProps> = ({
                                 <VideoPlayer
                                     videoUrl={video.videoUrl}
                                     posterUrl={video.posterUrl}
-                                    isActive={index === activeIndex}
-                                    shouldPreload={index === activeIndex || index === activeIndex + 1}
-                                    onScrubChange={index === activeIndex ? setIsScrubbing : undefined}
-                                />
-                                <div className={`video-feed-scroller__info ${isScrubbing && index === activeIndex ? 'video-feed-scroller__info--hidden' : ''}`}>
-                                    <h2 className="video-feed-scroller__title">{video.title}</h2>
-                                    {video.dek && (
-                                        <p className="video-feed-scroller__dek">{video.dek}</p>
-                                    )}
-                                </div>
+                                    isActive={isActive}
+                                    shouldPreload={isActive || index === activeIndex + 1}
+                                    onScrubChange={isActive ? setIsScrubbing : undefined}
+                                >
+                                    {/* Info overlay */}
+                                    <div
+                                        className={`video-feed-scroller__info ${isScrubbing && isActive ? 'video-feed-scroller__info--hidden' : ''
+                                            } ${isExpanded ? 'video-feed-scroller__info--expanded' : ''}`}
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        {/* Title - always visible, tappable to expand */}
+                                        <h2
+                                            className="video-feed-scroller__title"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                if (video.dek && !isExpanded) handleExpand(index);
+                                            }}
+                                        >
+                                            {video.title}
+                                        </h2>
+
+                                        {/* Collapsed state: show "More" if dek exists */}
+                                        {!isExpanded && video.dek && (
+                                            <button
+                                                type="button"
+                                                className="video-feed-scroller__more-btn"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    handleExpand(index);
+                                                }}
+                                            >
+                                                Más <Icons.chevronDown size={16} />
+                                            </button>
+                                        )}
+
+                                        {/* Expanded state: show full dek */}
+                                        {isExpanded && video.dek && (
+                                            <div className="video-feed-scroller__dek-container">
+                                                <p className="video-feed-scroller__dek">{video.dek}</p>
+                                                <button
+                                                    type="button"
+                                                    className="video-feed-scroller__collapse-btn"
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+                                                        handleCollapse();
+                                                    }}
+                                                >
+                                                    <Icons.chevronUp size={20} />
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </VideoPlayer>
                             </>
                         ) : (
                             // Placeholder for out-of-range videos

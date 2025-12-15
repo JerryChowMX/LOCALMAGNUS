@@ -38,37 +38,144 @@
     background: #111;
 }
 
-/* Video info overlay */
+/* Backdrop when description is expanded */
+.video-feed-scroller__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 15;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Video info overlay - collapsed state */
 .video-feed-scroller__info {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 2rem;
-    padding-bottom: 4rem;
+    padding: 1.5rem;
+    padding-bottom: 3.5rem;
     background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
     color: #fff;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
+    z-index: 25;
+    transition: all 0.3s ease;
+    pointer-events: auto;
 }
 
 /* Hide info during scrub */
 .video-feed-scroller__info--hidden {
     opacity: 0;
+    pointer-events: none;
 }
 
+/* Expanded state - higher, glass effect */
+.video-feed-scroller__info--expanded {
+    /* Kept transparent/gradient from base class */
+    /* Remove solid background and blur as requested */
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding-bottom: 2rem;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+/* Title - always visible, tappable in collapsed state */
 .video-feed-scroller__title {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     font-weight: 600;
-    margin: 0 0 0.5rem 0;
+    margin: 0;
     line-height: 1.3;
     color: #fff;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    cursor: pointer;
 }
 
-.video-feed-scroller__dek {
-    font-size: 0.9rem;
-    margin: 0;
-    opacity: 0.85;
-    line-height: 1.4;
+.video-feed-scroller__info--expanded .video-feed-scroller__title {
+    -webkit-line-clamp: unset;
+    cursor: default;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+/* "More" button - collapsed state */
+.video-feed-scroller__more-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    font-family: inherit;
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+    cursor: pointer;
+    transition: color 0.2s;
+    position: relative;
+    z-index: 30;
+}
+
+.video-feed-scroller__more-btn:hover {
     color: #fff;
+}
+
+/* Dek container - expanded state */
+.video-feed-scroller__dek-container {
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Dek text - expanded only */
+.video-feed-scroller__dek {
+    font-size: 0.95rem;
+    margin: 0;
+    opacity: 0.9;
+    line-height: 1.6;
+    color: #fff;
+}
+
+/* Collapse button - expanded state */
+.video-feed-scroller__collapse-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-top: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.video-feed-scroller__collapse-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
 }

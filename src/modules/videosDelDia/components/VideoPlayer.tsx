@@ -21,6 +21,9 @@ interface VideoPlayerProps {
     onVideoEnd?: () => void;
     /** Called when scrubbing state changes (true = scrubbing, false = not) */
     onScrubChange?: (isScrubbing: boolean) => void;
+    /** Force video to pause without resetting time (for expanded view) */
+    forcePause?: boolean;
+    children?: React.ReactNode;
 }
 
 export const VideoPlayer: React.FC<VideoPlayerProps> = ({
@@ -30,6 +33,8 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     shouldPreload = false,
     onVideoEnd,
     onScrubChange,
+    forcePause = false,
+    children,
 }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -54,19 +59,22 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     }, [isActive]);
 
     // Handle play/pause based on active state
+    // Handle play/pause based on active state
     useEffect(() => {
         const video = videoRef.current;
         if (!video) return;
 
-        if (isActive && !isPaused) {
+        if (isActive && !isPaused && !forcePause) {
             video.play().catch(() => { });
         } else {
             video.pause();
+            // Only reset time if truly inactive (scrolled away)
+            // If just paused/forcePaused but still active, keep current time
             if (!isActive) {
                 video.currentTime = 0;
             }
         }
-    }, [isActive, isPaused]);
+    }, [isActive, isPaused, forcePause]);
 
     // Tap to toggle play/pause
     const handleTap = useCallback(() => {
@@ -264,6 +272,8 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
                     />
                 </div>
             )}
+            {/* Render children (like info overlay) - renders on top due to DOM order */}
+            {children}
         </div>
     );
 };

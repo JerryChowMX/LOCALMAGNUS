@@ -7,6 +7,8 @@ import {
     IconMoodSmile,
     IconArrowLeft,
     IconChevronLeft,
+    IconChevronDown,
+    IconChevronUp,
     IconShare,
     IconFileText,
     IconTargetArrow,
@@ -81,4 +83,6 @@ export const Icons = {
     arrowLeft: IconArrowLeft,
     volume: IconVolume,
     volumeOff: IconVolumeOff,
+    chevronDown: IconChevronDown,
+    chevronUp: IconChevronUp,
 };
