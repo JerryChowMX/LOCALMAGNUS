@@ -6,6 +6,7 @@
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { VideoPlayer } from './VideoPlayer';
+import { VideoSideBar } from './VideoSideBar';
 import { Icons } from '../../../components/Icons';
 import type { VideoPost } from '../types/video.types';
 import './VideoFeedScroller.css';
@@ -187,24 +188,31 @@ export const VideoFeedScroller: React.FC<VideoFeedScrollerProps> = ({
                                             </button>
                                         )}
 
-                                        {/* Expanded state: show full dek */}
+                                        {/* Expanded state: show full dek then "Menos" button */}
                                         {isExpanded && video.dek && (
                                             <div className="video-feed-scroller__dek-container">
                                                 <p className="video-feed-scroller__dek">{video.dek}</p>
                                                 <button
                                                     type="button"
-                                                    className="video-feed-scroller__collapse-btn"
+                                                    className="video-feed-scroller__more-btn"
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         e.stopPropagation();
                                                         handleCollapse();
                                                     }}
                                                 >
-                                                    <Icons.chevronUp size={20} />
+                                                    Menos <Icons.chevronUp size={16} />
                                                 </button>
                                             </div>
                                         )}
                                     </div>
+
+                                    {/* Side Action Bar - Always visible, fixed position */}
+                                    <VideoSideBar
+                                        onLike={() => console.log('Like clicked')}
+                                        onComment={() => console.log('Comment clicked')}
+                                        onShare={() => console.log('Share clicked')}
+                                    />
                                 </VideoPlayer>
                             </>
                         ) : (

@@ -58,14 +58,22 @@
 }
 
 /* Video info overlay - collapsed state */
+/* Info container constrained to text column */
 .video-feed-scroller__info {
     position: absolute;
     bottom: 0;
     left: 0;
-    right: 0;
+    /* Constrain width to avoid Sidebar (approx 72px) */
+    right: 72px;
     padding: 1.5rem;
     padding-bottom: 3.5rem;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    /* Space for bottom nav/progress bar */
+
+    /* Text readability gradient is handled by container overlay or local gradient if needed */
+    /* background: linear-gradient(transparent, rgba(0, 0, 0, 0.8)); - Moved to logical overlay or kept here? */
+    /* Kept here for simpler scoping */
+    background: transparent;
+
     color: #fff;
     z-index: 25;
     transition: all 0.3s ease;
@@ -78,7 +86,7 @@
     pointer-events: none;
 }
 
-/* Expanded state - higher, glass effect */
+/* Expanded state - maintain width constraint but allow height growth */
 .video-feed-scroller__info--expanded {
     /* Kept transparent/gradient from base class */
     /* Remove solid background and blur as requested */
@@ -87,6 +95,9 @@
     padding-bottom: 2rem;
     max-height: 60vh;
     overflow-y: auto;
+
+    /* Ensure we still respect the right margin (sidebar) */
+    right: 72px;
 }
 
 /* Title - always visible, tappable in collapsed state */
