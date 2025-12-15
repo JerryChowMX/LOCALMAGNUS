@@ -3,7 +3,43 @@
 /* Container */
 .video-progress-bar {
     width: 100%;
+    position: relative;
 }
+
+/* Floating time bubble - centered above bar */
+.video-progress-bar__time-bubble {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #fff;
+    font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    border-radius: 8px;
+    white-space: nowrap;
+    pointer-events: none;
+    animation: timeBubbleFadeIn 0.15s ease-out;
+}
+
+@keyframes timeBubbleFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
 
 /* Track */
 .video-progress-bar__track {

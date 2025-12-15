@@ -23,6 +23,7 @@ export const VideoFeedScroller: React.FC<VideoFeedScrollerProps> = ({
 }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [activeIndex, setActiveIndex] = useState(0);
+    const [isScrubbing, setIsScrubbing] = useState(false);
     const observerRef = useRef<IntersectionObserver | null>(null);
     const videoRefs = useRef<Map<number, HTMLDivElement>>(new Map());
 
@@ -118,8 +119,9 @@ export const VideoFeedScroller: React.FC<VideoFeedScrollerProps> = ({
                                     posterUrl={video.posterUrl}
                                     isActive={index === activeIndex}
                                     shouldPreload={index === activeIndex || index === activeIndex + 1}
+                                    onScrubChange={index === activeIndex ? setIsScrubbing : undefined}
                                 />
-                                <div className="video-feed-scroller__info">
+                                <div className={`video-feed-scroller__info ${isScrubbing && index === activeIndex ? 'video-feed-scroller__info--hidden' : ''}`}>
                                     <h2 className="video-feed-scroller__title">{video.title}</h2>
                                     {video.dek && (
                                         <p className="video-feed-scroller__dek">{video.dek}</p>

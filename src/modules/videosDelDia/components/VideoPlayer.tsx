@@ -19,6 +19,8 @@ interface VideoPlayerProps {
     isActive: boolean;
     shouldPreload?: boolean;
     onVideoEnd?: () => void;
+    /** Called when scrubbing state changes (true = scrubbing, false = not) */
+    onScrubChange?: (isScrubbing: boolean) => void;
 }
 
 export const VideoPlayer: React.FC<VideoPlayerProps> = ({
@@ -27,6 +29,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     isActive,
     shouldPreload = false,
     onVideoEnd,
+    onScrubChange,
 }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -252,6 +255,10 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
                                 video.pause();
                                 setIsPaused(true);
                             }
+                            onScrubChange?.(true);
+                        }}
+                        onScrubEnd={() => {
+                            onScrubChange?.(false);
                         }}
                         variant="minimal"
                     />

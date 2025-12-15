@@ -49,6 +49,12 @@
     background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
     color: #fff;
     pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+/* Hide info during scrub */
+.video-feed-scroller__info--hidden {
+    opacity: 0;
 }
 
 .video-feed-scroller__title {

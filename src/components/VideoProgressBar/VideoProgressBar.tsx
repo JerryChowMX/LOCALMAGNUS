@@ -1,6 +1,7 @@
 /**
  * VideoProgressBar - Reusable progress bar for video players
  * Uses PointerEvents with setPointerCapture for smooth scrubbing
+ * Shows floating time indicator during scrub
  */
 
 import React, { useRef, useState, useCallback } from 'react';
@@ -15,15 +16,26 @@ interface VideoProgressBarProps {
     onSeek: (time: number) => void;
     /** Optional: callback when scrubbing starts (use to pause video) */
     onScrubStart?: () => void;
+    /** Optional: callback when scrubbing ends */
+    onScrubEnd?: () => void;
     /** Optional: variant for different visual styles */
     variant?: 'default' | 'minimal';
 }
+
+// Format time as m:ss
+const formatTime = (seconds: number): string => {
+    if (!isFinite(seconds) || isNaN(seconds)) return '0:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+};
 
 export const VideoProgressBar: React.FC<VideoProgressBarProps> = ({
     currentTime,
     duration,
     onSeek,
     onScrubStart,
+    onScrubEnd,
     variant = 'default',
 }) => {
     const trackRef = useRef<HTMLDivElement>(null);
@@ -45,7 +57,7 @@ export const VideoProgressBar: React.FC<VideoProgressBarProps> = ({
         isDragging.current = true;
         setIsScrubbing(true);
         setScrubTime(getTimeFromEvent(e));
-        onScrubStart?.(); // Pause video when scrubbing starts
+        onScrubStart?.();
     }, [getTimeFromEvent, onScrubStart]);
 
     const handlePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
@@ -60,15 +72,25 @@ export const VideoProgressBar: React.FC<VideoProgressBarProps> = ({
         isDragging.current = false;
         onSeek(scrubTime);
         setIsScrubbing(false);
+        onScrubEnd?.();
         e.currentTarget.releasePointerCapture(e.pointerId);
-    }, [scrubTime, onSeek]);
+    }, [scrubTime, onSeek, onScrubEnd]);
 
     const progressPercent = isScrubbing
         ? (scrubTime / (duration || 1)) * 100
         : (currentTime / (duration || 1)) * 100;
 
+    const displayTime = isScrubbing ? scrubTime : currentTime;
+
     return (
         <div className={`video-progress-bar video-progress-bar--${variant}`}>
+            {/* Floating time bubble - only visible during scrub */}
+            {isScrubbing && (
+                <div className="video-progress-bar__time-bubble">
+                    {formatTime(displayTime)} / {formatTime(duration)}
+                </div>
+            )}
+
             <div
                 ref={trackRef}
                 className={`video-progress-bar__track ${isScrubbing ? 'scrubbing' : ''}`}
