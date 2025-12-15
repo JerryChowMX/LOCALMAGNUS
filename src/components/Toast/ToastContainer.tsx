@@ -1,13 +1,13 @@
 import React from 'react';
-import { CheckCircle, XCircle, AlertTriangle, Info, X } from 'lucide-react';
 import { useToast, type Toast as ToastType } from '../../context/ToastContext';
+import { Icons } from '../Icons';
 import './ToastContainer.css';
 
 const iconMap = {
-    success: CheckCircle,
-    error: XCircle,
-    warning: AlertTriangle,
-    info: Info,
+    success: Icons.check,
+    error: Icons.x,
+    warning: Icons.alertCircle,
+    info: Icons.info,
 };
 
 interface ToastItemProps {
@@ -29,7 +29,7 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onClose }) => {
                 onClick={() => onClose(toast.id)}
                 aria-label="Cerrar notificación"
             >
-                <X size={18} strokeWidth={2} />
+                <Icons.x size={18} strokeWidth={2} />
             </button>
         </div>
     );

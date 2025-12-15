@@ -59,7 +59,6 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     }, [isActive]);
 
     // Handle play/pause based on active state
-    // Handle play/pause based on active state
     useEffect(() => {
         const video = videoRef.current;
         if (!video) return;

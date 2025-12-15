@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useScrolledHeader } from '../../../hooks/useScrolledHeader';
+import { useShare } from '../../../hooks/useShare';
 import { Icons } from '../../../components/Icons';
 import './HeaderContent.css';
 
@@ -20,6 +21,7 @@ export const HeaderContent: React.FC<HeaderContentProps> = ({
     onRightClick
 }) => {
     const { isScrolled } = useScrolledHeader();
+    const { handleShare } = useShare();
     const navigate = useNavigate();
 
     const handleBack = () => {
@@ -30,27 +32,16 @@ export const HeaderContent: React.FC<HeaderContentProps> = ({
         }
     };
 
-    const handleShare = async () => {
+    const onShareClick = async () => {
         if (onShare) {
             onShare();
             return;
         }
 
-        // Default native share
-        if (navigator.share) {
-            try {
-                await navigator.share({
-                    title: document.title,
-                    url: window.location.href
-                });
-            } catch (err) {
-                console.log('Error sharing:', err);
-            }
-        } else {
-            console.log('Web Share API not supported');
-            // Fallback: Copy to clipboard or show modal (could be implemented later)
-            alert('Share functionality not supported on this browser/device context.');
-        }
+        await handleShare({
+            title: document.title,
+            url: window.location.href
+        });
     };
 
     return (
@@ -68,7 +59,7 @@ export const HeaderContent: React.FC<HeaderContentProps> = ({
             </Link>
 
             {/* Right: Action Button */}
-            <button className="header-content__share" onClick={onRightClick || handleShare}>
+            <button className="header-content__share" onClick={onRightClick || onShareClick}>
                 {rightIcon || <Icons.share size={24} stroke={2} />}
             </button>
         </header>

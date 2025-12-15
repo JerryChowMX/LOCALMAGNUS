@@ -1,10 +1,10 @@
 /**
  * VideoFeedScroller - Infinite scroll with snap-to-video behavior
  * Uses IntersectionObserver for viewport detection
- * Supports collapsible description overlay (title only → expand for dek)
  */
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
+import { useShare } from '../../../hooks/useShare';
 import { VideoPlayer } from './VideoPlayer';
 import { VideoSideBar } from './VideoSideBar';
 import { Icons } from '../../../components/Icons';
@@ -38,12 +38,10 @@ export const VideoFeedScroller: React.FC<VideoFeedScrollerProps> = ({
     // Track active index in ref to avoid stale closures in observer
     const activeIndexRef = useRef(0);
 
-    // Sync ref with state
     useEffect(() => {
         activeIndexRef.current = activeIndex;
     }, [activeIndex]);
 
-    // Track liked videos (using localStorage)
     const [likedVideos, setLikedVideos] = useState<Set<string>>(() => {
         const stored = localStorage.getItem('likedVideos');
         return stored ? new Set(JSON.parse(stored)) : new Set();
@@ -82,7 +80,6 @@ export const VideoFeedScroller: React.FC<VideoFeedScrollerProps> = ({
         }
     }, [likedVideos]);
 
-    // Handle Share (Mobile Only)
     const handleShare = useCallback(async (video: VideoPost) => {
         if (navigator.share) {
             try {

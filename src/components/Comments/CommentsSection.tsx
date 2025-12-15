@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { Icons } from '../Icons';
 import { Heading } from '../Typography/Typography';
 import type { Comment } from './types';
 import { CommentItem } from './CommentItem';
@@ -84,7 +84,7 @@ export const CommentsSection = ({
                             disabled={!newComment.trim()}
                             className="magnus-send-button"
                         >
-                            <ArrowRight size={18} />
+                            <Icons.arrowRight size={18} />
                         </button>
                     </div>
                 </div>

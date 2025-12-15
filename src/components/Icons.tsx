@@ -41,6 +41,7 @@ import {
     IconVolume,
     IconVolumeOff,
     IconMessageCircle,
+    IconArrowRight,
 } from '@tabler/icons-react';
 
 export const Icons = {
@@ -87,4 +88,5 @@ export const Icons = {
     chevronDown: IconChevronDown,
     chevronUp: IconChevronUp,
     comment: IconMessageCircle,
+    arrowRight: IconArrowRight,
 };
