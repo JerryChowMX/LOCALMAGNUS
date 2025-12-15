@@ -5,6 +5,7 @@
  */
 
 import React, { useRef, useEffect, useState } from 'react';
+import { Icons } from '../../../components/Icons';
 import './VideoPlayer.css';
 
 interface VideoPlayerProps {
@@ -23,7 +24,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     onVideoEnd,
 }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
-    const [hasInteracted, setHasInteracted] = useState(false);
+    const [isMuted, setIsMuted] = useState(false); // Unmuted by default for mobile app
 
     // Determine preload strategy
     // - Active: auto (full preload)
@@ -39,8 +40,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         if (isActive) {
             // Play with error handling for autoplay restrictions
             video.play().catch(() => {
-                // Autoplay blocked - user needs to interact first
-                setHasInteracted(false);
+                // Autoplay blocked - video will remain paused
             });
         } else {
             video.pause();
@@ -49,14 +49,27 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         }
     }, [isActive]);
 
-    // Handle user tap to unmute/play (for autoplay-blocked scenarios)
+    // Sync muted state with video element
+    useEffect(() => {
+        const video = videoRef.current;
+        if (video) {
+            video.muted = isMuted;
+        }
+    }, [isMuted]);
+
+    // Toggle mute/unmute
+    const handleMuteToggle = (e: React.MouseEvent) => {
+        e.stopPropagation(); // Don't trigger video click
+        setIsMuted(!isMuted);
+    };
+
+    // Handle video area click - play if paused
     const handleVideoClick = () => {
         const video = videoRef.current;
         if (!video) return;
 
         if (video.paused) {
             video.play().catch(() => { });
-            setHasInteracted(true);
         }
     };
 
@@ -80,17 +93,33 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
                 src={videoUrl}
                 poster={posterUrl}
                 playsInline
-                muted
+                muted={isMuted}
                 loop
                 preload={preloadValue}
                 onEnded={onVideoEnd}
             />
+
             {/* Poster fallback overlay for when video hasn't loaded */}
             {posterUrl && !isActive && (
                 <div
                     className="video-player__poster-overlay"
                     style={{ backgroundImage: `url(${posterUrl})` }}
                 />
+            )}
+
+            {/* Mute/Unmute button - only show when active */}
+            {isActive && (
+                <button
+                    className="video-player__mute-btn"
+                    onClick={handleMuteToggle}
+                    aria-label={isMuted ? 'Activar sonido' : 'Silenciar'}
+                >
+                    {isMuted ? (
+                        <Icons.volumeOff size={24} />
+                    ) : (
+                        <Icons.volume size={24} />
+                    )}
+                </button>
             )}
         </div>
     );
