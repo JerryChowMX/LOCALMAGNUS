@@ -2,9 +2,13 @@
  * VideoPlayer - Single video with autoplay/pause logic
  * Controls playback based on visibility state
  * Supports aggressive preloading for next video
+ * 
+ * Touch controls:
+ * - Tap: Toggle play/pause
+ * - Hold right side: 2x speed while holding
  */
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Icons } from '../../../components/Icons';
 import './VideoPlayer.css';
 
@@ -12,7 +16,7 @@ interface VideoPlayerProps {
     videoUrl: string;
     posterUrl?: string;
     isActive: boolean;
-    shouldPreload?: boolean; // True for active + next video
+    shouldPreload?: boolean;
     onVideoEnd?: () => void;
 }
 
@@ -24,12 +28,14 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     onVideoEnd,
 }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
-    const [isMuted, setIsMuted] = useState(false); // Unmuted by default for mobile app
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [isPaused, setIsPaused] = useState(false);
+    const [isSpeedUp, setIsSpeedUp] = useState(false);
 
-    // Determine preload strategy
-    // - Active: auto (full preload)
-    // - Next: auto (aggressive preload for smoothness)
-    // - Others: metadata only
+    // Touch/hold tracking
+    const holdTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const isHoldingRef = useRef(false);
+
     const preloadValue = isActive || shouldPreload ? 'auto' : 'metadata';
 
     // Handle play/pause based on active state
@@ -37,40 +43,116 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         const video = videoRef.current;
         if (!video) return;
 
-        if (isActive) {
-            // Play with error handling for autoplay restrictions
-            video.play().catch(() => {
-                // Autoplay blocked - video will remain paused
-            });
+        if (isActive && !isPaused) {
+            video.play().catch(() => { });
         } else {
             video.pause();
-            // Reset to start when leaving view
-            video.currentTime = 0;
+            if (!isActive) {
+                video.currentTime = 0;
+            }
         }
-    }, [isActive]);
+    }, [isActive, isPaused]);
 
-    // Sync muted state with video element
-    useEffect(() => {
-        const video = videoRef.current;
-        if (video) {
-            video.muted = isMuted;
-        }
-    }, [isMuted]);
+    // Tap to toggle play/pause
+    const handleTap = useCallback(() => {
+        if (isHoldingRef.current) return; // Don't trigger tap if we were holding
 
-    // Toggle mute/unmute
-    const handleMuteToggle = (e: React.MouseEvent) => {
-        e.stopPropagation(); // Don't trigger video click
-        setIsMuted(!isMuted);
-    };
-
-    // Handle video area click - play if paused
-    const handleVideoClick = () => {
         const video = videoRef.current;
         if (!video) return;
 
         if (video.paused) {
             video.play().catch(() => { });
+            setIsPaused(false);
+        } else {
+            video.pause();
+            setIsPaused(true);
         }
+    }, []);
+
+    // Start 2x speed
+    const startSpeedUp = useCallback(() => {
+        const video = videoRef.current;
+        if (video) {
+            video.playbackRate = 2.0;
+            setIsSpeedUp(true);
+        }
+    }, []);
+
+    // End 2x speed
+    const endSpeedUp = useCallback(() => {
+        const video = videoRef.current;
+        if (video) {
+            video.playbackRate = 1.0;
+            setIsSpeedUp(false);
+        }
+        isHoldingRef.current = false;
+        if (holdTimeoutRef.current) {
+            clearTimeout(holdTimeoutRef.current);
+            holdTimeoutRef.current = null;
+        }
+    }, []);
+
+    // Check if touch/click is on right side of screen
+    const isRightSide = (clientX: number) => {
+        const container = containerRef.current;
+        if (!container) return false;
+        const rect = container.getBoundingClientRect();
+        const midpoint = rect.left + rect.width / 2;
+        return clientX > midpoint;
+    };
+
+    // Touch start - detect hold for 2x speed
+    const handleTouchStart = (e: React.TouchEvent) => {
+        const touch = e.touches[0];
+        if (!isRightSide(touch.clientX)) return;
+
+        holdTimeoutRef.current = setTimeout(() => {
+            isHoldingRef.current = true;
+            startSpeedUp();
+        }, 200); // 200ms hold threshold
+    };
+
+    // Touch end
+    const handleTouchEnd = () => {
+        if (holdTimeoutRef.current) {
+            clearTimeout(holdTimeoutRef.current);
+            holdTimeoutRef.current = null;
+        }
+
+        if (isHoldingRef.current) {
+            endSpeedUp();
+        } else {
+            handleTap();
+        }
+    };
+
+    // Mouse support for testing
+    const handleMouseDown = (e: React.MouseEvent) => {
+        if (!isRightSide(e.clientX)) return;
+
+        holdTimeoutRef.current = setTimeout(() => {
+            isHoldingRef.current = true;
+            startSpeedUp();
+        }, 200);
+    };
+
+    const handleMouseUp = () => {
+        if (holdTimeoutRef.current) {
+            clearTimeout(holdTimeoutRef.current);
+            holdTimeoutRef.current = null;
+        }
+
+        if (isHoldingRef.current) {
+            endSpeedUp();
+        }
+    };
+
+    const handleClick = (e: React.MouseEvent) => {
+        // Only handle tap if not holding
+        if (!isHoldingRef.current) {
+            handleTap();
+        }
+        isHoldingRef.current = false;
     };
 
     // Cleanup on unmount
@@ -82,24 +164,35 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
                 video.src = '';
                 video.load();
             }
+            if (holdTimeoutRef.current) {
+                clearTimeout(holdTimeoutRef.current);
+            }
         };
     }, []);
 
     return (
-        <div className="video-player" onClick={handleVideoClick}>
+        <div
+            ref={containerRef}
+            className="video-player"
+            onClick={handleClick}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={endSpeedUp}
+        >
             <video
                 ref={videoRef}
                 className="video-player__video"
                 src={videoUrl}
                 poster={posterUrl}
                 playsInline
-                muted={isMuted}
                 loop
                 preload={preloadValue}
                 onEnded={onVideoEnd}
             />
 
-            {/* Poster fallback overlay for when video hasn't loaded */}
+            {/* Poster fallback overlay */}
             {posterUrl && !isActive && (
                 <div
                     className="video-player__poster-overlay"
@@ -107,19 +200,18 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
                 />
             )}
 
-            {/* Mute/Unmute button - only show when active */}
-            {isActive && (
-                <button
-                    className="video-player__mute-btn"
-                    onClick={handleMuteToggle}
-                    aria-label={isMuted ? 'Activar sonido' : 'Silenciar'}
-                >
-                    {isMuted ? (
-                        <Icons.volumeOff size={24} />
-                    ) : (
-                        <Icons.volume size={24} />
-                    )}
-                </button>
+            {/* Pause indicator */}
+            {isActive && isPaused && (
+                <div className="video-player__pause-indicator">
+                    <Icons.play size={48} />
+                </div>
+            )}
+
+            {/* 2x Speed indicator */}
+            {isActive && isSpeedUp && (
+                <div className="video-player__speed-indicator">
+                    2x
+                </div>
             )}
         </div>
     );
