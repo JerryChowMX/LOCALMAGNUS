@@ -1,0 +1,86 @@
+/* VideoProgressBar - Reusable video player progress bar */
+
+/* Container */
+.video-progress-bar {
+    width: 100%;
+}
+
+/* Track */
+.video-progress-bar__track {
+    width: 100%;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 2px;
+    cursor: pointer;
+    position: relative;
+    transition: height 0.15s ease;
+}
+
+/* Mobile touch target - invisible expanded hit area */
+.video-progress-bar__track::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 0;
+    right: 0;
+    bottom: -20px;
+}
+
+.video-progress-bar__track:hover,
+.video-progress-bar__track.scrubbing {
+    height: 5px;
+}
+
+/* Fill (played portion) */
+.video-progress-bar__fill {
+    height: 100%;
+    background: #fff;
+    border-radius: 2px;
+    position: relative;
+}
+
+/* Scrub Thumb */
+.video-progress-bar__thumb {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(50%, -50%) scale(0);
+    width: 14px;
+    height: 14px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+}
+
+.video-progress-bar__track:hover .video-progress-bar__thumb,
+.video-progress-bar__track.scrubbing .video-progress-bar__thumb {
+    transform: translate(50%, -50%) scale(1);
+}
+
+.video-progress-bar__track.scrubbing .video-progress-bar__thumb {
+    transform: translate(50%, -50%) scale(1.3);
+    box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.2), 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Minimal variant - for full-screen video feeds */
+.video-progress-bar--minimal .video-progress-bar__track {
+    height: 3px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 0;
+}
+
+.video-progress-bar--minimal .video-progress-bar__track:hover,
+.video-progress-bar--minimal .video-progress-bar__track.scrubbing {
+    height: 4px;
+}
+
+.video-progress-bar--minimal .video-progress-bar__fill {
+    border-radius: 0;
+}
+
+.video-progress-bar--minimal .video-progress-bar__thumb {
+    width: 12px;
+    height: 12px;
+}

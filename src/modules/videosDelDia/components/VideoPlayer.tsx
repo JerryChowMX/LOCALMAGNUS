@@ -10,6 +10,7 @@
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Icons } from '../../../components/Icons';
+import { VideoProgressBar } from '../../../components/VideoProgressBar';
 import './VideoPlayer.css';
 
 interface VideoPlayerProps {
@@ -35,6 +36,10 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     // Touch/hold tracking
     const holdTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const isHoldingRef = useRef(false);
+
+    // Video time tracking
+    const [currentTime, setCurrentTime] = useState(0);
+    const [duration, setDuration] = useState(0);
 
     const preloadValue = isActive || shouldPreload ? 'auto' : 'metadata';
 
@@ -62,7 +67,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
     // Tap to toggle play/pause
     const handleTap = useCallback(() => {
-        if (isHoldingRef.current) return; // Don't trigger tap if we were holding
+        if (isHoldingRef.current) return; // Don't trigger tap if holding
 
         const video = videoRef.current;
         if (!video) return;
@@ -154,7 +159,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         }
     };
 
-    const handleClick = (e: React.MouseEvent) => {
+    const handleClick = () => {
         // Only handle tap if not holding
         if (!isHoldingRef.current) {
             handleTap();
@@ -197,6 +202,13 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
                 loop
                 preload={preloadValue}
                 onEnded={onVideoEnd}
+                onTimeUpdate={(e) => {
+                    const video = e.currentTarget;
+                    if (video.duration) {
+                        setCurrentTime(video.currentTime);
+                        setDuration(video.duration);
+                    }
+                }}
             />
 
             {/* Poster fallback overlay */}
@@ -218,6 +230,31 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
             {isActive && isSpeedUp && (
                 <div className="video-player__speed-indicator">
                     2x
+                </div>
+            )}
+
+            {/* Progress bar */}
+            {isActive && (
+                <div className="video-player__progress-container">
+                    <VideoProgressBar
+                        currentTime={currentTime}
+                        duration={duration}
+                        onSeek={(time) => {
+                            const video = videoRef.current;
+                            if (video) {
+                                video.currentTime = time;
+                                setCurrentTime(time);
+                            }
+                        }}
+                        onScrubStart={() => {
+                            const video = videoRef.current;
+                            if (video) {
+                                video.pause();
+                                setIsPaused(true);
+                            }
+                        }}
+                        variant="minimal"
+                    />
                 </div>
             )}
         </div>
