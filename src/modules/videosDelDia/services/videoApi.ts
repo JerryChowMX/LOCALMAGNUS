@@ -66,8 +66,7 @@ export const getVideosByDate = async (
         'sort[0]': 'priority:desc',
         'sort[1]': 'publishedAt:desc',
         'sort[2]': 'id:desc',
-        'populate[video]': '*',
-        'populate[poster]': '*',
+        'populate': '*',
         'pagination[page]': page.toString(),
         'pagination[pageSize]': pageSize.toString(),
     });

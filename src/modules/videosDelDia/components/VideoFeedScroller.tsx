@@ -117,8 +117,8 @@ export const VideoFeedScroller: React.FC<VideoFeedScrollerProps> = ({
                                     videoUrl={video.videoUrl}
                                     posterUrl={video.posterUrl}
                                     isActive={index === activeIndex}
+                                    shouldPreload={index === activeIndex || index === activeIndex + 1}
                                 />
-                                {/* Video info overlay */}
                                 <div className="video-feed-scroller__info">
                                     <h2 className="video-feed-scroller__title">{video.title}</h2>
                                     {video.dek && (
