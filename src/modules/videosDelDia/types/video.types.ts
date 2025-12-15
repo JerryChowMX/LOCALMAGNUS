@@ -13,6 +13,7 @@ export interface VideoPost {
     priority: number;
     durationSeconds?: number;
     publishedAt: string;
+    article_date?: string;
 }
 
 export interface VideoPostRaw {
@@ -32,6 +33,7 @@ export interface VideoPostRaw {
     priority: number;
     duration_seconds?: number;
     publishedAt: string;
+    article_date?: string;
 }
 
 export interface VideoFeedState {

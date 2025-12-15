@@ -47,6 +47,7 @@ const normalizeVideoPost = (raw: VideoPostRaw): VideoPost => {
         priority: raw.priority || 0,
         durationSeconds: raw.duration_seconds,
         publishedAt: raw.publishedAt,
+        article_date: raw.article_date,
     };
 };
 
@@ -58,11 +59,9 @@ export const getVideosByDate = async (
     page: number = 1,
     pageSize: number = 10
 ): Promise<{ videos: VideoPost[]; hasMore: boolean; total: number }> => {
-    const { start, end } = getMonterreyDayBoundaries(date);
-
+    // Use exact match on article_date (edition date) instead of publishedAt range
     const params = new URLSearchParams({
-        'filters[publishedAt][$gte]': start,
-        'filters[publishedAt][$lt]': end,
+        'filters[article_date][$eq]': date,
         'sort[0]': 'priority:desc',
         'sort[1]': 'publishedAt:desc',
         'sort[2]': 'id:desc',
