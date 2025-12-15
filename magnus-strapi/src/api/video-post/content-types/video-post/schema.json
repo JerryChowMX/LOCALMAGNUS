@@ -52,6 +52,10 @@
         "video_date": {
             "type": "date",
             "required": true
+        },
+        "like_count": {
+            "type": "integer",
+            "default": 0
         }
     }
 }

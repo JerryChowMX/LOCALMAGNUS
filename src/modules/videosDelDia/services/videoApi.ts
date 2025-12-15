@@ -48,6 +48,7 @@ const normalizeVideoPost = (raw: VideoPostRaw): VideoPost => {
         durationSeconds: raw.duration_seconds,
         publishedAt: raw.publishedAt,
         video_date: raw.video_date,
+        likeCount: raw.like_count || 0,
     };
 };
 
@@ -87,6 +88,38 @@ export const getVideosByDate = async (
     };
 };
 
+/**
+ * Like a video post
+ */
+export const likeVideo = async (documentId: string): Promise<{ likeCount: number }> => {
+    const response = await fetch(`${STRAPI_URL}/video-posts/${documentId}/like`, {
+        method: 'POST',
+    });
+
+    if (!response.ok) {
+        throw new Error(`Failed to like video: ${response.status}`);
+    }
+
+    return response.json();
+};
+
+/**
+ * Unlike a video post
+ */
+export const unlikeVideo = async (documentId: string): Promise<{ likeCount: number }> => {
+    const response = await fetch(`${STRAPI_URL}/video-posts/${documentId}/unlike`, {
+        method: 'POST',
+    });
+
+    if (!response.ok) {
+        throw new Error(`Failed to unlike video: ${response.status}`);
+    }
+
+    return response.json();
+};
+
 export const videoApi = {
     getVideosByDate,
+    likeVideo,
+    unlikeVideo,
 };

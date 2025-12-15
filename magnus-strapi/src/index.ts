@@ -26,7 +26,8 @@ export default {
           { apiId: 'api::author.author', actions: ['find', 'findOne'] },
           { apiId: 'api::category.category', actions: ['find', 'findOne'] },
           { apiId: 'api::tag.tag', actions: ['find', 'findOne'] },
-          { apiId: 'api::article.article', actions: ['find', 'findOne'] }
+          { apiId: 'api::article.article', actions: ['find', 'findOne'] },
+          { apiId: 'api::video-post.video-post', actions: ['find', 'findOne', 'like', 'unlike'] }
         ];
 
         for (const { apiId, actions } of permissionsToSet) {

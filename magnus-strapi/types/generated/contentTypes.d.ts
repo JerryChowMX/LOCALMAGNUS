@@ -691,6 +691,7 @@ export interface ApiVideoPostVideoPost extends Struct.CollectionTypeSchema {
         maxLength: 300;
       }>;
     duration_seconds: Schema.Attribute.Integer;
+    like_count: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',

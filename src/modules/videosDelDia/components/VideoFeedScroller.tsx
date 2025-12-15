@@ -9,6 +9,7 @@ import { VideoPlayer } from './VideoPlayer';
 import { VideoSideBar } from './VideoSideBar';
 import { Icons } from '../../../components/Icons';
 import type { VideoPost } from '../types/video.types';
+import { likeVideo, unlikeVideo } from '../services/videoApi';
 import './VideoFeedScroller.css';
 
 interface VideoFeedScrollerProps {
@@ -41,6 +42,45 @@ export const VideoFeedScroller: React.FC<VideoFeedScrollerProps> = ({
     useEffect(() => {
         activeIndexRef.current = activeIndex;
     }, [activeIndex]);
+
+    // Track liked videos (using localStorage)
+    const [likedVideos, setLikedVideos] = useState<Set<string>>(() => {
+        const stored = localStorage.getItem('likedVideos');
+        return stored ? new Set(JSON.parse(stored)) : new Set();
+    });
+
+    // Track video like counts (optimistic updates)
+    const [videoCounts, setVideoCounts] = useState<Map<string, number>>(new Map());
+
+    // Handle like/unlike
+    const handleLike = useCallback(async (video: VideoPost) => {
+        const isLiked = likedVideos.has(video.documentId);
+
+        // Optimistic update
+        const newLikedVideos = new Set(likedVideos);
+        if (isLiked) {
+            newLikedVideos.delete(video.documentId);
+        } else {
+            newLikedVideos.add(video.documentId);
+        }
+        setLikedVideos(newLikedVideos);
+        localStorage.setItem('likedVideos', JSON.stringify([...newLikedVideos]));
+
+        try {
+            // Call API
+            const result = isLiked
+                ? await unlikeVideo(video.documentId)
+                : await likeVideo(video.documentId);
+
+            // Update count
+            setVideoCounts(prev => new Map(prev).set(video.documentId, result.likeCount));
+        } catch (error) {
+            // Revert on error
+            setLikedVideos(likedVideos);
+            localStorage.setItem('likedVideos', JSON.stringify([...likedVideos]));
+            console.error('Failed to update like:', error);
+        }
+    }, [likedVideos]);
 
     // Setup IntersectionObserver for active video detection
     useEffect(() => {
@@ -209,7 +249,9 @@ export const VideoFeedScroller: React.FC<VideoFeedScrollerProps> = ({
 
                                     {/* Side Action Bar - Always visible, fixed position */}
                                     <VideoSideBar
-                                        onLike={() => console.log('Like clicked')}
+                                        likeCount={videoCounts.get(video.documentId) ?? video.likeCount}
+                                        isLiked={likedVideos.has(video.documentId)}
+                                        onLike={() => handleLike(video)}
                                         onComment={() => console.log('Comment clicked')}
                                         onShare={() => console.log('Share clicked')}
                                     />

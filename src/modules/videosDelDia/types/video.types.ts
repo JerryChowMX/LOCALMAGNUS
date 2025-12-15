@@ -14,6 +14,7 @@ export interface VideoPost {
     durationSeconds?: number;
     publishedAt: string;
     video_date?: string;
+    likeCount: number;
 }
 
 export interface VideoPostRaw {
@@ -34,6 +35,7 @@ export interface VideoPostRaw {
     duration_seconds?: number;
     publishedAt: string;
     video_date?: string;
+    like_count?: number;
 }
 
 export interface VideoFeedState {
