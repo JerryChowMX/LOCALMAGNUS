@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { DateFilterBar } from '../components/DateFilterBar';
+import { HeaderCenteredStack } from '../../../components/Header/HeaderCenteredStack';
 import { VideoFeedScroller } from '../components/VideoFeedScroller';
 import { useVideoFeed } from '../hooks/useVideoFeed';
 import { getMonterreyDate } from '../../../lib/dateUtils';
@@ -25,10 +25,17 @@ export const VideosDelDiaPage: React.FC = () => {
         loadMore,
     } = useVideoFeed({ date: currentDate });
 
+    // Handle date change - navigate to new date
+    const handleDateChange = (newDate: string) => {
+        navigate(`/VideosDelDia/${newDate}`);
+    };
+
     return (
         <div className="videos-del-dia-page">
-            <DateFilterBar
+            <HeaderCenteredStack
+                variant="dark"
                 currentDate={currentDate}
+                onDateChange={handleDateChange}
                 onBack={() => navigate('/')}
             />
 

@@ -3,7 +3,30 @@
     height: 100vh;
     background: #000;
     overflow: hidden;
+    position: relative;
 }
+
+/* Position header fixed over video feed */
+.videos-del-dia-page .header-centered-stack {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), transparent);
+}
+
+/* Dark variant overrides for video context */
+.videos-del-dia-page .header-centered-stack--dark {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), transparent);
+}
+
+.videos-del-dia-page .header-centered-stack--dark .header-centered-stack__logo,
+.videos-del-dia-page .header-centered-stack--dark .header-centered-stack__back,
+.videos-del-dia-page .header-centered-stack--dark .header-centered-stack__date-button {
+    color: #fff;
+}
+
 
 .videos-del-dia-page__error {
     display: flex;
