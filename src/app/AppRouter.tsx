@@ -53,54 +53,66 @@ const RedirectToToday = () => {
     return <Navigate to={`${cleanPath}/${today}`} replace />;
 };
 
+import { SubscriptionGuard } from '../modules/monetization/components/SubscriptionGuard';
+import { Outlet } from 'react-router-dom';
+
+const MonetizedLayout = () => (
+    <SubscriptionGuard>
+        <Outlet />
+    </SubscriptionGuard>
+);
+
 export const AppRouter = () => {
     return (
         <BrowserRouter>
             <AuthProvider>
                 <Suspense fallback={<RouteLoader />}>
                     <Routes>
-                        {/* Home */}
-                        <Route path={routes.home} element={<HomeHubsPage />} />
-
-                        {/* Auth */}
+                        {/* Auth (Public) */}
                         <Route path="/login" element={<LoginPage />} />
                         <Route path={routes.signup} element={<SignupPage />} />
                         <Route path={routes.forgotPassword} element={<ForgotPasswordPage />} />
                         <Route path={routes.authCallback} element={<AuthCallbackPage />} />
 
-                        {/* Notas Routes */}
-                        <Route path="/Notas" element={<RedirectToToday />} />
-                        <Route path="/Notas/:date" element={<NotasFeedPage />} />
-                        <Route path="/Notas/:date/:slug" element={<UnifiedArticleView />} />
-
-                        {/* Videos del Día Routes */}
-                        <Route path="/VideosDelDia" element={<RedirectToToday />} />
-                        <Route path="/VideosDelDia/:date" element={<VideosDelDiaPage />} />
-
-                        {/* EPaper Routes */}
-                        <Route path="/EPaper" element={<RedirectToToday />} />
-                        <Route path="/EPaper/:date" element={<EpaperHubPage />} />
-                        <Route path="/EPaper/:date/:editionNumber" element={<EpaperEditionPage />} />
-
-                        {/* Perfil Hub (Protected) */}
-                        <Route
-                            path={routes.perfilHub}
-                            element={
-                                <ProtectedRoute>
-                                    <PerfilHubPage />
-                                </ProtectedRoute>
-                            }
-                        />
-
-                        {/* Dev Routes */}
+                        {/* Dev Routes (Public for Development) */}
                         <Route path={routes.STAGING_ROOT} element={<StagingMenu />} />
                         <Route path="/dev/playground/*" element={<PlaygroundRouter />} />
                         <Route path={routes.strapiTest} element={<StrapiTestPage />} />
-
-                        {/* Staging/Production Article Routes */}
-                        <Route path="/articulo/:slug" element={<StandardOneRoute />} />
                         <Route path="/dev/staging/standard-one/:slug" element={<StandardOneRoute />} />
-                        <Route path={routes.ejecutivo} element={<ResumenEjecutivoPage />} />
+
+                        {/* Protected / Monetized Routes */}
+                        <Route element={<MonetizedLayout />}>
+                            {/* Home */}
+                            <Route path={routes.home} element={<HomeHubsPage />} />
+
+                            {/* Notas Routes */}
+                            <Route path="/Notas" element={<RedirectToToday />} />
+                            <Route path="/Notas/:date" element={<NotasFeedPage />} />
+                            <Route path="/Notas/:date/:slug" element={<UnifiedArticleView />} />
+                            <Route path="/articulo/:slug" element={<StandardOneRoute />} />
+
+                            {/* Videos del Día Routes */}
+                            <Route path="/VideosDelDia" element={<RedirectToToday />} />
+                            <Route path="/VideosDelDia/:date" element={<VideosDelDiaPage />} />
+
+                            {/* EPaper Routes */}
+                            <Route path="/EPaper" element={<RedirectToToday />} />
+                            <Route path="/EPaper/:date" element={<EpaperHubPage />} />
+                            <Route path="/EPaper/:date/:editionNumber" element={<EpaperEditionPage />} />
+
+                            {/* Resumen */}
+                            <Route path={routes.ejecutivo} element={<ResumenEjecutivoPage />} />
+
+                            {/* Perfil Hub (Protected) */}
+                            <Route
+                                path={routes.perfilHub}
+                                element={
+                                    <ProtectedRoute>
+                                        <PerfilHubPage />
+                                    </ProtectedRoute>
+                                }
+                            />
+                        </Route>
 
                         {/* 404 Catch-all */}
                         <Route path="*" element={<NotFoundPage />} />
@@ -110,3 +122,9 @@ export const AppRouter = () => {
         </BrowserRouter>
     );
 };
+
+// Renaming ProtectedRoute to PermissionsGuard to avoid confusion, 
+// as SubscriptionGuard now handles the main "Access" protection.
+// But wait, ProtectedRoute import is at the top. 
+// I should just use MonetizedLayout for now. I'll leave PerfilHub as is for now, but wrapped in MonetizedLayout so it also checks subscription.
+
