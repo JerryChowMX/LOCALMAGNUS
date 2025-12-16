@@ -32,7 +32,7 @@ const PerfilHubPage = lazy(() => import('../modules/perfilHub/pages/PerfilHubPag
 // Dev Routes
 const StagingMenu = lazy(() => import('../modules/staging/StagingMenu').then(module => ({ default: module.StagingMenu })));
 const PlaygroundRouter = lazy(() => import('./routes/PlaygroundRouter').then(module => ({ default: module.PlaygroundRouter })));
-const StrapiTestPage = lazy(() => import('../modules/noticiasHub/pages/StrapiTestPage'));
+const StrapiTestPage = lazy(() => import('../modules/playground/pages/StrapiTestPage'));
 const StandardOneRoute = lazy(() => import('./routes/article/StandardOneRoute').then(module => ({ default: module.StandardOneRoute })));
 
 // Error Pages
