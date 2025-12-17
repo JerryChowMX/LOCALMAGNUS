@@ -13,11 +13,13 @@
     width: fit-content;
 
     /* Glassmorphism */
-    background: var(--glass-bg);
-    backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(var(--glass-blur));
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--shadow-3);
+    /* Strong Glassmorphism for Floating Bar */
+    background: rgba(255, 252, 246, 0.5);
+    /* Extra Transparent Cream */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: var(--shadow-3), 0 8px 32px rgba(0, 0, 0, 0.1);
 
     border-radius: 0;
     /* Squared */
@@ -99,12 +101,14 @@
     flex-direction: column;
 
     /* Glassmorphism Card */
-    backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(var(--glass-blur));
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
+    /* Glassmorphism Card */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(255, 252, 246, 0.5);
+    /* Strong Glass */
+    border: 1px solid rgba(255, 255, 255, 0.6);
     border-radius: 0;
-    box-shadow: var(--shadow-3);
+    box-shadow: var(--shadow-3), 0 8px 32px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
 
@@ -292,8 +296,9 @@
 
 /* --- Dark Mode Overrides --- */
 :root[data-theme='dark'] .ai-chat-bar-container {
-    /* Dark glass */
-    background: var(--glass-bg);
+    /* Dark glass extended */
+    background: rgba(18, 16, 13, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 :root[data-theme='dark'] .ai-chat-button:hover,
@@ -308,4 +313,11 @@
 
 :root[data-theme='dark'] .ai-chip-title {
     color: #E5E7EB;
+}
+
+/* Dark Mode Modal Glass Overrides */
+:root[data-theme='dark'] .ai-chat-modal-content,
+:root[data-theme='dark'] .magnus-comments-panel {
+    background: rgba(18, 16, 13, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }

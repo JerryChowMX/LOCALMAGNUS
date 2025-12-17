@@ -93,7 +93,8 @@
 .header-centered-stack__divider {
     width: 40px;
     height: 2px;
-    background: #FF6B35;
+    background: #1E6FA8;
+    /* Magnus Blue */
     margin-bottom: var(--spacing-xs);
 }
 

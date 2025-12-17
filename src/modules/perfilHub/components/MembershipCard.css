@@ -1,8 +1,10 @@
 .membership-card {
-    background-color: var(--bg-secondary);
+    background-color: transparent;
     border-radius: 0;
-    padding: var(--spacing-lg);
-    border: 1px solid var(--border-secondary);
+    padding: var(--spacing-md) 0;
+    border: none;
+    border-top: 1px solid rgba(18, 14, 11, 0.08);
+    border-bottom: 1px solid rgba(18, 14, 11, 0.08);
 }
 
 .membership-card__header {
@@ -14,16 +16,19 @@
 
 .membership-card__title {
     font-family: 'Blinker', sans-serif;
-    font-weight: 700;
-    font-size: var(--font-size-h2);
-    color: var(--text-primary);
+    font-weight: 800;
+    font-size: 1.25rem;
+    color: #120E0B;
     margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
 }
 
 .membership-card__renewal {
     font-family: 'Blinker', sans-serif;
-    font-size: var(--font-size-caption);
-    color: var(--text-secondary);
+    font-size: 0.8rem;
+    color: #6A5F55;
+    font-weight: 600;
 }
 
 .membership-card__benefits {
@@ -36,14 +41,15 @@
     display: flex;
     align-items: center;
     font-family: 'Blinker', sans-serif;
-    font-size: var(--font-size-body);
-    color: var(--text-secondary);
-    margin-bottom: var(--spacing-sm);
+    font-size: 0.95rem;
+    color: #2A221C;
+    margin-bottom: var(--spacing-xs);
 }
 
 .membership-card__benefit::before {
     content: "•";
-    color: var(--text-primary);
+    color: #9C8A4D;
+    /* Brass bullet */
     font-weight: bold;
     margin-right: var(--spacing-sm);
 }
@@ -57,14 +63,52 @@
     flex: 1;
 }
 
-.membership-card__btn-manage {
-    background-color: var(--text-primary) !important;
-    color: var(--bg-primary) !important;
-    border-color: var(--text-primary) !important;
+/* Override Button component styles - Ver Beneficios (secondary) */
+.membership-card__actions .btn,
+.membership-card__actions button {
+    height: 44px;
+    border-radius: 0 !important;
+    font-family: 'Blinker', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 0.85rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    box-shadow: none !important;
+    transform: none !important;
 }
 
-.membership-card__btn-manage:hover {
-    opacity: 0.9;
+/* First button: Ver Beneficios - Outline style */
+.membership-card__actions .btn:first-child,
+.membership-card__actions button:first-child,
+.membership-card__actions .btn.btn--secondary {
+    background-color: transparent !important;
+    background: transparent !important;
+    color: #120E0B !important;
+    border: 1px solid #6A5F55 !important;
+}
+
+.membership-card__actions .btn:first-child:hover,
+.membership-card__actions button:first-child:hover {
+    background-color: rgba(18, 14, 11, 0.05) !important;
+    border-color: #120E0B !important;
+}
+
+/* Second button: Administrar - Brass solid */
+.membership-card__actions .btn:last-child,
+.membership-card__actions button:last-child,
+.membership-card__actions .membership-card__btn-manage,
+.membership-card__actions .btn.btn--primary {
+    background-color: #9C8A4D !important;
+    background: #9C8A4D !important;
+    color: #FFFFFF !important;
+    border: none !important;
+}
+
+.membership-card__actions .btn:last-child:hover,
+.membership-card__actions button:last-child:hover,
+.membership-card__actions .membership-card__btn-manage:hover {
+    background-color: #7D6E3D !important;
+    background: #7D6E3D !important;
 }
 
 /* Non-paying / Free tier state */
@@ -74,18 +118,53 @@
 
 .membership-card__description {
     font-family: 'Blinker', sans-serif;
-    font-size: var(--font-size-body);
-    color: var(--text-secondary);
+    font-size: 0.95rem;
+    color: #2A221C;
     margin: 0 0 var(--spacing-lg) 0;
     line-height: 1.6;
 }
 
 .membership-card__btn-subscribe {
-    background-color: var(--color-accent) !important;
-    border-color: var(--color-accent) !important;
+    background-color: #9C8A4D !important;
+    border: none !important;
     color: white !important;
 }
 
 .membership-card__btn-subscribe:hover {
-    opacity: 0.9;
+    background-color: #7D6E3D !important;
+}
+
+/* Dark Mode Overrides */
+[data-theme='dark'] .membership-card {
+    border-top-color: rgba(242, 238, 232, 0.08);
+    border-bottom-color: rgba(242, 238, 232, 0.08);
+}
+
+[data-theme='dark'] .membership-card__title {
+    color: #F2EEE8;
+}
+
+[data-theme='dark'] .membership-card__renewal {
+    color: #BEB5A7;
+}
+
+[data-theme='dark'] .membership-card__benefit {
+    color: #DCD5CA;
+}
+
+[data-theme='dark'] .membership-card__description {
+    color: #DCD5CA;
+}
+
+/* Dark mode button adjustments */
+[data-theme='dark'] .membership-card__actions .btn:first-child,
+[data-theme='dark'] .membership-card__actions button:first-child {
+    color: #F2EEE8 !important;
+    border-color: rgba(242, 238, 232, 0.3) !important;
+}
+
+[data-theme='dark'] .membership-card__actions .btn:first-child:hover,
+[data-theme='dark'] .membership-card__actions button:first-child:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-color: #F2EEE8 !important;
 }

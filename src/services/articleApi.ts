@@ -26,6 +26,7 @@ function normalizeArticle(data: any): StrapiArticle {
     excerpt: attrs.excerpt || '',
     publishedAt: attrs.publishedAt,
     reading_time: attrs.reading_time || 0,
+    isSpecial: attrs.isSpecial || false,
     hero_image: attrs.hero_image ? {
       url: attrs.hero_image.url || attrs.hero_image.data?.attributes?.url,
       alternativeText: attrs.hero_image.alternativeText || attrs.hero_image.data?.attributes?.alternativeText
@@ -150,13 +151,16 @@ function normalizeArticle(data: any): StrapiArticle {
 
 export const articleApi = {
   async getArticles(page = 1, pageSize = 10, date?: string): Promise<{ articles: StrapiArticle[] }> {
-    // Strapi REST API with proper query string format
-    const params = new URLSearchParams({
-      'populate': '*',
-      'sort[0]': 'publishedAt:desc',
-      'pagination[page]': page.toString(),
-      'pagination[pageSize]': pageSize.toString()
-    });
+    // Build Strapi REST API URL with explicit population for relations
+    const params = new URLSearchParams();
+
+    // Use populate=* to populate all first-level relations
+    params.append('populate', '*');
+
+    // Sorting and pagination
+    params.append('sort[0]', 'publishedAt:desc');
+    params.append('pagination[page]', page.toString());
+    params.append('pagination[pageSize]', pageSize.toString());
 
     // Add Date Filtering if provided (YYYY-MM-DD)
     if (date) {

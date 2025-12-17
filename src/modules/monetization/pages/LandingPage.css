@@ -1,27 +1,24 @@
-:root {
-    /* Revised Luxury Palette */
-    /* Core Neutrals */
+.landing-container {
+    /* FORCE LUXURY PALETTE (Ignore Global Dark Mode) */
     --cream-25: #FFFCF6;
     --cream-50: #F7F1E8;
     --cream-100: #EFE6D8;
     --cream-150: #E6DACC;
 
-    /* Coffee / Ink */
     --ink-950: #120E0B;
     --ink-900: #1B1612;
     --ink-800: #2A231D;
     --ink-700: #3F362E;
     --ink-500: #6A5F55;
 
-    /* Accent (Brass – restrained) */
-    --brass-500: #9C8A4D;
-    --brass-400: #B2A266;
-    --brass-300: #C9BD8A;
-}
+    /* Force Brand Colors locally to ensure visibility */
+    --magnus-blue: #1E6FA8;
+    --magnus-blue-hover: #2A7FB8;
 
-.landing-container {
+    --shadow-luxury: 0 0 32px rgba(18, 14, 11, 0.12);
+
+    /* Use local vars to FORCE Cream theme */
     min-height: 100vh;
-    /* Stronger gradient as preferred by user */
     background: linear-gradient(to bottom, var(--cream-25) 0%, var(--cream-25) 50%, var(--cream-100) 100%);
     color: var(--ink-900);
     display: flex;
@@ -30,17 +27,13 @@
     justify-content: flex-end;
     padding: 1.5rem;
     padding-bottom: 8rem;
-    /* Pushed content down, leaving space for footer */
     position: relative;
     overflow: hidden;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-/* Background Gradients - Keeping hidden for clean look */
-.landing-bg-gradient-1 {
-    display: none;
-}
-
+/* Background Gradients - Keeping hidden per design */
+.landing-bg-gradient-1,
 .landing-bg-gradient-2 {
     display: none;
 }
@@ -74,8 +67,8 @@
 
 .landing-header p {
     font-size: 1.1rem;
-    /* Replaced back to original size */
     color: var(--ink-700);
+    /* Muted Ink */
     margin-top: 1rem;
     line-height: 1.4;
     font-weight: 400;
@@ -88,19 +81,17 @@
 .landing-card {
     padding: 3rem;
     border-radius: 0;
-    /* Very subtle surface distinction */
-    background: var(--cream-50);
+    /* Subtle surface distinction: Subtle cream to Raised cream */
     background: linear-gradient(to bottom, var(--cream-50), var(--cream-100));
     border: none;
-    box-shadow: 0 20px 40px rgba(27, 22, 18, 0.06);
-    /* Soft ink shadow restored */
+    box-shadow: var(--shadow-luxury);
+    /* New colored ink shadow */
     margin-bottom: 2rem;
     text-align: center;
 }
 
 .landing-card h2 {
     font-size: 1.75rem;
-    /* Reduced slightly from 2rem */
     font-weight: 700;
     margin-bottom: 0.5rem;
     color: var(--ink-900);
@@ -120,14 +111,14 @@
     gap: 0.75rem;
 }
 
+/* PRIMARY CTA: Ink (Luxury Monochrome) */
+/* PRIMARY CTA: Brass (Luxury Accent) */
 .btn-primary {
     width: 100%;
     padding: 1rem;
-    /* Primary CTA: Dark coffee or ink, not gold */
-    background-color: var(--ink-900);
-    background: var(--ink-900);
-    color: var(--cream-25);
-    /* Light cream text */
+    background-color: var(--accent-brass, #9C8A4D);
+    color: var(--text-inverse, #FFFFFF);
+    /* White text */
     font-weight: 700;
     font-size: 1rem;
     border-radius: 0;
@@ -141,23 +132,27 @@
 }
 
 .btn-primary:hover {
-    background-color: var(--ink-800);
+    background-color: var(--accent-brass-dark, #7D6E3D);
     transform: translateY(-1px);
 }
 
+/* SECONDARY CTA: Outline Ink (Demoted for hierarchy) */
 .btn-secondary {
     width: 100%;
     padding: 1rem;
     background-color: transparent;
-    border: 1px solid var(--ink-800);
+    border: 1px solid var(--ink-900);
+    /* Ink Border */
     color: var(--ink-900);
+    /* Ink text */
     font-weight: 600;
     font-size: 1rem;
     border-radius: 0;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.2s;
 }
 
 .btn-secondary:hover {
-    background-color: rgba(27, 22, 18, 0.03);
+    background-color: rgba(27, 22, 18, 0.05);
+    /* Subtle ink tint */
 }

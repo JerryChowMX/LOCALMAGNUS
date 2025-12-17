@@ -89,7 +89,8 @@
     font-family: var(--font-family-display);
     font-weight: var(--font-weight-bold);
     font-size: 0.6rem;
-    color: var(--color-brand-orange);
+    color: #1E6FA8;
+    /* Magnus Blue */
     letter-spacing: 0.2em;
     text-transform: uppercase;
     margin-top: 2px;

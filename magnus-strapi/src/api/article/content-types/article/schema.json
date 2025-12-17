@@ -113,6 +113,10 @@
     "reading_time": {
       "type": "integer"
     },
+    "isSpecial": {
+      "type": "boolean",
+      "default": false
+    },
     "ai_metadata": {
       "type": "json",
       "private": true

@@ -5,22 +5,30 @@
 }
 
 .settings-section__title {
-    padding: 0 0 var(--spacing-xs) 0;
+    padding: 0 0 var(--spacing-sm) 0;
     font-family: 'Blinker', sans-serif;
-    font-weight: 600;
-    font-size: var(--font-size-caption);
-    color: var(--text-tertiary);
+    font-weight: 700;
+    font-size: 0.7rem;
+    color: #6A5F55;
+    /* text-muted */
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.1em;
 }
 
 .settings-section__content {
-    background-color: var(--bg-secondary);
+    background-color: transparent;
     border-radius: 0;
-    overflow: hidden;
-    border: 1px solid var(--border-secondary);
+    overflow: visible;
+    border: none;
+    display: flex;
+    flex-direction: column;
 }
 
 .settings-section__content>.settings-row:last-child {
     border-bottom: none;
+}
+
+/* Dark Mode Overrides */
+[data-theme='dark'] .settings-section__title {
+    color: #BEB5A7;
 }

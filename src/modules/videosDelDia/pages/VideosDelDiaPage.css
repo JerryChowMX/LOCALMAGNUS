@@ -1,9 +1,12 @@
 .videos-del-dia-page {
     width: 100%;
     height: 100vh;
-    background: #000;
+    background: #12100D;
+    /* Deep Coffee (Dark Mode Base) */
     overflow: hidden;
     position: relative;
+    color: #F2EEE8;
+    /* Warm Milk (Dark Mode Text) */
 }
 
 /* Position header fixed over video feed */
@@ -13,18 +16,22 @@
     left: 0;
     right: 0;
     z-index: 100;
-    background: linear-gradient(rgba(0, 0, 0, 0.7), transparent);
+    /* Dark Glassmorphism Override */
+    background: rgba(18, 16, 13, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Dark variant overrides for video context */
 .videos-del-dia-page .header-centered-stack--dark {
-    background: linear-gradient(rgba(0, 0, 0, 0.7), transparent);
+    background: rgba(18, 16, 13, 0.6);
 }
 
 .videos-del-dia-page .header-centered-stack--dark .header-centered-stack__logo,
 .videos-del-dia-page .header-centered-stack--dark .header-centered-stack__back,
 .videos-del-dia-page .header-centered-stack--dark .header-centered-stack__date-button {
-    color: #fff;
+    color: #F2EEE8;
 }
 
 

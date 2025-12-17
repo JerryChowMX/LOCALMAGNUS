@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PageWrapper } from '../../../components/Layout/PageWrapper';
 import { Section, Stack } from '../../../components/Layout';
 import { HeaderContent } from '../../noticiasHub/components/HeaderContent';
 import { Icons } from '../../../components/Icons';
@@ -58,28 +57,28 @@ export const PerfilHubPage: React.FC = () => {
 
     if (isLoading) {
         return (
-            <PageWrapper>
+            <div className="perfil-hub-page">
                 <HeaderContent onBack={() => navigate('/')} />
                 <Section padding="md">
                     <Body>Cargando perfil...</Body>
                 </Section>
-            </PageWrapper>
+            </div>
         );
     }
 
     if (error) {
         return (
-            <PageWrapper>
+            <div className="perfil-hub-page">
                 <HeaderContent onBack={() => navigate('/')} />
                 <Section padding="md">
                     <Body color="error">Error al cargar el perfil. Por favor intente más tarde.</Body>
                 </Section>
-            </PageWrapper>
+            </div>
         );
     }
 
     return (
-        <PageWrapper>
+        <div className="perfil-hub-page">
             <HeaderContent
                 onBack={() => navigate('/')}
                 rightIcon={<Icons.settings size={24} stroke={1.5} />}
@@ -197,6 +196,6 @@ export const PerfilHubPage: React.FC = () => {
                     </Stack>
                 </Section>
             </div>
-        </PageWrapper>
+        </div>
     );
 };

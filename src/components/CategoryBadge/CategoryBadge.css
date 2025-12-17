@@ -1,0 +1,42 @@
+/* CategoryBadge - Small category label for special articles */
+
+.category-badge {
+    /* Positioning - to be placed absolutely by parent */
+    position: absolute;
+    top: var(--spacing-sm, 8px);
+    right: var(--spacing-sm, 8px);
+    z-index: 5;
+
+    /* Design: Magnus Blue fill, Cream text, no border */
+    background-color: var(--magnus-blue);
+    color: var(--text-inverse);
+    border: none;
+
+    /* Typography */
+    font-family: 'Blinker', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    line-height: 1;
+
+    /* Spacing */
+    padding: 6px 12px;
+
+    /* No border-radius for editorial look */
+    border-radius: 0;
+
+    /* Subtle shadow for depth over image */
+    box-shadow: 0 2px 8px rgba(18, 14, 11, 0.25);
+}
+
+/* Dark mode adjustment - lighter blue for visibility */
+[data-theme='dark'] .category-badge {
+    /* Variables handle theme switching automatically mostly using magnus-blue, 
+       but if we need a specific lighter blue for dark mode that isn't the main var: */
+    background-color: var(--magnus-blue);
+    /* Or specifically #38BDF8 if var(--magnus-blue) isn't adapting as desired. 
+       In index.css, --magnus-blue IS redefined for dark mode. So we can just use the var! */
+    color: var(--text-inverse);
+    /* In dark mode, text-inverse is #12100D (Dark), so this works perfectly. */
+}

@@ -148,6 +148,7 @@ export interface StrapiArticle {
     excerpt: string;
     publishedAt: string;
     reading_time: number;
+    isSpecial?: boolean;
     hero_image?: {
         url: string;
         alternativeText?: string;

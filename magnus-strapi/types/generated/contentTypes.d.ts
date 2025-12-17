@@ -475,6 +475,7 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
       'ai.infographic-summary',
       false
     >;
+    isSpecial: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',

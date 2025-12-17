@@ -9,12 +9,6 @@
     background-position: center;
     /* Background image is set via inline style --card-bg */
     background-image: var(--card-bg);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.noticias-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-md);
 }
 
 .noticias-card__overlay {
@@ -23,31 +17,21 @@
     left: 0;
     right: 0;
     padding: var(--spacing-md);
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-    color: white;
-    /* Always white text on overlay */
+    /* Deep Ink Gradient (matching --text-primary #120E0B) */
+    background: linear-gradient(to top, rgba(18, 14, 11, 0.9), transparent);
+    color: var(--surface-base);
 }
 
 .noticias-card__content {
-    color: white;
-}
-
-.noticias-card__section {
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-weight: var(--font-weight-bold);
-    color: var(--color-accent);
+    color: var(--surface-base);
 }
 
 .noticias-card__title {
-    color: white;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    /* Force Brand Cream (#FFFCF6) to ensure legibility on dark overlay in ALL modes. 
+       We cannot use var(--surface-base) because it changes to dark in Dark Mode. */
+    color: #FFFCF6 !important;
+    text-shadow: 0 2px 4px rgba(18, 14, 11, 0.5);
     font-size: 1.5rem;
     line-height: 1.3;
-    font-weight: var(--font-weight-medium);
-}
-
-.noticias-card__date {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.95rem;
+    font-weight: 600;
 }

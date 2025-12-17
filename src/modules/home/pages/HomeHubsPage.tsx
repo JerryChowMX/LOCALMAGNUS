@@ -23,7 +23,7 @@ export const HomeHubsPage: React.FC = () => {
             {/* 1. MAGNUS Logo Stack */}
             <div className="home-hubs__brand">
                 <Heading level={1} className="home-hubs__logo">MAGNUS</Heading>
-                <div className="home-hubs__submark">VANGUARDIA</div>
+                <div className="home-hubs__submark">by JerryChowMX</div>
             </div>
 
             {/* 2. Welcome Block */}

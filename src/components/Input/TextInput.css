@@ -22,13 +22,11 @@
     width: 100%;
     padding: var(--spacing-md);
     padding-right: 48px;
-    /* Space for right icon */
     font-family: 'Blinker', sans-serif;
     font-size: var(--font-size-body);
-    background-color: var(--surface-card);
-    /* Light gray/white depending on theme, but spec says light gray var(--color-surface-2) */
-    border: 1px solid #D1D5DB;
-    /* Visible gray border */
+    background-color: transparent;
+    /* Luxury aesthetic */
+    border: 1px solid var(--border-color, rgba(18, 14, 11, 0.15));
     border-radius: 0;
     color: var(--text-primary);
     transition: all 0.2s ease;
@@ -36,17 +34,19 @@
 
 .text-input:focus {
     outline: none;
-    border-color: var(--primary-color);
-    background-color: var(--surface-background);
+    border-color: var(--accent-brass, #9C8A4D);
+    /* Brass focus ring */
+    box-shadow: 0 0 0 1px var(--accent-brass-soft, rgba(156, 138, 77, 0.1));
+    background-color: var(--surface-base, #FFFCF6);
 }
 
 .text-input--error {
-    border-color: var(--error-color);
+    border-color: var(--semantic-error, #8C2F2F);
 }
 
 .text-input::placeholder {
-    color: #9CA3AF;
-    /* Gray placeholder */
+    color: var(--text-muted, #9CA3AF);
+    opacity: 0.6;
 }
 
 .text-input-icon-btn {
@@ -71,6 +71,9 @@
 
 .text-input-error {
     font-family: 'Blinker', sans-serif;
-    font-size: var(--font-size-caption);
-    color: var(--error-color);
+    font-size: var(--font-size-caption, 12px);
+    /* Fallback to 12px if undefined */
+    color: var(--semantic-error, #8C2F2F);
+    /* Burnt Brick */
+    margin-top: 4px;
 }

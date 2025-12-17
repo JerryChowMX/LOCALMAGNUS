@@ -183,8 +183,16 @@ export const VideoFeedScroller: React.FC<VideoFeedScrollerProps> = ({
     if (videos.length === 0) {
         return (
             <div className="video-feed-scroller video-feed-scroller--empty">
-                <div className="video-feed-scroller__empty">
-                    No hay videos para esta fecha
+                <div className="video-feed-scroller__empty-content">
+                    <div className="video-feed-scroller__empty-icon">
+                        <Icons.play size={48} />
+                    </div>
+                    <h2 className="video-feed-scroller__empty-title">
+                        No hay videos para esta fecha
+                    </h2>
+                    <p className="video-feed-scroller__empty-text">
+                        Intenta buscar en otro día usando el selector de fecha superior.
+                    </p>
                 </div>
             </div>
         );

@@ -4,46 +4,35 @@
     justify-content: center;
     width: 100%;
     padding: var(--spacing-md);
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    /* Visible gray border */
+    background-color: transparent;
+    border: 1px solid var(--border-color, rgba(18, 14, 11, 0.15));
     border-radius: 0;
     cursor: pointer;
     transition: background-color 0.2s;
     position: relative;
+    color: var(--text-primary);
 }
 
 .social-button:hover {
-    background-color: var(--surface-card);
+    background-color: var(--surface-subtle, #F7F1E8);
 }
 
 .social-button__icon {
     position: absolute;
     left: var(--spacing-lg);
+    color: var(--text-primary);
 }
 
 .social-button__label {
     font-family: 'Blinker', sans-serif;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--text-primary);
 }
 
-.social-button--apple .social-button__icon {
-    color: var(--text-primary);
-}
-
-/* Google icon - black in light mode, white in dark mode */
+/* Ensure Google icon inherits color properly if forced */
 .social-button--google .social-button__icon {
-    color: #000000;
+    color: var(--text-primary);
 }
 
-/* For dark mode, ensure good contrast */
-[data-theme="dark"] .social-button--google {
-    background-color: var(--bg-surface);
-    border-color: var(--border-subtle);
-}
-
-[data-theme="dark"] .social-button--google .social-button__icon {
-    color: #ffffff;
-}
+/* Override specific to google if not using an SVG that handles color */

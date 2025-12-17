@@ -40,13 +40,16 @@ export const NotasFeedPage: React.FC = () => {
                                 ? `${STRAPI_ORIGIN}${article.hero_image.url}`
                                 : DEFAULT_IMAGE;
 
+                            // Only show badge if category exists (no fallback)
+                            const badgeCategory = article.category?.name;
+
                             return (
                                 <React.Fragment key={article.documentId}>
                                     <ArticleCard
                                         title={article.title}
                                         imageUrl={imageUrl}
-                                        publishedAt={article.publishedAt}
-                                        section={article.category?.name || 'General'}
+                                        category={badgeCategory}
+                                        isSpecial={article.isSpecial}
                                         onClick={() => navigate(routes.notasArticle(currentDate, article.slug))}
                                     />
                                     {index < articles.length - 1 && (

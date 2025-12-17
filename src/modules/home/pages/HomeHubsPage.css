@@ -1,70 +1,84 @@
 /* Frame & Layout */
 .home-hubs {
+    /* Creamy Coffee Theme */
+    --cream-25: #FFFCF6;
+    --cream-50: #F7F1E8;
+    --cream-100: #EFE6D8;
+    --ink-950: #120E0B;
+    --ink-800: #2A231D;
+    --ink-700: #3F362E;
+    --ink-500: #6A5F55;
+    --brass: #9C8A4D;
+
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: var(--spacing-xxl);
-    padding-bottom: var(--spacing-lg);
+    padding: var(--spacing-xl, 24px) var(--spacing-lg, 16px);
+    padding-top: var(--spacing-2xl, 32px);
     max-width: 480px;
     margin: 0 auto;
     min-height: 100vh;
     justify-content: space-between;
-    /* Spread content evenly */
+    background: linear-gradient(180deg, var(--cream-25) 0%, var(--cream-50) 100%);
 }
 
 /* 1. MAGNUS Logo Stack */
 .home-hubs__brand {
     text-align: center;
     margin-top: var(--spacing-xl);
-    /* Push down slightly */
 }
 
 .home-hubs__logo {
     font-size: 4rem;
-    /* Custom larger size for logo */
+    font-family: 'Blinker', sans-serif;
+    font-weight: 800;
     margin-bottom: var(--spacing-xs);
     line-height: 0.9;
-    /* Tighter line height for large text */
     letter-spacing: -0.02em;
+    color: var(--ink-950);
 }
 
 .home-hubs__submark {
-    font-family: var(--font-family-display);
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-brand-orange);
-    font-size: var(--font-size-lg);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
+    font-family: 'Blinker', sans-serif;
+    font-weight: 600;
+    color: var(--brass);
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    text-transform: none;
+    opacity: 0.8;
 }
+
+
 
 /* 2. Welcome Block */
 .home-hubs__welcome {
     text-align: center;
     flex-grow: 1;
-    /* Allow this to take space */
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
 .home-hubs__greeting {
-    font-weight: var(--font-weight-regular);
+    font-weight: 400;
     margin-bottom: var(--spacing-xs);
-    font-size: var(--font-size-xl);
+    font-size: 1.25rem;
+    color: var(--ink-700);
 }
 
 .home-hubs__date {
-    color: var(--color-text-secondary);
+    color: var(--ink-500);
     display: block;
-    font-size: var(--font-size-md);
+    font-size: 1rem;
     text-transform: capitalize;
 }
 
 .home-hubs__username {
     display: block;
     font-size: 2.5rem;
-    font-weight: var(--font-weight-bold);
-    color: var(--text-primary);
+    font-weight: 700;
+    font-family: 'Blinker', sans-serif;
+    color: var(--ink-950);
     line-height: 1.2;
     margin-top: var(--spacing-xs);
 }
@@ -73,7 +87,8 @@
 .home-hubs__prompt {
     text-align: center;
     margin-bottom: var(--spacing-lg);
-    font-weight: var(--font-weight-semibold);
+    font-weight: 600;
+    color: var(--ink-800);
 }
 
 /* 4. Button Group */
@@ -85,11 +100,25 @@
     margin-bottom: var(--spacing-xl);
 }
 
-/* Override button padding for Home Screen */
-.home-hubs__buttons .btn--lg {
+/* Override button styling for Home Screen */
+.home-hubs__buttons .btn--lg,
+.home-hubs__buttons button {
     padding: var(--spacing-lg) var(--spacing-xl);
-    /* Bigger padding */
-    font-size: var(--font-size-lg);
+    font-size: 1.1rem;
+    border: 1px solid var(--ink-700) !important;
+    /* Softer ink border */
+    border-radius: 0;
+    background: transparent;
+    color: var(--ink-950);
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.home-hubs__buttons .btn--lg:hover,
+.home-hubs__buttons button:hover {
+    background: rgba(18, 14, 11, 0.04);
+    /* Subtle ink tint on hover */
+    border-color: var(--ink-950) !important;
 }
 
 /* 5. Footer */
@@ -99,6 +128,38 @@
 }
 
 .home-hubs__footer button {
-    color: var(--color-text-secondary);
-    font-weight: var(--font-weight-medium);
+    color: var(--ink-500);
+    font-weight: 500;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.home-hubs__footer button:hover {
+    color: var(--ink-950);
+}
+
+/* Dark Mode Overrides */
+[data-theme='dark'] .home-hubs {
+    --cream-25: #12100D;
+    --cream-50: #191613;
+    --ink-950: #F2EEE8;
+    --ink-800: #DCD5CA;
+    --ink-700: #BEB5A7;
+    --ink-500: #8F8679;
+    --brass: #C4B476;
+    background: linear-gradient(180deg, #12100D 0%, #191613 100%);
+}
+
+[data-theme='dark'] .home-hubs__buttons .btn--lg,
+[data-theme='dark'] .home-hubs__buttons button {
+    border-color: var(--ink-700) !important;
+    color: var(--ink-950);
+}
+
+[data-theme='dark'] .home-hubs__buttons .btn--lg:hover,
+[data-theme='dark'] .home-hubs__buttons button:hover {
+    background: rgba(242, 238, 232, 0.08);
 }

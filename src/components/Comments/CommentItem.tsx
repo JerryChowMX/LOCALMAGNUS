@@ -43,7 +43,7 @@ export const CommentItem = ({ comment, onReply, onLike, onDislike }: CommentItem
                             <span className="comment-author-name">{comment.author}</span>
                             {comment.role && (
                                 <span className="comment-role-badge" style={{
-                                    backgroundColor: comment.role === 'Admin' ? 'var(--color-accent)' : comment.role === 'Subscriber' ? 'var(--color-brand-orange)' : 'transparent',
+                                    backgroundColor: comment.role === 'Admin' ? 'var(--magnus-blue)' : comment.role === 'Subscriber' ? 'var(--accent-brass)' : 'transparent',
                                     color: comment.role === 'Guest' ? 'var(--text-secondary)' : '#FFFFFF',
                                     border: comment.role === 'Guest' ? '1px solid var(--text-secondary)' : 'none'
                                 }}>

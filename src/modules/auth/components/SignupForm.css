@@ -31,7 +31,8 @@
     width: 16px;
     height: 16px;
     cursor: pointer;
-    accent-color: var(--color-brand-orange);
+    accent-color: var(--magnus-blue);
+    /* Editorial Blue */
     flex-shrink: 0;
 }
 
@@ -40,14 +41,23 @@
 .signup-form__checkbox-label>span,
 .signup-form__checkbox-label>span *,
 .signup-form__checkbox-label .text-caption {
-    font-size: 8px !important;
-    color: #888 !important;
-    line-height: 1.3 !important;
+    font-size: 0.55rem !important;
+    /* Tiny legal text size to force fit */
+    color: var(--text-muted) !important;
+    line-height: 1.2 !important;
+    white-space: nowrap;
+    /* Force one line */
+    overflow: hidden;
+    /* Prevent spillover */
+    text-overflow: clip;
+    /* Try not to show dots if it fits, or just clip edge slightly */
+    max-width: 100%;
+    margin-top: 2px;
 }
 
-/* Links inherit gray color and stay 8px */
+/* Links inherit color and stay 8px */
 .signup-form__link {
-    color: inherit !important;
+    color: var(--text-primary) !important;
     font-size: inherit !important;
     cursor: pointer;
     text-decoration: underline;
@@ -60,8 +70,10 @@
 
 .signup-form__error {
     padding: var(--spacing-sm) var(--spacing-md);
-    background-color: var(--color-error-bg, #fee);
-    color: var(--color-error, #c00);
+    background-color: transparent;
+    color: var(--semantic-error);
+    /* Burnt Brick */
+    border: 1px solid var(--semantic-error);
     border-radius: 0;
     font-size: var(--font-size-sm);
     text-align: center;
@@ -69,13 +81,20 @@
 
 .signup-form__submit {
     margin-top: var(--spacing-sm);
-    background-color: var(--color-brand-orange) !important;
-    color: #fff !important;
+    /* Brass CTA */
+    background-color: var(--accent-brass, #9C8A4D) !important;
+    color: #FFFFFF !important;
+    /* White text */
     border: none !important;
+    font-family: inherit;
+    font-weight: 700;
+    border-radius: 0 !important;
+    transition: background-color 0.2s;
 }
 
 .signup-form__submit:hover {
-    filter: brightness(0.9);
+    background-color: var(--accent-brass-dark, #7D6E3D) !important;
+    /* Darker Brass */
 }
 
 .signup-form__login {
@@ -83,20 +102,28 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    /* Ensure vertical centering */
     gap: var(--spacing-xs);
     margin-top: var(--spacing-md);
+    color: var(--text-secondary);
+    /* Text color for "YA TIENES CUENTA?" */
 }
 
 .signup-form__login-link {
-    color: var(--color-brand-orange);
+    color: var(--magnus-blue, #1E6FA8) !important;
+    /* Force Editorial Blue */
     cursor: pointer;
-    font-weight: var(--font-weight-medium);
+    font-weight: 700;
+    /* Make it pop a bit more if needed, or keep medium */
     transition: opacity var(--transition-fast);
+    display: inline-flex;
+    /* Fix potential line-height misalignment */
+    align-items: center;
 }
 
 .signup-form__login-link caption,
 .signup-form__login-link span {
-    color: var(--color-brand-orange) !important;
+    color: var(--magnus-blue) !important;
 }
 
 .signup-form__login-link:hover {
@@ -104,8 +131,8 @@
     text-decoration: underline;
 }
 
-/* Dark mode - use Magnus blue for links */
+/* Dark mode overrides (if needed globally, but this page is theme-locked) */
 [data-theme="dark"] .signup-form__login-link,
 [data-theme="dark"] .signup-form__login-link span {
-    color: var(--magnus-blue, #0284C7) !important;
+    color: var(--magnus-blue) !important;
 }

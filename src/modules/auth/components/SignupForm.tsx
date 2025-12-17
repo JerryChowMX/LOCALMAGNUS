@@ -8,6 +8,15 @@ import { Caption } from '../../../components/Typography/Typography';
 import { routes } from '../../../app/routes';
 import './SignupForm.css';
 
+interface FormErrors {
+    fullName?: string;
+    email?: string;
+    password?: string;
+    confirmPassword?: string;
+    terms?: string;
+    general?: string;
+}
+
 export const SignupForm: React.FC = () => {
     const navigate = useNavigate();
     const { register } = useAuth();
@@ -19,49 +28,72 @@ export const SignupForm: React.FC = () => {
     });
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [errors, setErrors] = useState<FormErrors>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [acceptedTerms, setAcceptedTerms] = useState(false);
 
-    const validateForm = () => {
-        if (formData.password.length < 8) {
-            setError('La contraseña debe tener al menos 8 caracteres');
-            return false;
+    const validateForm = (): boolean => {
+        const newErrors: FormErrors = {};
+        let isValid = true;
+
+        if (!formData.fullName.trim()) {
+            newErrors.fullName = 'Por favor completa este campo';
+            isValid = false;
         }
+
+        if (!formData.email.trim()) {
+            newErrors.email = 'Por favor completa este campo';
+            isValid = false;
+        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+            newErrors.email = 'Ingresa un correo electrónico válido';
+            isValid = false;
+        }
+
+        if (!formData.password) {
+            newErrors.password = 'Por favor completa este campo';
+            isValid = false;
+        } else if (formData.password.length < 8) {
+            newErrors.password = 'La contraseña debe tener al menos 8 caracteres';
+            isValid = false;
+        }
+
         if (formData.password !== formData.confirmPassword) {
-            setError('Las contraseñas no coinciden');
-            return false;
+            newErrors.confirmPassword = 'Las contraseñas no coinciden';
+            isValid = false;
         }
+
         if (!acceptedTerms) {
-            setError('Debes aceptar los términos y condiciones');
-            return false;
+            newErrors.terms = 'Debes aceptar los términos y condiciones';
+            isValid = false;
         }
-        return true;
+
+        setErrors(newErrors);
+        return isValid;
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError(null);
 
         if (!validateForm()) {
             return;
         }
 
         setIsSubmitting(true);
+        setErrors({});
 
         try {
             await register({
-                username: formData.email, // Using email as username for now as per Strapi often defaults
+                username: formData.email,
                 email: formData.email,
                 password: formData.password,
                 fullName: formData.fullName
             });
 
-            // Registration auto-logs in the user (Strapi returns JWT), redirect to profile
             navigate(routes.perfilHub);
         } catch (err: any) {
-            // Display the actual error message from the backend
-            setError(err.message || 'Error al crear la cuenta. El correo podría estar ya registrado.');
+            setErrors({
+                general: err.message || 'Error al crear la cuenta. El correo podría estar ya registrado.'
+            });
         } finally {
             setIsSubmitting(false);
         }
@@ -71,11 +103,14 @@ export const SignupForm: React.FC = () => {
         e: React.ChangeEvent<HTMLInputElement>
     ) => {
         setFormData(prev => ({ ...prev, [field]: e.target.value }));
-        setError(null);
+        // Clear specific error when user types
+        if (errors[field]) {
+            setErrors(prev => ({ ...prev, [field]: undefined }));
+        }
     };
 
     return (
-        <form onSubmit={handleSubmit} className="signup-form">
+        <form onSubmit={handleSubmit} className="signup-form" noValidate>
             <div className="signup-form__fields">
                 <TextInput
                     placeholder="Nombre completo"
@@ -83,7 +118,7 @@ export const SignupForm: React.FC = () => {
                     value={formData.fullName}
                     onChange={handleChange('fullName')}
                     autoComplete="name"
-                    required
+                    error={errors.fullName}
                 />
 
                 <TextInput
@@ -92,7 +127,7 @@ export const SignupForm: React.FC = () => {
                     value={formData.email}
                     onChange={handleChange('email')}
                     autoComplete="email"
-                    required
+                    error={errors.email}
                 />
 
                 <TextInput
@@ -103,7 +138,7 @@ export const SignupForm: React.FC = () => {
                     rightIcon={showPassword ? <Icons.eyeOff size={20} /> : <Icons.eye size={20} />}
                     onRightIconClick={() => setShowPassword(!showPassword)}
                     autoComplete="new-password"
-                    required
+                    error={errors.password}
                 />
 
                 <TextInput
@@ -114,7 +149,7 @@ export const SignupForm: React.FC = () => {
                     rightIcon={showConfirmPassword ? <Icons.eyeOff size={20} /> : <Icons.eye size={20} />}
                     onRightIconClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     autoComplete="new-password"
-                    required
+                    error={errors.confirmPassword}
                 />
 
                 <div className="signup-form__terms">
@@ -122,7 +157,10 @@ export const SignupForm: React.FC = () => {
                         <input
                             type="checkbox"
                             checked={acceptedTerms}
-                            onChange={(e) => setAcceptedTerms(e.target.checked)}
+                            onChange={(e) => {
+                                setAcceptedTerms(e.target.checked);
+                                if (errors.terms) setErrors(prev => ({ ...prev, terms: undefined }));
+                            }}
                             className="signup-form__checkbox"
                         />
                         <Caption>
@@ -130,10 +168,11 @@ export const SignupForm: React.FC = () => {
                             <span className="signup-form__link">política de privacidad</span>
                         </Caption>
                     </label>
+                    {errors.terms && <div className="signup-form__error">{errors.terms}</div>}
                 </div>
             </div>
 
-            {error && <div className="signup-form__error">{error}</div>}
+            {errors.general && <div className="signup-form__error">{errors.general}</div>}
 
             <Button
                 type="submit"

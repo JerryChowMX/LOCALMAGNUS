@@ -1,11 +1,12 @@
 .profile-card {
     display: flex;
     flex-direction: column;
-    padding: var(--spacing-lg) var(--spacing-md);
-    background-color: var(--bg-secondary);
+    padding: var(--spacing-lg) 0;
+    margin-top: var(--spacing-md);
+    background-color: transparent;
     border-radius: 0;
-    gap: var(--spacing-sm);
-    border: 1px solid var(--border-secondary);
+    gap: var(--spacing-md);
+    border: none;
 }
 
 .profile-card__image-container {
@@ -14,11 +15,14 @@
     border-radius: 0;
     overflow: hidden;
     position: relative;
-    background-color: var(--bg-tertiary);
+    background-color: #EFE6D8;
+    /* surface-raised */
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Container for hover effects */
+    margin: 0;
+    border: none;
+    box-shadow: 0 4px 12px rgba(18, 14, 11, 0.08);
 }
 
 /* Show edit button on hover or always if mobile? Let's make it always visible but subtle, prominent on hover */
@@ -36,13 +40,11 @@
     position: absolute;
     bottom: 12px;
     right: 12px;
-    /* Bottom right looks better for camera icon usually */
     top: auto;
     background: rgba(0, 0, 0, 0.6);
     color: white;
     border: none;
     border-radius: 50%;
-    /* Circle looks more modern */
     width: 36px;
     height: 36px;
     display: flex;
@@ -51,7 +53,8 @@
     cursor: pointer;
     transition: all 0.2s ease;
     backdrop-filter: blur(4px);
-    /* opacity: 0;  Uncomment if we want hide-until-hover */
+    z-index: 10;
+    pointer-events: auto;
 }
 
 .profile-card__edit-button:hover {
@@ -227,24 +230,24 @@
 }
 
 .profile-card__save-btn {
-    background-color: var(--color-accent);
-    color: white;
+    background-color: #9C8A4D;
+    /* accent-brass */
+    color: #FFFFFF;
     border: none;
-    padding: 6px 16px;
+    padding: 8px 20px;
     border-radius: 0;
-    font-size: var(--font-size-caption);
-    font-weight: 600;
+    font-family: 'Blinker', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     cursor: pointer;
-    transition: transform 0.1s, opacity 0.2s;
+    transition: background-color 0.2s;
 }
 
 .profile-card__save-btn:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-}
-
-.profile-card__save-btn:active {
-    transform: translateY(0);
+    background-color: #7D6E3D;
+    /* darker brass */
 }
 
 .profile-card__description-text {
@@ -264,4 +267,37 @@
 .profile-card__actions {
     margin-top: var(--spacing-sm);
     width: 100%;
+}
+
+/* Dark Mode Overrides */
+[data-theme='dark'] .profile-card__image-container {
+    background-color: #201C18;
+    box-shadow: 0 4px 12px rgba(10, 5, 0, 0.3);
+}
+
+[data-theme='dark'] .profile-card__name-display h2,
+[data-theme='dark'] .profile-card__name-input {
+    color: #F2EEE8;
+}
+
+[data-theme='dark'] .profile-card__info p {
+    color: #DCD5CA;
+}
+
+[data-theme='dark'] .profile-card__description-label {
+    color: #BEB5A7;
+}
+
+[data-theme='dark'] .profile-card__description-input {
+    color: #F2EEE8;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(242, 238, 232, 0.12);
+}
+
+[data-theme='dark'] .profile-card__description-text {
+    color: #DCD5CA;
+}
+
+[data-theme='dark'] .profile-card__char-count {
+    color: #8F8679;
 }

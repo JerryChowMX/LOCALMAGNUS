@@ -6,46 +6,71 @@
   font-weight: 400;
   -moz-osx-font-smoothing: grayscale;
 
-  /* --- DESIGN TOKENS --- */
+  /* --- BRAND & SIGNAL --- */
+  /* Interaction Only - "If it's blue, click it" */
+  --magnus-blue: #1E6FA8;
+  /* Editorial Blue */
+  --magnus-blue-soft: rgba(30, 111, 168, 0.18);
+  --magnus-blue-hover: #2A7FB8;
 
-  /* Brand */
-  --magnus-blue: #0369A1;
-  --magnus-blue-light: #F0F9FF;
-  /* Backgrounds */
+  /* Details Only - Focus rings, selection tabs (NEVER buttons) */
+  --accent-brass: #9C8A4D;
+  /* Desaturated Gold */
+  --accent-brass-soft: rgba(156, 138, 77, 0.22);
+
+  /* Semantic - Editorial Safe (No Neon) */
+  --semantic-success: #2F6F4E;
+  /* Forest Green */
+  --semantic-warning: #9C6B1A;
+  /* Burnt Amber */
+  --semantic-error: #8C2F2F;
+  /* Burnt Brick */
+  --semantic-info: #2E5F7D;
+  /* Muted Steel */
+
+  /* DEPRECATED - Do not use */
   --magnus-orange: #FF6B35;
+  /* Legacy Support Only */
 
-  /* Text */
-  --text-primary: #1E293B;
-  --text-secondary: #64748B;
-  --text-inverse: #FFFFFF;
+  /* --- LIGHT MODE (Cream & Ink) --- */
 
   /* Surface */
-  --surface-base: #FFFFFF;
-  --surface-subtle: #F8FAFC;
+  --surface-base: #FFFCF6;
+  /* Creamy Paper */
+  --surface-subtle: #F7F1E8;
+  /* Warm Card */
+  --surface-raised: #EFE6D8;
+  /* Modals */
 
-  /* Component Aliases (Legacy Support) */
-  --bg-primary: var(--surface-base);
-  --bg-secondary: var(--surface-subtle);
-  --border-subtle: var(--border-color);
-  --shadow-1: 0 2px 4px rgba(0, 0, 0, 0.05);
-
-  /* Utilities */
-  .magnus-glass-panel {
-    backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(var(--glass-blur));
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    border-radius: 0;
-    box-shadow: var(--shadow-3);
-  }
+  /* Text */
+  --text-primary: #120E0B;
+  /* Deep Ink */
+  --text-secondary: #2A221C;
+  /* Body Copy */
+  --text-muted: #3F362E;
+  /* Metadata */
+  --text-disabled: #6A5F55;
+  --text-inverse: #FFFCF6;
 
   /* Borders */
-  --border-color: #E2E8F0;
+  --border-color: rgba(18, 14, 11, 0.12);
+  --border-subtle: rgba(18, 14, 11, 0.08);
 
-  /* Podcast */
-  --podcast-blob-color: #E0F2FE;
+  /* Shadows - Ink based (Not Gray) */
+  --shadow-sm: 0 1px 2px rgba(18, 14, 11, 0.06);
+  --shadow-md: 0 4px 12px rgba(18, 14, 11, 0.08);
+  --shadow-lg: 0 12px 32px rgba(18, 14, 11, 0.12);
+  --shadow-3: var(--shadow-lg);
+  /* Alias for legacy */
 
-  /* --- Spacing System --- */
+  /* Component Aliases */
+  --bg-primary: var(--surface-base);
+  --bg-secondary: var(--surface-subtle);
+  --bg-tertiary: var(--surface-raised);
+  --border-subtle-alias: var(--border-color);
+  /* Legacy naming adjustment */
+
+  /* Spacing System */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 12px;
@@ -54,51 +79,63 @@
   --spacing-2xl: 32px;
   --spacing-3xl: 48px;
 
-  /* --- Glassmorphism --- */
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.5);
-  --glass-blur: 16px;
-  --overlay-bg: rgba(0, 0, 0, 0.2);
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 252, 246, 0.6);
+  /* Frosty Cream - More transparent */
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --glass-blur: 8px;
+  --overlay-bg: rgba(18, 14, 11, 0.2);
+  /* Ink Overlay */
 
-  /* --- Shadows --- */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-  0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-  0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-3: 0 12px 32px rgba(0, 0, 0, 0.12);
-
-  /* --- Aliases & Legacy Support --- */
-  --color-brand-orange: var(--magnus-orange);
-  --color-accent: var(--magnus-blue);
+  /* Podcast */
+  --podcast-blob-color: #E0F2FE;
+  /* Kept for identity */
 }
 
 [data-theme='dark'] {
-  /* Dark Mode Overrides */
+  /* --- DARK MODE (Coffee Noir) --- */
+
+  /* Surface */
+  --surface-base: #12100D;
+  /* Deep Coffee */
+  --surface-subtle: #191613;
+  /* Espresso */
+  --surface-raised: #201C18;
+  /* Mocha */
+
+  --bg-primary: var(--surface-base);
+  --bg-secondary: var(--surface-subtle);
+  --bg-tertiary: var(--surface-raised);
+
+  /* Text */
+  --text-primary: #F2EEE8;
+  /* Warm Milk */
+  --text-secondary: #DCD5CA;
+  /* Latte */
+  --text-muted: #BEB5A7;
+  /* Ash */
+  --text-disabled: #8F8679;
+  --text-inverse: #12100D;
+
+  /* Borders */
+  --border-color: rgba(242, 238, 232, 0.12);
+  --border-subtle: rgba(242, 238, 232, 0.08);
+
+  /* Shadows - Coffee based (Not Black) */
+  --shadow-sm: 0 1px 2px rgba(10, 5, 0, 0.4);
+  --shadow-md: 0 6px 16px rgba(10, 5, 0, 0.5);
+  --shadow-lg: 0 16px 40px rgba(10, 5, 0, 0.6);
+  --shadow-3: var(--shadow-lg);
+
+  /* Overrides */
   --magnus-blue: #38BDF8;
-  /* Sky-400 for better contrast */
-  --magnus-blue-light: rgba(56, 189, 248, 0.15);
+  /* Brighter Blue for Dark Mode */
+  --magnus-blue-soft: rgba(56, 189, 248, 0.15);
 
-  --text-primary: #F1F5F9;
-  --text-secondary: #94A3B8;
+  --glass-bg: rgba(18, 16, 13, 0.6);
+  /* Coffee Glass - More transparent */
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --overlay-bg: rgba(0, 0, 0, 0.7);
 
-  --surface-base: #0F172A;
-  /* Slate-900 */
-  --surface-subtle: #1E293B;
-  /* Slate-800 */
-
-  --border-color: #334155;
-  /* Slate-700 */
-
-  /* Podcast - Deep blue glow */
   --podcast-blob-color: rgba(56, 189, 248, 0.2);
-
-  /* Glassmorphism - Dark Mode */
-  --glass-bg: rgba(30, 41, 59, 0.7);
-  /* Slate-800 with opacity */
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --overlay-bg: rgba(0, 0, 0, 0.6);
-
-  /* Shadows - Dark Mode */
-  --shadow-3: 0 12px 32px rgba(0, 0, 0, 0.5);
 }

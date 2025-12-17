@@ -2,47 +2,72 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    /* Light mode: Cream gradient background */
+    background: linear-gradient(180deg, var(--surface-base, #FFFCF6) 0%, var(--surface-subtle, #F7F1E8) 100%);
 }
 
 .perfil-hub-page__content {
     flex: 1;
-    padding-bottom: 80px;
-    /* Space for AiChatBar */
+    padding: 0 var(--spacing-lg) 80px var(--spacing-lg);
+    /* Horizontal padding + space for AiChatBar at bottom */
 }
 
 .perfil-hub-page__preferences-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--spacing-md);
-    background-color: var(--bg-secondary);
-    border-bottom: 1px solid var(--bg-tertiary);
+    padding: var(--spacing-md) 0;
+    background-color: transparent;
+    border-bottom: 1px solid var(--border-subtle, rgba(18, 14, 11, 0.08));
+}
+
+/* First preferences row gets top border */
+.perfil-hub-page__preferences-row:first-of-type {
+    border-top: 1px solid var(--border-subtle, rgba(18, 14, 11, 0.08));
 }
 
 .perfil-hub-page__preferences-label {
     font-family: 'Blinker', sans-serif;
-    font-weight: 500;
-    font-size: var(--font-size-body);
-    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-primary, #120E0B);
 }
 
 .perfil-hub-page__logout-container {
     margin-top: var(--spacing-xl);
+    padding: 0 var(--spacing-md);
 }
 
 .perfil-hub-page__logout-button {
     width: 100%;
-    padding: var(--spacing-md);
-    background-color: var(--bg-error);
-    color: var(--text-error);
-    border: 1px solid var(--border-error);
+    padding: 14px;
+    background-color: transparent;
+    color: var(--semantic-error, #8C2F2F);
+    border: 1px solid var(--semantic-error, #8C2F2F);
     border-radius: 0;
-    font-weight: 600;
-    font-size: var(--font-size-body);
+    font-family: 'Blinker', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
     cursor: pointer;
-    transition: opacity 0.2s;
+    transition: all 0.2s ease;
 }
 
 .perfil-hub-page__logout-button:hover {
-    opacity: 0.9;
+    background-color: var(--semantic-error, #8C2F2F);
+    color: #FFFFFF;
+}
+
+/* Dark Mode Overrides */
+[data-theme='dark'] .perfil-hub-page {
+    background: linear-gradient(180deg, #12100D 0%, #191613 100%);
+}
+
+[data-theme='dark'] .perfil-hub-page__preferences-row {
+    border-bottom-color: rgba(242, 238, 232, 0.08);
+}
+
+[data-theme='dark'] .perfil-hub-page__preferences-label {
+    color: #F2EEE8;
 }

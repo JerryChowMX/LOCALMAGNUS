@@ -1,23 +1,36 @@
 .signup-page__container {
+    /* FORCE LUXURY THEME (Creamy Coffee) */
+    --surface-base: #FFFCF6;
+    --surface-subtle: #F7F1E8;
+    --surface-raised: #EFE6D8;
+
+    --text-primary: #120E0B;
+    --text-secondary: #2A221C;
+    --text-muted: #3F362E;
+
+    --shadow-lg: 0 12px 32px rgba(18, 14, 11, 0.12);
+
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--color-background) 0%, var(--color-surface) 100%);
+    padding: var(--spacing-xl) var(--spacing-lg);
+    background: linear-gradient(135deg, var(--surface-base) 0%, var(--surface-subtle) 100%);
 }
 
 .signup-page__form-card {
     width: 100%;
     max-width: 440px;
-    padding: var(--spacing-2xl);
-    background: var(--color-surface);
+    padding: var(--spacing-lg) 0;
+    background: transparent;
     border-radius: 0;
-    box-shadow: var(--shadow-lg);
+    box-shadow: none;
 }
 
 @media (max-width: 768px) {
     .signup-page__form-card {
-        padding: var(--spacing-xl);
+        padding: var(--spacing-md) 0;
         max-width: 100%;
     }
 }

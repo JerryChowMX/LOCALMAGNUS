@@ -1,13 +1,16 @@
 import React from 'react';
 import { Stack } from '../../../components/Layout';
-import { Headline, Caption } from '../../../components/Typography/Typography';
+import { Headline } from '../../../components/Typography/Typography';
+import { CategoryBadge } from '../../../components/CategoryBadge';
 import './ArticleCard.css';
 
 export interface ArticleCardProps {
     title: string;
     imageUrl: string;
-    publishedAt: string;
-    section?: string;
+    /** Category name for the badge */
+    category?: string;
+    /** Show category badge for special articles */
+    isSpecial?: boolean;
     variant?: "light" | "dark";
     onClick?: () => void;
 }
@@ -15,7 +18,8 @@ export interface ArticleCardProps {
 export const ArticleCard: React.FC<ArticleCardProps> = ({
     title,
     imageUrl,
-    publishedAt,
+    category,
+    isSpecial = false,
     variant = "light",
     onClick
 }) => {
@@ -25,10 +29,14 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
             onClick={onClick}
             style={{ '--card-bg': `url(${imageUrl})` } as React.CSSProperties}
         >
+            {/* Category badge for special articles */}
+            {isSpecial && category && (
+                <CategoryBadge category={category} />
+            )}
+
             <div className="noticias-card__overlay">
                 <Stack spacing="sm" className="noticias-card__content">
                     <Headline level={3} className="noticias-card__title">{title}</Headline>
-                    <Caption className="noticias-card__date">{new Date(publishedAt).toLocaleDateString()}</Caption>
                 </Stack>
             </div>
         </article>

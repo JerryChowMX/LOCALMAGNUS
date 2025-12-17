@@ -1,14 +1,39 @@
 .login-page__container {
-    display: flex;
-    justify-content: center;
+    /* FORCE LUXURY THEME (Creamy Coffee) */
+    --surface-base: #FFFCF6;
+    --surface-subtle: #F7F1E8;
+    --surface-raised: #EFE6D8;
+
+    --text-primary: #120E0B;
+    --text-secondary: #2A221C;
+    --text-muted: #3F362E;
+
     min-height: 100vh;
-    background-color: var(--bg-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-xl) var(--spacing-lg);
+    background: linear-gradient(135deg, var(--surface-base) 0%, var(--surface-subtle) 100%);
 }
 
 .login-page__form-card {
     width: 100%;
-    max-width: 480px;
-    display: flex;
-    flex-direction: column;
-    /* gap: var(--spacing-xl); handled by internal components + divider margin */
+    max-width: 440px;
+    padding: var(--spacing-lg) 0;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+@media (max-width: 768px) {
+    .login-page__form-card {
+        padding: var(--spacing-md) 0;
+        max-width: 100%;
+    }
+}
+
+/* Dark Mode */
+[data-theme='dark'] .login-page__container {
+    background: linear-gradient(135deg, #12100D 0%, #191613 100%);
 }
