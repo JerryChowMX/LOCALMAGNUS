@@ -1,5 +1,5 @@
 /**
- * comment controller
+ * comment controller - default
  */
 
 import { factories } from '@strapi/strapi';

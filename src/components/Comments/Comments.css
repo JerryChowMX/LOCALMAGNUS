@@ -322,6 +322,11 @@
     padding: 12px;
 }
 
+/* Counteract parent indent when reply box is inside a reply */
+.comment-item.is-reply .reply-input-inline {
+    margin-left: 16px;
+}
+
 .reply-textarea {
     width: 100%;
     border: none;

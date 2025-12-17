@@ -48,10 +48,12 @@ export interface CreateCommentPayload {
 export const commentsApi = {
     // Fetch comments for a specific article (including parent info for nesting)
     getCommentsByArticle: async (articleId: number) => {
-        // Filter by article ID, populate author and parent for threading
-        const query = `filters[article][id][$eq]=${articleId}&populate[author][fields][0]=name&populate[author][fields][1]=username&populate[parent][fields][0]=id&sort=createdAt:asc`;
+        // Explicit populate for author (users-permissions) and parent
+        const query = `filters[article][id][$eq]=${articleId}&populate[0]=author&populate[1]=parent&sort=createdAt:asc`;
 
         const response = await strapiClient.get<{ data: any[] }>(`comments?${query}`);
+
+        console.log('Raw Strapi response:', JSON.stringify(response, null, 2));
 
         const rawData = response.data || [];
         return { data: rawData.map(normalizeComment) };

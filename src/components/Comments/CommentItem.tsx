@@ -35,18 +35,9 @@ export const CommentItem = ({ comment, onReply, onLike, onDislike }: CommentItem
                 <div className="comment-content-wrapper">
                     {/* Message Bubble */}
                     <div className="comment-message-bubble">
-                        {/* Header with Name and Role */}
+                        {/* Header with Name and Timestamp */}
                         <div className="comment-header-info">
                             <span className="comment-author-name">{comment.author}</span>
-                            {comment.role && (
-                                <span className="comment-role-badge" style={{
-                                    backgroundColor: comment.role === 'Admin' ? 'var(--magnus-blue)' : comment.role === 'Subscriber' ? 'var(--accent-brass)' : 'transparent',
-                                    color: comment.role === 'Guest' ? 'var(--text-secondary)' : '#FFFFFF',
-                                    border: comment.role === 'Guest' ? '1px solid var(--text-secondary)' : 'none'
-                                }}>
-                                    {comment.role === 'Admin' ? 'Admin' : comment.role === 'Subscriber' ? 'Suscriptor' : 'Invitado'}
-                                </span>
-                            )}
                             <span className="comment-timestamp">
                                 {comment.replyingTo ? comment.shortTime : comment.date}
                             </span>

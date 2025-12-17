@@ -22,21 +22,52 @@ function formatShortTime(dateStr: string): string {
     const mins = date.getMinutes().toString().padStart(2, '0');
     return `${hours}:${mins}`;
 }
+// Helper to extract author name from various Strapi response formats
+function getAuthorName(author: any): string {
+    console.log('Author data:', JSON.stringify(author, null, 2));
+    if (!author) return 'Usuario';
+    // v5 flat: { id, name, username }
+    if (author.name || author.username) {
+        return author.name || author.username;
+    }
+    // v4 nested: { data: { id, attributes: { name, username } } }
+    if (author.data?.attributes) {
+        return author.data.attributes.name || author.data.attributes.username || 'Usuario';
+    }
+    // v4/v5 mixed: { data: { name, username } }
+    if (author.data) {
+        return author.data.name || author.data.username || 'Usuario';
+    }
+    return 'Usuario';
+}
+
+// Helper to extract parent comment ID from various Strapi formats
+function getParentId(parent: any): number | null {
+    if (!parent) return null;
+    // v5 flat: { id, content, ... }
+    if (typeof parent.id === 'number') {
+        return parent.id;
+    }
+    // v4 nested: { data: { id } }
+    if (parent.data?.id) {
+        return parent.data.id;
+    }
+    return null;
+}
 
 // Convert API comment to UI comment (flat, with replyingTo)
 function toUIComment(comment: Comment, parentAuthorName?: string): UIComment {
-    const attrs = comment.author?.data?.attributes;
     return {
         id: comment.id.toString(),
-        author: attrs?.name || attrs?.username || 'Usuario',
+        author: getAuthorName(comment.author),
         role: 'Guest',
         date: formatCommentDate(comment.createdAt),
         shortTime: formatShortTime(comment.createdAt),
         content: comment.content,
         likes: 0,
         dislikes: 0,
-        replyingTo: parentAuthorName, // @mention target
-        replies: [] // Always empty - flat structure
+        replyingTo: parentAuthorName,
+        replies: []
     };
 }
 
@@ -74,8 +105,7 @@ export const useComments = (articleId: number | undefined) => {
         // Create a map of comment IDs to author names for @mentions
         const authorMap = new Map<number, string>();
         comments.forEach(c => {
-            const attrs = c.author?.data?.attributes;
-            authorMap.set(c.id, attrs?.name || attrs?.username || 'Usuario');
+            authorMap.set(c.id, getAuthorName(c.author));
         });
 
         // Separate top-level comments and replies
@@ -83,7 +113,7 @@ export const useComments = (articleId: number | undefined) => {
         const repliesMap = new Map<number, Comment[]>(); // parentId -> replies
 
         comments.forEach(c => {
-            const parentId = c.parent?.data?.id;
+            const parentId = getParentId(c.parent);
             if (parentId) {
                 if (!repliesMap.has(parentId)) {
                     repliesMap.set(parentId, []);
@@ -112,7 +142,7 @@ export const useComments = (articleId: number | undefined) => {
 
         // Convert to UI format
         return orderedComments.map(c => {
-            const parentId = c.parent?.data?.id;
+            const parentId = getParentId(c.parent);
             const parentAuthor = parentId ? authorMap.get(parentId) : undefined;
             return toUIComment(c, parentAuthor);
         });
