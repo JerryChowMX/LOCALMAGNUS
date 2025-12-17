@@ -288,6 +288,19 @@
     word-break: break-word;
 }
 
+/* Markdown styling in AI bubbles */
+.message-ai p:last-child {
+    margin-bottom: 0 !important;
+}
+
+.message-ai ul, .message-ai ol {
+    margin-left: 1.2rem;
+}
+
+.message-ai li {
+    margin-bottom: 4px;
+}
+
 .ai-suggestions-toggle {
     background: none;
     border: none;

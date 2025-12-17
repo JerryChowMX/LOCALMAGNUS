@@ -30,8 +30,7 @@
     flex: 1;
     height: 1px;
     border: none;
-    background-color: #E5E7EB;
-    /* Gray-200 to ensure visibility */
+    background-color: var(--border-color);
 }
 
 .divider-text {

@@ -1,145 +1,77 @@
 .landing-container {
-    /* FORCE LUXURY PALETTE (Ignore Global Dark Mode) */
-    --cream-25: #FFFCF6;
-    --cream-50: #F7F1E8;
-    --cream-100: #EFE6D8;
-    --cream-150: #E6DACC;
-
-    --ink-950: #120E0B;
-    --ink-900: #1B1612;
-    --ink-800: #2A231D;
-    --ink-700: #3F362E;
-    --ink-500: #6A5F55;
-
-    /* Force Brand Colors locally to ensure visibility */
-    --magnus-blue: #1E6FA8;
-    --magnus-blue-hover: #2A7FB8;
-
-    --shadow-luxury: 0 0 32px rgba(18, 14, 11, 0.12);
-
-    /* Use local vars to FORCE Cream theme */
     min-height: 100vh;
-    background: linear-gradient(to bottom, var(--cream-25) 0%, var(--cream-25) 50%, var(--cream-100) 100%);
-    color: var(--ink-900);
+    background: linear-gradient(to bottom, var(--surface-base) 0%, var(--surface-subtle) 100%);
+    color: var(--text-primary);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
-    padding: 1.5rem;
-    padding-bottom: 8rem;
+    justify-content: center;
+    padding: var(--spacing-xl);
     position: relative;
     overflow: hidden;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-}
-
-/* Background Gradients - Keeping hidden per design */
-.landing-bg-gradient-1,
-.landing-bg-gradient-2 {
-    display: none;
 }
 
 .landing-content-wrapper {
-    max-width: 30rem;
+    max-width: 440px;
     width: 100%;
     text-align: center;
     z-index: 10;
     display: flex;
     flex-direction: column;
-    height: 80vh;
-    max-height: 800px;
-}
-
-.landing-header {
-    margin-top: 4rem;
-}
-
-.landing-header h1 {
-    font-size: 5rem;
-    font-weight: 900;
-    letter-spacing: 0.02em;
-    margin: 0;
-    line-height: 0.9;
-    color: var(--ink-950);
-    /* Darkest ink for title */
-    text-transform: uppercase;
-    font-family: 'Blinker', sans-serif;
-}
-
-.landing-header .landing-byline {
-    font-size: 0.9rem;
-    color: #9C8A4D;
-    font-family: 'Blinker', sans-serif;
-    font-weight: 600;
-    margin-top: 0.25rem;
-    margin-bottom: 0;
-    letter-spacing: 0.02em;
-}
-
-.landing-header p {
-    font-size: 1.1rem;
-    color: var(--ink-700);
-    /* Muted Ink */
-    margin-top: 1rem;
-    line-height: 1.4;
-    font-weight: 400;
-}
-
-.landing-spacer {
-    flex-grow: 1;
+    gap: var(--spacing-2xl);
 }
 
 .landing-card {
-    padding: 3rem;
-    border-radius: 0;
-    /* Subtle surface distinction: Subtle cream to Raised cream */
-    background: linear-gradient(to bottom, var(--cream-50), var(--cream-100));
+    padding: var(--spacing-3xl) var(--spacing-xl);
+    background: var(--surface-raised);
     border: none;
-    box-shadow: var(--shadow-luxury);
-    /* New colored ink shadow */
-    margin-bottom: 2rem;
+    box-shadow: var(--shadow-lg);
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
 }
 
-.landing-card h2 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin-bottom: 0;
-    color: var(--ink-900);
+.landing-card__title {
     font-family: 'Blinker', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--text-primary);
     text-transform: uppercase;
+    margin: 0;
+    letter-spacing: 0.02em;
 }
 
-.landing-card p {
-    color: var(--ink-700);
-    margin-top: 8px;
-    margin-bottom: 1.5rem;
-    font-size: 0.95rem;
+.landing-card__description {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    line-height: 1.4;
+    margin: 0;
+    margin-bottom: var(--spacing-lg);
 }
 
 .landing-actions {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: var(--spacing-md);
 }
 
-/* PRIMARY CTA: Ink (Luxury Monochrome) */
-/* PRIMARY CTA: Brass (Luxury Accent) */
 .btn-primary {
     width: 100%;
-    padding: 1rem;
-    background-color: var(--accent-brass, #9C8A4D);
-    color: var(--text-inverse, #FFFFFF);
-    /* White text */
+    padding: var(--spacing-md);
+    background-color: var(--accent-brass);
+    color: white;
     font-weight: 700;
     font-size: 1rem;
     border-radius: 0;
     border: none;
     cursor: pointer;
-    transition: background-color 0.2s, transform 0.1s;
+    transition: all 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: var(--spacing-sm);
+    font-family: 'Blinker', sans-serif;
 }
 
 .btn-primary:hover {
@@ -147,23 +79,25 @@
     transform: translateY(-1px);
 }
 
-/* SECONDARY CTA: Outline Ink (Demoted for hierarchy) */
 .btn-secondary {
     width: 100%;
-    padding: 1rem;
+    padding: var(--spacing-md);
     background-color: transparent;
-    border: 1px solid var(--ink-900);
-    /* Ink Border */
-    color: var(--ink-900);
-    /* Ink text */
+    border: 1px solid var(--text-primary);
+    color: var(--text-primary);
     font-weight: 600;
     font-size: 1rem;
     border-radius: 0;
     cursor: pointer;
     transition: all 0.2s;
+    font-family: 'Blinker', sans-serif;
 }
 
 .btn-secondary:hover {
-    background-color: rgba(27, 22, 18, 0.05);
-    /* Subtle ink tint */
+    background-color: rgba(var(--text-primary-rgb, 18, 14, 11), 0.05);
+}
+
+/* Dark Mode refinement if needed, but primary vars handle it */
+[data-theme='dark'] .landing-card {
+    background: linear-gradient(to bottom, var(--surface-subtle), var(--surface-raised));
 }

@@ -1,4 +1,6 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Display } from '../Typography/Typography';
 import { useAiChat } from '../../hooks/useAiChat';
 import type { AiChatUsedProps } from '../../lib/analytics';
@@ -37,7 +39,22 @@ export const AiChatBarExpanded: React.FC<AiChatBarExpandedProps> = ({ onClose, c
                 <div className="ai-chat-body">
                     {messages.map((msg, idx) => (
                         <div key={idx} className={`message-bubble ${msg.sender === 'user' ? 'message-user' : 'message-ai'}`}>
-                            {msg.text}
+                            {msg.sender === 'user' ? (
+                                msg.text
+                            ) : (
+                                <ReactMarkdown
+                                    remarkPlugins={[remarkGfm]}
+                                    components={{
+                                        p: ({ children }) => <p style={{ margin: '0 0 12px 0' }}>{children}</p>,
+                                        ul: ({ children }) => <ul style={{ margin: '0 0 12px 16px', padding: 0 }}>{children}</ul>,
+                                        ol: ({ children }) => <ol style={{ margin: '0 0 12px 16px', padding: 0 }}>{children}</ol>,
+                                        li: ({ children }) => <li style={{ marginBottom: '4px' }}>{children}</li>,
+                                        strong: ({ children }) => <strong style={{ fontWeight: 700 }}>{children}</strong>
+                                    }}
+                                >
+                                    {msg.text}
+                                </ReactMarkdown>
+                            )}
                         </div>
                     ))}
                     {isTyping && (

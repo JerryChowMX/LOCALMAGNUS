@@ -18,8 +18,7 @@
 }
 
 .login-form__forgot-link {
-    color: #0284C7;
-    /* Magnus Blue */
+    color: var(--magnus-blue);
     font-size: 12px;
     cursor: pointer;
     font-weight: 600;
@@ -36,7 +35,7 @@
 }
 
 .login-form__error {
-    color: #8C2F2F;
+    color: var(--semantic-error);
     font-size: var(--font-size-caption);
     text-align: center;
     background: rgba(140, 47, 47, 0.1);
@@ -47,8 +46,7 @@
 .login-form__submit {
     width: 100%;
     padding: var(--spacing-md);
-    background-color: #9C8A4D;
-    /* Brass - NOT orange */
+    background-color: var(--accent-brass);
     color: white;
     border: none;
     border-radius: 0;
@@ -61,12 +59,11 @@
 }
 
 .login-form__submit:hover {
-    background-color: #7D6E3D;
-    /* Darker brass */
+    background-color: var(--accent-brass-dark, #7D6E3D);
 }
 
 .login-form__submit:disabled {
-    background-color: #6A5F55;
+    background-color: var(--text-disabled);
     cursor: not-allowed;
     opacity: 0.6;
 }
@@ -78,14 +75,12 @@
     align-items: center;
 }
 
-/* Targeting the Caption components inside register */
 .login-form__register span {
     font-size: 12px;
 }
 
 .login-form__register-link {
-    color: #0284C7;
-    /* Magnus Blue */
+    color: var(--magnus-blue);
     font-weight: 600;
     cursor: pointer;
     text-transform: uppercase;
@@ -95,14 +90,4 @@
     text-decoration: underline;
 }
 
-/* Dark mode overrides - lighter blue for visibility */
-[data-theme="dark"] .login-form__forgot-link {
-    color: #38BDF8 !important;
-    /* Lighter blue for dark mode */
-}
-
-[data-theme="dark"] .login-form__register-link,
-[data-theme="dark"] .login-form__register-link span {
-    color: #38BDF8 !important;
-    /* Lighter blue for dark mode */
-}
+/* Dark mode overrides handled by global variables */

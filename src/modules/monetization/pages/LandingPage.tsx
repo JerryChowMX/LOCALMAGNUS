@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { AuthHeaderLogo } from '../../auth/components/AuthHeaderLogo';
 import './LandingPage.css';
 
 export const LandingPage = () => {
@@ -7,21 +8,15 @@ export const LandingPage = () => {
 
     return (
         <div className="landing-container">
-            {/* Background Effects */}
-            <div className="landing-bg-gradient-1" />
-            <div className="landing-bg-gradient-2" />
-
             <div className="landing-content-wrapper">
-                <div className="landing-header">
-                    <h1>MAGNUS</h1>
-                    <p className="landing-byline">by JerryChowMX</p>
-                </div>
-
-                <div className="landing-spacer" />
+                <AuthHeaderLogo />
 
                 <div className="landing-card">
-                    <h2>Comienza tu prueba</h2>
-                    <p>Acceso gratuito por diez días.</p>
+                    <h2 className="landing-card__title">COMIENZA TU PRUEBA</h2>
+                    <p className="landing-card__description">
+                        Acceso total por 10 días.<br />
+                        Sin compromiso.
+                    </p>
 
                     <div className="landing-actions">
                         <button
@@ -40,8 +35,6 @@ export const LandingPage = () => {
                         </button>
                     </div>
                 </div>
-
-
             </div>
         </div>
     );

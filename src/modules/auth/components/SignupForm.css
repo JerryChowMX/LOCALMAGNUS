@@ -57,7 +57,7 @@
 
 /* Links inherit color and stay 8px */
 .signup-form__link {
-    color: var(--text-primary) !important;
+    color: var(--magnus-blue) !important;
     font-size: inherit !important;
     cursor: pointer;
     text-decoration: underline;

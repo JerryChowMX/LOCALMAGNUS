@@ -1,15 +1,4 @@
 .signup-page__container {
-    /* FORCE LUXURY THEME (Creamy Coffee) */
-    --surface-base: #FFFCF6;
-    --surface-subtle: #F7F1E8;
-    --surface-raised: #EFE6D8;
-
-    --text-primary: #120E0B;
-    --text-secondary: #2A221C;
-    --text-muted: #3F362E;
-
-    --shadow-lg: 0 12px 32px rgba(18, 14, 11, 0.12);
-
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -33,4 +22,9 @@
         padding: var(--spacing-md) 0;
         max-width: 100%;
     }
+}
+
+/* Dark Mode - Primary vars handle background */
+[data-theme='dark'] .signup-page__container {
+    background: linear-gradient(135deg, var(--surface-base) 0%, var(--surface-subtle) 100%);
 }

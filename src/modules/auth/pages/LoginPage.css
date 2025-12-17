@@ -1,13 +1,4 @@
 .login-page__container {
-    /* FORCE LUXURY THEME (Creamy Coffee) */
-    --surface-base: #FFFCF6;
-    --surface-subtle: #F7F1E8;
-    --surface-raised: #EFE6D8;
-
-    --text-primary: #120E0B;
-    --text-secondary: #2A221C;
-    --text-muted: #3F362E;
-
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -33,7 +24,7 @@
     }
 }
 
-/* Dark Mode */
+/* Dark Mode - Primary vars handle background, but we can refine the gradient if needed */
 [data-theme='dark'] .login-page__container {
-    background: linear-gradient(135deg, #12100D 0%, #191613 100%);
+    background: linear-gradient(135deg, var(--surface-base) 0%, var(--surface-subtle) 100%);
 }
