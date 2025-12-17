@@ -4,11 +4,13 @@ export interface Comment {
     id: string;
     author: string;
     role?: UserRole;
-    date: string; // ISO string or flexible for display
+    date: string; // Full format: "17 Dic, 10:09"
+    shortTime: string; // Short format for replies: "10:09"
     content: string;
     likes: number;
     isLiked?: boolean;
     dislikes: number;
     isDisliked?: boolean;
+    replyingTo?: string; // @mention for flat replies
     replies?: Comment[];
 }

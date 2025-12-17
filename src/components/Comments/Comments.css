@@ -98,6 +98,25 @@
     align-items: flex-start;
 }
 
+/* Reply thread line - subtle left border for replies */
+.comment-item.is-reply {
+    margin-left: 20px;
+    padding-left: 16px;
+    border-left: 2px solid var(--magnus-blue, #1A5F7A);
+    position: relative;
+}
+
+.comment-item.is-reply::before {
+    content: '';
+    position: absolute;
+    left: -2px;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--magnus-blue, #1A5F7A) 0%, transparent 100%);
+    opacity: 0.6;
+}
+
 .comment-avatar {
     width: 40px;
     height: 40px;
@@ -158,6 +177,15 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.03em;
+}
+
+.comment-timestamp {
+    font-size: 0.75rem;
+    color: var(--text-tertiary, #999);
+    font-weight: 400;
+    margin-left: auto;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .comment-text {
@@ -339,6 +367,13 @@
     background: var(--bg-tertiary);
     color: var(--text-disabled);
     cursor: not-allowed;
+}
+
+/* @mention styling for replies */
+.comment-mention {
+    color: var(--magnus-blue, #1A5F7A);
+    font-weight: 600;
+    font-size: 0.9em;
 }
 
 @keyframes fadeIn {

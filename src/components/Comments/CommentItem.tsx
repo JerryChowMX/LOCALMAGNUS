@@ -13,20 +13,17 @@ interface CommentItemProps {
 export const CommentItem = ({ comment, onReply, onLike, onDislike }: CommentItemProps) => {
     const [isReplying, setIsReplying] = useState(false);
     const [replyContent, setReplyContent] = useState('');
-    // Default replies to open for now, could be passed as prop or toggled
-    const [areRepliesOpen, setAreRepliesOpen] = useState(true);
 
     const handleSubmitReply = () => {
         if (replyContent.trim()) {
             onReply(comment.id, replyContent);
             setIsReplying(false);
             setReplyContent('');
-            setAreRepliesOpen(true);
         }
     };
 
     return (
-        <div className="comment-item">
+        <div className={`comment-item ${comment.replyingTo ? 'is-reply' : ''}`}>
             <div className="comment-bubble">
                 {/* Avatar */}
                 <div className="comment-avatar">
@@ -50,10 +47,16 @@ export const CommentItem = ({ comment, onReply, onLike, onDislike }: CommentItem
                                     {comment.role === 'Admin' ? 'Admin' : comment.role === 'Subscriber' ? 'Suscriptor' : 'Invitado'}
                                 </span>
                             )}
+                            <span className="comment-timestamp">
+                                {comment.replyingTo ? comment.shortTime : comment.date}
+                            </span>
                         </div>
 
                         {/* Comment Text */}
                         <div className="comment-text">
+                            {comment.replyingTo && (
+                                <span className="comment-mention">@{comment.replyingTo}</span>
+                            )}{' '}
                             {comment.content}
                         </div>
                     </div>
@@ -114,21 +117,6 @@ export const CommentItem = ({ comment, onReply, onLike, onDislike }: CommentItem
                     )}
                 </div>
             </div>
-
-            {/* Nested Replies */}
-            {comment.replies && comment.replies.length > 0 && areRepliesOpen && (
-                <div className="comment-replies">
-                    {comment.replies.map(reply => (
-                        <CommentItem
-                            key={reply.id}
-                            comment={reply}
-                            onReply={onReply}
-                            onLike={onLike}
-                            onDislike={onDislike}
-                        />
-                    ))}
-                </div>
-            )}
         </div>
     );
 };
