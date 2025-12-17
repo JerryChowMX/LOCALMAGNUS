@@ -18,6 +18,11 @@ export interface Comment {
             id: number;
         };
     } | undefined;
+    parent: {
+        data: {
+            id: number;
+        } | null;
+    } | undefined;
 }
 
 // Helper to normalize Strapi response
@@ -28,40 +33,46 @@ function normalizeComment(data: any): Comment {
         content: attrs.content || '',
         createdAt: attrs.createdAt,
         updatedAt: attrs.updatedAt,
-        author: attrs.author, // Keep nested for now as hook uses it, or flatten further if desired
-        article: attrs.article
+        author: attrs.author,
+        article: attrs.article,
+        parent: attrs.parent
     };
 }
 
 export interface CreateCommentPayload {
     content: string;
     article: number;
+    parent?: number; // Optional parent comment ID for replies
 }
 
 export const commentsApi = {
-    // Fetch comments for a specific article
+    // Fetch comments for a specific article (including parent info for nesting)
     getCommentsByArticle: async (articleId: number) => {
-        // Filter by article ID and populate author details
-        const query = `filters[article][id][$eq]=${articleId}&populate=author&sort=createdAt:desc`;
+        // Filter by article ID, populate author and parent for threading
+        const query = `filters[article][id][$eq]=${articleId}&populate[author][fields][0]=name&populate[author][fields][1]=username&populate[parent][fields][0]=id&sort=createdAt:asc`;
 
-        // Use get for generic request
         const response = await strapiClient.get<{ data: any[] }>(`comments?${query}`);
 
         const rawData = response.data || [];
         return { data: rawData.map(normalizeComment) };
     },
 
-    // Create a new comment
+    // Create a new comment or reply
     createComment: async (payload: CreateCommentPayload) => {
-        // Wrap in { data: ... } for Strapi
+        const requestData: any = {
+            content: payload.content,
+            article: payload.article
+        };
+
+        // Add parent if this is a reply
+        if (payload.parent) {
+            requestData.parent = payload.parent;
+        }
+
         const response = await strapiClient.post<{ data: any }>('comments', {
-            data: {
-                content: payload.content,
-                article: payload.article
-            }
+            data: requestData
         });
 
-        // Normalize single response
         const normalized = response.data ? normalizeComment(response.data) : null;
         return { data: normalized };
     }
