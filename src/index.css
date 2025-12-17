@@ -5,6 +5,44 @@
   line-height: 1.5;
   font-weight: 400;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Global Resets - Critical for Layout */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family-body);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Default Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-family-title);
+  font-weight: var(--font-weight-semibold);
+  margin-top: 0;
+  margin-bottom: var(--spacing-md);
+  color: var(--text-primary);
+}
+
+:root {
+  /* Typography - Migrated from theme.css */
+  --font-family-display: "Blinker", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-family-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-family-title: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
   /* --- BRAND & SIGNAL --- */
   /* Interaction Only - "If it's blue, click it" */
@@ -62,6 +100,29 @@
   --shadow-lg: 0 12px 32px rgba(18, 14, 11, 0.12);
   --shadow-3: var(--shadow-lg);
   /* Alias for legacy */
+  --color-accent: var(--magnus-blue);
+  /* Map legacy accent to new brand */
+  --color-brand-orange: var(--accent-brass);
+  /* Map legacy orange to brass, or leave as magnus-orange if specific */
+
+  /* Type Scale - Migrated from theme.css */
+  --font-size-caption: 12px;
+  --font-size-body: 15px;
+  --font-size-h3: 18px;
+  --font-size-h2: 21px;
+  --font-size-h1: 26px;
+
+  /* Line Heights */
+  --line-height-tight: 1.3;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.6;
+
+  /* Weights */
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
 
   /* Component Aliases */
   --bg-primary: var(--surface-base);
@@ -86,6 +147,10 @@
   --glass-blur: 8px;
   --overlay-bg: rgba(18, 14, 11, 0.2);
   /* Ink Overlay */
+  --glass-shadow: var(--shadow-lg);
+  /* Legacy alias */
+  --overlay-bg-legacy: rgba(0, 0, 0, 0.2);
+  /* Legacy alias */
 
   /* Podcast */
   --podcast-blob-color: #E0F2FE;
@@ -138,4 +203,33 @@
   --overlay-bg: rgba(0, 0, 0, 0.7);
 
   --podcast-blob-color: rgba(56, 189, 248, 0.2);
+}
+
+/* --- FONT SIZE SCALING --- */
+
+/* Small (A) - Reduced ~20% */
+body[data-font-size='small'] {
+  --font-size-caption: 10px;
+  --font-size-body: 12px;
+  --font-size-h3: 14px;
+  --font-size-h2: 17px;
+  --font-size-h1: 20px;
+}
+
+/* Medium (A+) - Default */
+body[data-font-size='medium'] {
+  --font-size-caption: 12px;
+  --font-size-body: 15px;
+  --font-size-h3: 18px;
+  --font-size-h2: 21px;
+  --font-size-h1: 26px;
+}
+
+/* Large (A++) - Increased ~25% */
+body[data-font-size='large'] {
+  --font-size-caption: 15px;
+  --font-size-body: 19px;
+  --font-size-h3: 24px;
+  --font-size-h2: 29px;
+  --font-size-h1: 36px;
 }

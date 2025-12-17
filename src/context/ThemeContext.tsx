@@ -52,6 +52,7 @@ export const UserPreferencesProvider: React.FC<{ children: React.ReactNode }> = 
     // Update DOM immediately when fontSize changes
     useLayoutEffect(() => {
         document.documentElement.setAttribute('data-font-size', fontSize);
+        document.body.setAttribute('data-font-size', fontSize);
         localStorage.setItem(FONT_SIZE_STORAGE_KEY, fontSize);
     }, [fontSize]);
 

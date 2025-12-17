@@ -19,10 +19,12 @@
     -webkit-backdrop-filter: blur(var(--glass-blur));
 
     /* Subtle border */
-    border-bottom: 1px solid var(--border-subtle);
+    /* Subtle border - Removed for smooth gradient */
+    border-bottom: none;
 
     /* Premium shadow */
-    box-shadow: var(--glass-shadow);
+    /* Premium shadow - Slight restoration */
+    box-shadow: var(--shadow-sm);
 
     transition: all 0.3s ease;
 }

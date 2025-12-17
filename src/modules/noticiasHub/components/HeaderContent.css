@@ -16,7 +16,8 @@
     /* Glassmorphism Always On */
     backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
-    box-shadow: var(--glass-shadow);
+    /* Slight shadow restoration */
+    box-shadow: var(--shadow-sm);
 }
 
 /* Light Mode Variant */
@@ -31,7 +32,7 @@
     background: rgba(0, 0, 0, 0.75);
     /* Dark glass override */
     color: #FFFFFF;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: none;
 }
 
 /* Scrolled State - Optional extra styling */
