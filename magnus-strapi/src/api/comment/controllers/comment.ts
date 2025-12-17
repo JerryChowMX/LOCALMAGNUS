@@ -6,12 +6,26 @@ import { factories } from '@strapi/strapi';
 
 export default factories.createCoreController('api::comment.comment', ({ strapi }) => ({
     async find(ctx) {
-        // Use documentService with correct Strapi v5 syntax
+        // Parse query params
+        const filters = ctx.query.filters as Record<string, any> || {};
+        const sort = ctx.query.sort;
+
+        // Use documentService with proper filters and population
         const documents = await strapi.documents('api::comment.comment').findMany({
-            filters: ctx.query.filters,
-            sort: ctx.query.sort,
-            populate: ['author', 'parent', 'article'],
-            pagination: ctx.query.pagination
+            filters: filters,
+            sort: sort || ['createdAt:asc'],
+            populate: {
+                author: {
+                    fields: ['id', 'username', 'email', 'description']
+                },
+                parent: {
+                    fields: ['id', 'documentId', 'content']
+                },
+                article: {
+                    fields: ['id', 'documentId']
+                }
+            },
+            status: 'published'
         });
 
         return {
