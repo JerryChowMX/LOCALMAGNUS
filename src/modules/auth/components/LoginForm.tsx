@@ -64,7 +64,7 @@ export const LoginForm: React.FC = () => {
                         onClick={() => navigate(routes.forgotPassword)}
                         className="login-form__forgot-link"
                     >
-                        <Caption>¿Olvidaste tu contraseña?</Caption>
+                        <Caption>¿OLVIDASTE TU CONTRASEÑA?</Caption>
                     </span>
                 </div>
             </div>

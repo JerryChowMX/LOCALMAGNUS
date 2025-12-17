@@ -14,14 +14,14 @@ export const LandingPage = () => {
             <div className="landing-content-wrapper">
                 <div className="landing-header">
                     <h1>MAGNUS</h1>
-                    <p>Una nueva forma de informarte.</p>
+                    <p className="landing-byline">by JerryChowMX</p>
                 </div>
 
                 <div className="landing-spacer" />
 
                 <div className="landing-card">
                     <h2>Comienza tu prueba</h2>
-                    <p>Acceso total por 10 días.</p>
+                    <p>Acceso gratuito por diez días.</p>
 
                     <div className="landing-actions">
                         <button

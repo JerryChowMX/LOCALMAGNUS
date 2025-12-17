@@ -20,11 +20,15 @@
 .login-form__forgot-link {
     color: #0284C7;
     /* Magnus Blue */
-    font-size: 10px;
+    font-size: 12px;
     cursor: pointer;
-    text-transform: uppercase;
     font-weight: 600;
     letter-spacing: 0.5px;
+}
+
+.login-form__forgot-link span,
+.login-form__forgot-link .text-caption {
+    font-size: 12px !important;
 }
 
 .login-form__forgot-link:hover {
