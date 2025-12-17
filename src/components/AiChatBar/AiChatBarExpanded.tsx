@@ -92,11 +92,9 @@ export const AiChatBarExpanded: React.FC<AiChatBarExpandedProps> = ({ onClose, c
                             className="ai-chat-input"
                         />
                         <button onClick={() => handleSendMessage()} className="ai-chat-send-button">
-                            <div className="ai-chat-bar-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <path d="M5 12h14M12 5l7 7-7 7" />
-                                </svg>
-                            </div>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M5 12h14M12 5l7 7-7 7" />
+                            </svg>
                         </button>
                     </div>
                     {!messages.some(m => m.sender === 'user') && (

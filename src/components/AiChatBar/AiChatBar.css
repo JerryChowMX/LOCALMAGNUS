@@ -202,30 +202,43 @@
 }
 
 .ai-chat-send-button {
-    background: none;
+    background: var(--magnus-blue);
     border: none;
     cursor: pointer;
     padding: 0;
-    color: var(--color-brand-orange);
-    transition: opacity 0.2s;
-    display: flex;
-    align-items: center;
-}
-
-.ai-chat-send-button .ai-chat-bar-icon {
-    /* Small icon style */
     width: 32px;
     height: 32px;
-    background: var(--color-brand-orange);
+    border-radius: 50%;
+    /* Circular */
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.2s ease;
+    margin-left: 8px;
+    flex-shrink: 0;
+}
+
+.ai-chat-send-button:hover {
+    background: var(--magnus-blue-hover);
+    transform: scale(1.05);
+}
+
+.ai-chat-send-button:active {
+    transform: scale(0.95);
 }
 
 .ai-chat-send-button svg {
     width: 16px;
     height: 16px;
+    stroke-width: 2.5;
+}
+
+/* Dark mode adjustment */
+:root[data-theme='dark'] .ai-chat-send-button {
+    background: var(--magnus-blue);
+    color: #12100D;
+    /* Contrast icon color */
 }
 
 .ai-chat-disclaimer {

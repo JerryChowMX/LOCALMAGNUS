@@ -256,8 +256,9 @@
 .magnus-send-button {
     width: 32px;
     height: 32px;
-    border-radius: 0;
-    background-color: var(--color-brand-orange);
+    border-radius: 50%;
+    /* Circular matching AI Chat */
+    background-color: var(--magnus-blue);
     color: #fff;
     border: none;
     display: flex;
@@ -280,7 +281,7 @@
 
 .magnus-send-button:hover:not(:disabled) {
     transform: scale(1.05);
-    background-color: #ff8533;
+    background-color: var(--magnus-blue-hover);
 }
 
 /* Reply Input Inline */
