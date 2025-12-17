@@ -1,0 +1,20 @@
+{
+    "kind": "collectionType",
+    "collectionName": "ai_chats",
+    "info": {
+        "singularName": "aichat",
+        "pluralName": "aichats",
+        "displayName": "AI Chat",
+        "description": "AI Chat streaming endpoint (no data storage, custom routes only)"
+    },
+    "options": {
+        "draftAndPublish": false
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "placeholder": {
+            "type": "string",
+            "private": true
+        }
+    }
+}

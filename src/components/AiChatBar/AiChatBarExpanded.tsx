@@ -4,13 +4,16 @@ import { useAiChat } from '../../hooks/useAiChat';
 import type { AiChatUsedProps } from '../../lib/analytics';
 import './AiChatBar.css';
 
+import type { ArticleContext } from '../../hooks/useAiChat';
+
 interface AiChatBarExpandedProps {
     onClose: () => void;
     context?: AiChatUsedProps['context'];
+    article?: ArticleContext;
 }
 
-export const AiChatBarExpanded: React.FC<AiChatBarExpandedProps> = ({ onClose, context }) => {
-    const { input, setInput, messages, sendMessage, isTyping } = useAiChat(context);
+export const AiChatBarExpanded: React.FC<AiChatBarExpandedProps> = ({ onClose, context, article }) => {
+    const { input, setInput, messages, sendMessage, isTyping } = useAiChat(context, article);
     // Suggestions are visible by default if there are no user messages, otherwise hidden
     const [showSuggestions, setShowSuggestions] = React.useState(messages.length <= 1);
 

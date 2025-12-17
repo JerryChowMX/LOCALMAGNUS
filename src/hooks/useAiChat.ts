@@ -1,5 +1,6 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { trackAiChatUsed, type AiChatUsedProps } from '../lib/analytics';
+import { STRAPI_ORIGIN } from '../lib/env';
 
 export interface ChatMessage {
     text: string;
@@ -7,7 +8,15 @@ export interface ChatMessage {
     timestamp: number;
 }
 
-export const useAiChat = (context: AiChatUsedProps['context'] = 'global') => {
+export interface ArticleContext {
+    title: string;
+    author: string;
+    date: string;
+    content: string;
+    summary?: string;
+}
+
+export const useAiChat = (context: AiChatUsedProps['context'] = 'global', articleContext?: ArticleContext) => {
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState<ChatMessage[]>([
         {
@@ -17,16 +26,18 @@ export const useAiChat = (context: AiChatUsedProps['context'] = 'global') => {
         }
     ]);
     const [isTyping, setIsTyping] = useState(false);
+    const abortControllerRef = useRef<AbortController | null>(null);
 
-    // Cleanup typing timeout on unmount
+    // Cleanup on unmount
     useEffect(() => {
         return () => {
-            // No specific cleanup needed for the current simple timeout, 
-            // but good practice if we had a ref to the timer.
+            if (abortControllerRef.current) {
+                abortControllerRef.current.abort();
+            }
         };
     }, []);
 
-    const sendMessage = useCallback((textOverride?: string) => {
+    const sendMessage = useCallback(async (textOverride?: string) => {
         const textToSend = textOverride || input;
         if (!textToSend.trim()) return;
 
@@ -36,25 +47,100 @@ export const useAiChat = (context: AiChatUsedProps['context'] = 'global') => {
             timestamp: Date.now()
         };
 
-        // Track usage
-        trackAiChatUsed(context, textToSend.length);
-
+        // Update UI with user message
         setMessages(prev => [...prev, userMessage]);
         setInput('');
         setIsTyping(true);
 
-        // Mock AI response
-        // In a real app, this would be an API call
-        setTimeout(() => {
-            const aiMessage: ChatMessage = {
-                text: 'Esta es una respuesta simulada de Magnus AI.',
+        // Track usage
+        trackAiChatUsed(context, textToSend.length);
+
+        try {
+            if (abortControllerRef.current) {
+                abortControllerRef.current.abort();
+            }
+            abortControllerRef.current = new AbortController();
+
+            const response = await fetch(`${STRAPI_ORIGIN}/api/aichats/stream`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: textToSend,
+                    articleContext: articleContext || {},
+                    history: messages.slice(-10) // Send last 10 messages for context
+                }),
+                signal: abortControllerRef.current.signal,
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to send message');
+            }
+
+            if (!response.body) {
+                throw new Error('No response body');
+            }
+
+            // Create a placeholder for the AI response
+            const aiResponseTimestamp = Date.now();
+            setMessages(prev => [...prev, {
+                text: '',
                 sender: 'ai',
-                timestamp: Date.now()
-            };
-            setMessages(prev => [...prev, aiMessage]);
+                timestamp: aiResponseTimestamp
+            }]);
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let accumulatedText = '';
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                const chunk = decoder.decode(value, { stream: true });
+                const lines = chunk.split('\n\n');
+
+                for (const line of lines) {
+                    if (line.startsWith('data: ')) {
+                        const data = line.slice(6);
+                        if (data === '[DONE]') continue;
+
+                        try {
+                            const parsed = JSON.parse(data);
+                            if (parsed.text) {
+                                accumulatedText += parsed.text;
+                                // Update the last message (AI response) with accumulated text
+                                setMessages(prev => {
+                                    const newMessages = [...prev];
+                                    const lastMsg = newMessages[newMessages.length - 1];
+                                    if (lastMsg.sender === 'ai' && lastMsg.timestamp === aiResponseTimestamp) {
+                                        lastMsg.text = accumulatedText;
+                                    }
+                                    return newMessages;
+                                });
+                            }
+                        } catch (e) {
+                            console.error('Error parsing SSE data:', e);
+                        }
+                    }
+                }
+            }
+
+        } catch (error: any) {
+            if (error.name !== 'AbortError') {
+                console.error('AI Chat Error:', error);
+                setMessages(prev => [...prev, {
+                    text: 'Lo siento, tuve un problema al procesar tu solicitud. Por favor intenta de nuevo.',
+                    sender: 'ai',
+                    timestamp: Date.now()
+                }]);
+            }
+        } finally {
             setIsTyping(false);
-        }, 1000);
-    }, [input, context]);
+            abortControllerRef.current = null;
+        }
+    }, [input, context, articleContext, messages]);
 
     return {
         input,

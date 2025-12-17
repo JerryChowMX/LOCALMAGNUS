@@ -330,7 +330,22 @@ export const StandardOneArticle: FC<StandardOneArticleProps> = ({ article }) => 
 
             {/* Expanded Chat Modal */}
             {isChatOpen && (
-                <AiChatBarExpanded onClose={() => setIsChatOpen(false)} />
+                <AiChatBarExpanded
+                    onClose={() => setIsChatOpen(false)}
+                    article={{
+                        title: title,
+                        author: author?.name || 'Redacción Magnus',
+                        date: publishedAt,
+                        summary: dek || undefined,
+                        content: contentBlocks.map(block => {
+                            // Extract text content based on block type
+                            if (block.text) return block.text; // Rich Text / Paragraph
+                            if (block.quote) return `"${block.quote}" - ${block.author}`; // Quote
+                            if (block.caption) return `[Imagen: ${block.caption}]`; // Gallery/Image
+                            return '';
+                        }).join('\n\n')
+                    }}
+                />
             )}
 
             {/* Comments Modal */}

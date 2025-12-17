@@ -2,15 +2,17 @@ import React, { useState } from 'react';
 import { AiChatBarCollapsed } from './AiChatBarCollapsed';
 import { AiChatBarExpanded } from './AiChatBarExpanded';
 import { AiCommentsExpanded } from './AiCommentsExpanded';
+import type { ArticleContext } from '../../hooks/useAiChat';
 import type { AiChatUsedProps } from '../../lib/analytics';
 
 interface AiChatBarProps {
     context?: AiChatUsedProps['context'];
+    article?: ArticleContext;
 }
 
 type ActiveView = 'none' | 'chat' | 'comments';
 
-export const AiChatBar: React.FC<AiChatBarProps> = ({ context }) => {
+export const AiChatBar: React.FC<AiChatBarProps> = ({ context, article }) => {
     const [activeView, setActiveView] = useState<ActiveView>('none');
 
     const handleClose = () => setActiveView('none');
@@ -24,7 +26,7 @@ export const AiChatBar: React.FC<AiChatBarProps> = ({ context }) => {
                 />
             )}
             {activeView === 'chat' && (
-                <AiChatBarExpanded onClose={handleClose} context={context} />
+                <AiChatBarExpanded onClose={handleClose} context={context} article={article} />
             )}
             {activeView === 'comments' && (
                 <AiCommentsExpanded onClose={handleClose} />
