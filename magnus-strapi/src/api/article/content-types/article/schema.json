@@ -120,6 +120,12 @@
     "ai_metadata": {
       "type": "json",
       "private": true
+    },
+    "comments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::comment.comment",
+      "mappedBy": "article"
     }
   }
 }

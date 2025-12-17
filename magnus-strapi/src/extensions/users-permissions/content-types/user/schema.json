@@ -78,6 +78,12 @@
     },
     "description": {
       "type": "text"
+    },
+    "posted_comments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::comment.comment",
+      "mappedBy": "author"
     }
   }
 }

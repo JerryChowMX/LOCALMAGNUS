@@ -198,7 +198,7 @@ export const UnifiedArticleView = () => {
                 onCommentsClick={() => setIsCommentsOpen(true)}
             />
             {isChatOpen && <AiChatBarExpanded onClose={() => setIsChatOpen(false)} />}
-            {isCommentsOpen && <AiCommentsExpanded onClose={() => setIsCommentsOpen(false)} />}
+            {isCommentsOpen && <AiCommentsExpanded onClose={() => setIsCommentsOpen(false)} articleId={article.id} />}
         </PageWrapper>
     );
 };

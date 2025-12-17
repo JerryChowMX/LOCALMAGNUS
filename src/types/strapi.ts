@@ -142,6 +142,7 @@ export interface StrapiArticleAttributes {
 
 // Flattened/Normalized Article type for frontend use
 export interface StrapiArticle {
+    id: number;
     documentId: string;
     title: string;
     slug: string;

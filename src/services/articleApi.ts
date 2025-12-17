@@ -20,6 +20,7 @@ function normalizeArticle(data: any): StrapiArticle {
   const id = data.documentId || data.id?.toString();
 
   return {
+    id: typeof data.id === 'number' ? data.id : 0, // Ensure numeric ID
     documentId: id,
     title: attrs.title || 'Untitled',
     slug: attrs.slug || 'untitled',
