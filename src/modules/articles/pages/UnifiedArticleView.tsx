@@ -23,6 +23,7 @@ import { Infografia } from '../components/FormatViews/Infografia';
 import { useStrapiArticle } from '../../../hooks/useStrapiArticles';
 import { usePreviewMode } from '../../../hooks/usePreviewMode';
 import { routes } from '../../../app/routes';
+import { extractTextFromBlocks } from '../../../lib/articleUtils';
 
 // Styles
 import '../templates/StandardOneArticle.css';
@@ -197,7 +198,18 @@ export const UnifiedArticleView = () => {
                 onChatClick={() => setIsChatOpen(true)}
                 onCommentsClick={() => setIsCommentsOpen(true)}
             />
-            {isChatOpen && <AiChatBarExpanded onClose={() => setIsChatOpen(false)} />}
+            {isChatOpen && (
+                <AiChatBarExpanded
+                    onClose={() => setIsChatOpen(false)}
+                    article={{
+                        title: article.title,
+                        author: article.author?.name || 'Redacción Magnus',
+                        date: article.publishedAt,
+                        summary: article.excerpt || article.summary || undefined,
+                        content: extractTextFromBlocks(article.blocks || [])
+                    }}
+                />
+            )}
             {isCommentsOpen && <AiCommentsExpanded onClose={() => setIsCommentsOpen(false)} articleId={article.id} />}
         </PageWrapper>
     );

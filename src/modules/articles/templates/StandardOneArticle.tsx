@@ -22,6 +22,7 @@ import { RecommendedArticles } from '../../../components/Article/RecommendedArti
 import { AiCommentsExpanded } from '../../../components/AiChatBar/AiCommentsExpanded';
 import type { ArticleStandard } from '../../../types/articles';
 import { STRAPI_ORIGIN } from '../../../lib/env';
+import { extractTextFromBlocks } from '../../../lib/articleUtils';
 
 import './StandardOneArticle.css';
 
@@ -60,6 +61,7 @@ export const StandardOneArticle: FC<StandardOneArticleProps> = ({ article }) => 
         return `${STRAPI_ORIGIN}${url}`;
     };
 
+    console.log('FILE LOADED: StandardOneArticle.tsx');
 
 
     return (
@@ -337,13 +339,7 @@ export const StandardOneArticle: FC<StandardOneArticleProps> = ({ article }) => 
                         author: author?.name || 'Redacción Magnus',
                         date: publishedAt,
                         summary: dek || undefined,
-                        content: contentBlocks.map(block => {
-                            // Extract text content based on block type
-                            if (block.text) return block.text; // Rich Text / Paragraph
-                            if (block.quote) return `"${block.quote}" - ${block.author}`; // Quote
-                            if (block.caption) return `[Imagen: ${block.caption}]`; // Gallery/Image
-                            return '';
-                        }).join('\n\n')
+                        content: extractTextFromBlocks(contentBlocks || [])
                     }}
                 />
             )}
