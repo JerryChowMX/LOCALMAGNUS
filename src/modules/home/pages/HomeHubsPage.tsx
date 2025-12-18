@@ -36,7 +36,7 @@ export const HomeHubsPage: React.FC = () => {
 
             {/* 3. Prompt Block */}
             <Heading level={3} className="home-hubs__prompt">
-                ¿Qué quieres ver hoy?
+                {user ? '¿Cómo quieres informarte hoy?' : '¿Qué quieres ver hoy?'}
             </Heading>
 
             {/* 4. Main Navigation Button Group */}
