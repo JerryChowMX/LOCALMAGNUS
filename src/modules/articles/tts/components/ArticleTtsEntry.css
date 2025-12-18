@@ -1,82 +1,155 @@
+/* ========================================
+   Article TTS Entry Component
+   Magnus Design System - Editorial Style
+   ======================================== */
+
 .article-tts-entry-container {
     display: flex;
     align-items: center;
-    gap: 16px;
-    margin-bottom: 24px;
-    padding: 8px 0;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    gap: 20px;
+    padding: 14px 0;
+    margin: 20px 0;
+    border-top: 1px solid var(--border-color, rgba(18, 14, 11, 0.12));
+    border-bottom: 1px solid var(--border-color, rgba(18, 14, 11, 0.12));
 }
 
+/* Play/Stop Button */
 .tts-entry-button {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     background: transparent;
     border: none;
     padding: 0;
     cursor: pointer;
-    font-family: var(--font-primary, 'EB Garamond', serif);
-    font-size: 1.1rem;
-    color: #444;
+    font-family: var(--font-family-display, 'Blinker', sans-serif);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--magnus-blue, #1E6FA8);
     transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
 }
 
 .tts-entry-button:hover {
-    color: #000;
+    color: var(--magnus-blue-hover, #2A7FB8);
 }
 
 .tts-entry-button.active {
-    color: #c00;
-    /* Subtle red for stop state */
+    color: var(--semantic-error, #8C2F2F);
 }
 
+/* Icon container */
 .tts-icon {
-    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--magnus-blue, #1E6FA8);
+    color: white;
+    transition: all 0.2s ease;
 }
 
+.tts-entry-button:hover .tts-icon {
+    background: var(--magnus-blue-hover, #2A7FB8);
+}
+
+.tts-entry-button.active .tts-icon {
+    background: var(--semantic-error, #8C2F2F);
+}
+
+/* Button text */
 .tts-text {
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-size: 0.8rem;
+    font-weight: 700;
 }
 
+/* Divider */
 .tts-divider {
     width: 1px;
-    height: 16px;
-    background: rgba(0, 0, 0, 0.1);
+    height: 24px;
+    background: var(--border-color, rgba(18, 14, 11, 0.12));
 }
 
+/* AI Status Indicator */
 .tts-status-indicator {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
+    color: var(--text-muted, #3F362E);
+}
+
+.tts-status-indicator svg {
+    opacity: 0.6;
 }
 
 .status-label {
+    font-family: var(--font-family-body, 'Inter', sans-serif);
     font-size: 0.75rem;
-    color: #888;
-    font-style: italic;
+    font-weight: 500;
+    color: var(--text-muted, #3F362E);
+    letter-spacing: 0.02em;
 }
 
-.status-dot {
-    width: 4px;
-    height: 4px;
-    background: #10b981;
-    border-radius: 50%;
-    box-shadow: 0 0 4px #10b981;
-}
+/* ========================================
+   Dark Mode Support
+   ======================================== */
 
-/* Dark mode adjustment if needed */
-.dark-mode .article-tts-entry-container {
+.dark-mode .article-tts-entry-container,
+[data-theme="dark"] .article-tts-entry-container {
     border-color: rgba(255, 255, 255, 0.1);
 }
 
-.dark-mode .tts-entry-button {
-    color: #ccc;
+.dark-mode .tts-entry-button,
+[data-theme="dark"] .tts-entry-button {
+    color: #5DA9D8;
 }
 
-.dark-mode .tts-entry-button:hover {
-    color: #fff;
+.dark-mode .tts-entry-button:hover,
+[data-theme="dark"] .tts-entry-button:hover {
+    color: #7BBEE6;
+}
+
+.dark-mode .tts-icon,
+[data-theme="dark"] .tts-icon {
+    background: #5DA9D8;
+}
+
+.dark-mode .tts-entry-button:hover .tts-icon,
+[data-theme="dark"] .tts-entry-button:hover .tts-icon {
+    background: #7BBEE6;
+}
+
+.dark-mode .status-label,
+.dark-mode .tts-status-indicator,
+[data-theme="dark"] .status-label,
+[data-theme="dark"] .tts-status-indicator {
+    color: #9CA3AF;
+}
+
+.dark-mode .tts-divider,
+[data-theme="dark"] .tts-divider {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ========================================
+   Responsive Design
+   ======================================== */
+
+@media (max-width: 480px) {
+    .article-tts-entry-container {
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 12px 0;
+    }
+
+    .tts-divider {
+        display: none;
+    }
+
+    .tts-status-indicator {
+        width: 100%;
+        padding-top: 8px;
+        border-top: 1px solid var(--border-subtle, rgba(18, 14, 11, 0.06));
+    }
 }
