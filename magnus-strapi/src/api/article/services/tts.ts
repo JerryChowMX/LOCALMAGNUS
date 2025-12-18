@@ -83,11 +83,11 @@ export default () => {
             }
         },
 
-        async processTts(documentId: string, retryCount = 0) {
+        async processTts(documentId: string, retryCount = 0, forceRegenerate = false) {
             const MAX_RETRIES = 5;
             const RETRY_DELAY_MS = 3000;
 
-            strapi.log.info(`[TTS] LOUD: processTts for ${documentId} (attempt ${retryCount + 1})`);
+            strapi.log.info(`[TTS] LOUD: processTts for ${documentId} (attempt ${retryCount + 1})${forceRegenerate ? ' [FORCE]' : ''}`);
 
             try {
                 const article = await (strapi as any).documents('api::article.article').findOne({
@@ -100,7 +100,7 @@ export default () => {
                     if (retryCount < MAX_RETRIES) {
                         strapi.log.warn(`[TTS] LOUD: Published version of ${documentId} not visible yet. Retrying in ${RETRY_DELAY_MS}ms...`);
                         await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
-                        return this.processTts(documentId, retryCount + 1);
+                        return this.processTts(documentId, retryCount + 1, forceRegenerate);
                     }
                     strapi.log.warn(`[TTS] LOUD: Article ${documentId} (published) not found after retries.`);
                     return;
@@ -109,8 +109,8 @@ export default () => {
                 const canonicalText = this.extractCanonicalText(article.content_blocks);
                 const currentHash = this.generateContentHash(canonicalText);
 
-                // If content hasn't changed, we're done.
-                if (article.tts_status === 'ready' && article.tts_hash === currentHash && article.tts_audio) {
+                // If content hasn't changed and not forcing, we're done.
+                if (!forceRegenerate && article.tts_status === 'ready' && article.tts_hash === currentHash && article.tts_audio) {
                     strapi.log.info(`[TTS] LOUD: Cache hit for ${documentId}.`);
                     return;
                 }

@@ -20,9 +20,12 @@ export default factories.createCoreController('api::article.article', ({ strapi 
 
         strapi.log.info(`[TTS] Firewall passed. Triggering isolated synthesis for ${documentId}`);
 
+        // Check if force regeneration is requested
+        const forceRegenerate = ctx.request.query.force === 'true';
+
         // Fire-and-forget inside the NEW request context.
         // This is perfectly isolated from the original Publish call.
-        (strapi.service('api::article.tts') as any).processTts(documentId).catch((err: any) => {
+        (strapi.service('api::article.tts') as any).processTts(documentId, 0, forceRegenerate).catch((err: any) => {
             strapi.log.error(`[TTS] Isolated synthesis failed for ${documentId}: ${err.message}`);
         });
 
