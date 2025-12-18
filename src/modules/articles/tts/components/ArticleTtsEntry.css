@@ -13,7 +13,7 @@
 /* Header Label */
 .audio-player-header {
     font-family: var(--font-family-display, 'Blinker', sans-serif);
-    font-size: 0.85rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--text-primary, #111111);
     letter-spacing: 0.02em;

@@ -231,30 +231,6 @@ export const UnifiedArticleView = () => {
                                 </ReactMarkdown>
                             </div>
                         )}
-
-                        <ArticleTtsEntry
-                            ttsStatus={article.tts_status}
-                            isActive={isTtsActive}
-                            isPaused={isTtsPaused}
-                            currentTime={ttsCurrentTime}
-                            duration={ttsDuration}
-                            playbackRate={ttsPlaybackRate}
-                            onStart={() => {
-                                setIsTtsActive(true);
-                                setIsTtsPaused(false);
-                                setTtsCurrentTime(0);
-                            }}
-                            onStop={() => {
-                                setIsTtsActive(false);
-                                setIsTtsPaused(false);
-                                setTtsCurrentTime(0);
-                                setTtsDuration(0);
-                            }}
-                            onPause={() => setIsTtsPaused(true)}
-                            onResume={() => setIsTtsPaused(false)}
-                            onSeek={handleTtsSeek}
-                            onPlaybackRateChange={handleTtsPlaybackRateChange}
-                        />
                     </div>
 
                     <div className="standard-article-wrapper" ref={articleContainerRef}>
@@ -281,6 +257,32 @@ export const UnifiedArticleView = () => {
                             publishedFormats={publishedFormats}
                             onFormatChange={setActiveFormat}
                         />
+
+                        {activeFormat === 'nota-original' && (
+                            <ArticleTtsEntry
+                                ttsStatus={article.tts_status}
+                                isActive={isTtsActive}
+                                isPaused={isTtsPaused}
+                                currentTime={ttsCurrentTime}
+                                duration={ttsDuration}
+                                playbackRate={ttsPlaybackRate}
+                                onStart={() => {
+                                    setIsTtsActive(true);
+                                    setIsTtsPaused(false);
+                                    setTtsCurrentTime(0);
+                                }}
+                                onStop={() => {
+                                    setIsTtsActive(false);
+                                    setIsTtsPaused(false);
+                                    setTtsCurrentTime(0);
+                                    setTtsDuration(0);
+                                }}
+                                onPause={() => setIsTtsPaused(true)}
+                                onResume={() => setIsTtsPaused(false)}
+                                onSeek={handleTtsSeek}
+                                onPlaybackRateChange={handleTtsPlaybackRateChange}
+                            />
+                        )}
 
                         <div>
                             {activeFormat === 'nota-original' && <NotaOriginal article={articleAttrs as any} />}
