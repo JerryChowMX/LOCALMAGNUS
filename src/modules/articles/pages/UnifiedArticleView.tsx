@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -21,7 +21,7 @@ import { Infografia } from '../components/FormatViews/Infografia';
 
 // TTS Components
 import { ArticleTtsEntry } from '../tts/components/ArticleTtsEntry';
-import { TtsExperience } from '../tts/components/TtsExperience';
+import { TtsExperience, type TtsExperienceHandle } from '../tts/components/TtsExperience';
 
 // Hooks & Utils
 import { useStrapiArticle } from '../../../hooks/useStrapiArticles';
@@ -58,7 +58,53 @@ export const UnifiedArticleView = () => {
     const [isCommentsOpen, setIsCommentsOpen] = useState(false);
     const [activeFormat, setActiveFormat] = useState<ArticleFormatId>('nota-original');
     const [isTtsActive, setIsTtsActive] = useState(false);
+    const [isTtsPaused, setIsTtsPaused] = useState(false);
+    const [ttsCurrentTime, setTtsCurrentTime] = useState(0);
+    const [ttsDuration, setTtsDuration] = useState(0);
+    const [ttsPlaybackRate, setTtsPlaybackRate] = useState(1);
     const articleContainerRef = useRef<HTMLDivElement>(null);
+    const ttsRef = useRef<TtsExperienceHandle>(null);
+
+    // Handler for seeking in the audio
+    const handleTtsSeek = (time: number) => {
+        if (ttsRef.current) {
+            ttsRef.current.seek(time);
+            setTtsCurrentTime(time);
+        }
+    };
+
+    // Handler for playback rate changes
+    const handleTtsPlaybackRateChange = (rate: number) => {
+        setTtsPlaybackRate(rate);
+    };
+
+    // Preload audio duration so user can see time before playing
+    useEffect(() => {
+        if (!article?.tts_audio?.url) return;
+
+        const audio = new Audio();
+        audio.preload = 'metadata';
+        audio.src = `${STRAPI_ORIGIN}${article.tts_audio.url}`;
+
+        const handleLoadedMetadata = () => {
+            if (audio.duration && !isNaN(audio.duration)) {
+                setTtsDuration(audio.duration);
+            }
+        };
+
+        audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+
+        return () => {
+            audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+            audio.src = '';
+        };
+    }, [article?.tts_audio?.url]);
+
+    // Handler for time updates from TtsExperience
+    const handleTtsTimeUpdate = (currentTime: number, duration: number) => {
+        setTtsCurrentTime(currentTime);
+        setTtsDuration(duration);
+    };
 
     // Format Date
     const formatDate = (dateString: string) => {
@@ -189,19 +235,40 @@ export const UnifiedArticleView = () => {
                         <ArticleTtsEntry
                             ttsStatus={article.tts_status}
                             isActive={isTtsActive}
-                            onStart={() => setIsTtsActive(true)}
-                            onStop={() => setIsTtsActive(false)}
+                            isPaused={isTtsPaused}
+                            currentTime={ttsCurrentTime}
+                            duration={ttsDuration}
+                            playbackRate={ttsPlaybackRate}
+                            onStart={() => {
+                                setIsTtsActive(true);
+                                setIsTtsPaused(false);
+                                setTtsCurrentTime(0);
+                            }}
+                            onStop={() => {
+                                setIsTtsActive(false);
+                                setIsTtsPaused(false);
+                                setTtsCurrentTime(0);
+                                setTtsDuration(0);
+                            }}
+                            onPause={() => setIsTtsPaused(true)}
+                            onResume={() => setIsTtsPaused(false)}
+                            onSeek={handleTtsSeek}
+                            onPlaybackRateChange={handleTtsPlaybackRateChange}
                         />
                     </div>
 
                     <div className="standard-article-wrapper" ref={articleContainerRef}>
                         {isTtsActive && article.tts_audio && article.tts_metadata && (
                             <TtsExperience
+                                ref={ttsRef}
                                 audioUrl={`${STRAPI_ORIGIN}${article.tts_audio.url}`}
                                 metadataUrl={`${STRAPI_ORIGIN}${article.tts_metadata.url}`}
                                 articleText={extractTextFromBlocks(article.blocks || [])}
                                 containerRef={articleContainerRef}
+                                isPaused={isTtsPaused}
+                                playbackRate={ttsPlaybackRate}
                                 onEnded={() => setIsTtsActive(false)}
+                                onTimeUpdate={handleTtsTimeUpdate}
                             />
                         )}
                         <ArticleHero
