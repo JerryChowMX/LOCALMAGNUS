@@ -126,6 +126,38 @@
       "relation": "oneToMany",
       "target": "api::comment.comment",
       "mappedBy": "article"
+    },
+    "tts_audio": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "files"
+      ]
+    },
+    "tts_metadata": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "files"
+      ]
+    },
+    "tts_hash": {
+      "type": "string"
+    },
+    "tts_status": {
+      "type": "enumeration",
+      "enum": [
+        "none",
+        "pending",
+        "ready",
+        "error"
+      ],
+      "default": "none"
+    },
+    "tts_last_error": {
+      "type": "text"
     }
   }
 }

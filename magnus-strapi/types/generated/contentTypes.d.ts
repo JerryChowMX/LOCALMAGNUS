@@ -531,6 +531,14 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 130;
       }>;
+    tts_audio: Schema.Attribute.Media<'files'>;
+    tts_hash: Schema.Attribute.String;
+    tts_last_error: Schema.Attribute.Text;
+    tts_metadata: Schema.Attribute.Media<'files'>;
+    tts_status: Schema.Attribute.Enumeration<
+      ['none', 'pending', 'ready', 'error']
+    > &
+      Schema.Attribute.DefaultTo<'none'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

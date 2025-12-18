@@ -1,0 +1,36 @@
+/* TtsOverlay.css */
+
+.tts-overlay {
+    /* Design Tokens for Highlights */
+    --tts-sentence-bg: rgba(210, 227, 252, 0.4);
+    --tts-word-bg: rgba(138, 180, 248, 0.7);
+
+    transition: opacity 0.3s ease;
+}
+
+/* Dark Mode Overrides */
+:root[data-theme='dark'] .tts-overlay {
+    --tts-sentence-bg: rgba(30, 58, 138, 0.3);
+    /* Deeper blue for dark mode */
+    --tts-word-bg: rgba(59, 130, 246, 0.6);
+    mix-blend-mode: screen;
+    /* Change blend mode for dark surfaces */
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    .tts-word-group {
+        display: none;
+        /* Hide word-level karaoke for reduced motion */
+    }
+
+    .tts-overlay {
+        transition: none;
+    }
+}
+
+/* Selection isolation */
+.tts-overlay-active ::selection {
+    background: transparent;
+    /* Optional: clear selection if it interferes visually */
+}

@@ -29,3 +29,7 @@ magnus-strapi/public/uploads/
 *.njsproj
 *.sln
 *.sw?
+
+
+# Google Credentials
+google-tts-credentials.json

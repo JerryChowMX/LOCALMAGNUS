@@ -27,6 +27,39 @@ export default {
             data.reading_time = Math.ceil(wordCount / 200) || 1;
         }
     },
+
+    afterCreate(event) {
+        const { result } = event;
+        // Defer execution outside the database transaction
+        setImmediate(() => {
+            (strapi.service('api::article.tts') as any).processTts(result.id).catch((err: any) => {
+                strapi.log.error(`[TTS] Background processing failed: ${err.message}`);
+            });
+        });
+    },
+
+    afterUpdate(event) {
+        const { result, params } = event;
+
+        // 1. Guard against recursive TTS updates to prevent infinite loops
+        const isTtsUpdate =
+            params?.data?.tts_status ||
+            params?.data?.tts_hash ||
+            params?.data?.tts_audio ||
+            params?.data?.tts_metadata;
+
+        if (isTtsUpdate) return;
+
+        // 2. Only trigger if the article is published
+        if (!result.publishedAt) return;
+
+        // 3. Defer execution outside the database transaction
+        setImmediate(() => {
+            (strapi.service('api::article.tts') as any).processTts(result.id).catch((err: any) => {
+                strapi.log.error(`[TTS] Post-publish background processing failed: ${err.message}`);
+            });
+        });
+    },
 };
 
 function calculateWordCount(blocks: any[]) {
