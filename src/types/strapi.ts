@@ -137,7 +137,11 @@ export interface StrapiArticleAttributes {
         generated_at?: string;
         file_size?: number;
     };
-
+    tts_status: 'none' | 'pending' | 'ready' | 'error';
+    tts_audio?: StrapiMedia;
+    tts_metadata?: StrapiMedia;
+    tts_hash?: string;
+    tts_last_error?: string;
 }
 
 // Flattened/Normalized Article type for frontend use
@@ -228,5 +232,12 @@ export interface StrapiArticle {
         };
         generated_at?: string;
         file_size?: number;
+    };
+    tts_status: 'none' | 'pending' | 'ready' | 'error';
+    tts_audio?: {
+        url: string;
+    };
+    tts_metadata?: {
+        url: string;
     };
 }

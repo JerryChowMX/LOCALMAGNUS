@@ -1,27 +1,56 @@
+const INTERNAL_URL = process.env.STRAPI_INTERNAL_URL || 'http://127.0.0.1:1337';
+
+function triggerWebhook(documentId: string) {
+    setTimeout(() => {
+        fetch(`${INTERNAL_URL}/api/articles/process-tts?docId=${encodeURIComponent(documentId)}`, {
+            method: 'POST',
+            headers: {
+                'x-tts-secret': process.env.TTS_WEBHOOK_SECRET || '',
+                'content-type': 'application/json',
+            },
+        })
+            .then(res => {
+                if (!res.ok) return res.text().then(text => { throw new Error(text) });
+                return res.json();
+            })
+            .then(data => {
+                strapi.log.info(`[TTS] LOUD: Webhook successful for ${documentId}`);
+            })
+            .catch((e) => {
+                strapi.log.error(`[TTS] LOUD: Webhook call failed for ${documentId}: ${e?.message ?? e}`);
+            });
+    }, 5000);
+}
+
+function shouldTriggerTts(result: any): boolean {
+    // Skip if not published
+    if (!result.publishedAt) return false;
+
+    // ONLY trigger when tts_status is 'none' or not set
+    // Skip for 'pending', 'ready', AND 'error' to prevent loops
+    if (result.tts_status && result.tts_status !== 'none') {
+        strapi.log.info(`[TTS] LOUD: Skipped (tts_status=${result.tts_status}) for ${result.documentId}`);
+        return false;
+    }
+
+    return true;
+}
+
 export default {
     beforeCreate(event) {
         const { data } = event.params;
-
-        // 1. Auto-generate slug if missing
         if (data.title && !data.slug) {
             data.slug = slugify(data.title);
         }
-
-        // 2. Calculate reading time
         if (data.content_blocks) {
             const wordCount = calculateWordCount(data.content_blocks);
-            // Avg reading speed: 200 words per minute
             data.reading_time = Math.ceil(wordCount / 200) || 1;
         }
-
-        // 4. Update view count if missing
         if (!data.view_count) data.view_count = 0;
     },
 
     beforeUpdate(event) {
         const { data } = event.params;
-
-        // 2. Recalculate reading time if content changed
         if (data.content_blocks) {
             const wordCount = calculateWordCount(data.content_blocks);
             data.reading_time = Math.ceil(wordCount / 200) || 1;
@@ -30,64 +59,40 @@ export default {
 
     afterCreate(event) {
         const { result } = event;
-        // Defer execution outside the database transaction
-        setImmediate(() => {
-            (strapi.service('api::article.tts') as any).processTts(result.id).catch((err: any) => {
-                strapi.log.error(`[TTS] Background processing failed: ${err.message}`);
-            });
-        });
+
+        if (shouldTriggerTts(result)) {
+            strapi.log.info('--------------------------------------------------');
+            strapi.log.info(`[TTS] LOUD: AFTER_CREATE for docId=${result.documentId} - Scheduling synthesis`);
+            triggerWebhook(result.documentId);
+        }
     },
 
     afterUpdate(event) {
-        const { result, params } = event;
+        const { result } = event;
 
-        // 1. Guard against recursive TTS updates to prevent infinite loops
-        const isTtsUpdate =
-            params?.data?.tts_status ||
-            params?.data?.tts_hash ||
-            params?.data?.tts_audio ||
-            params?.data?.tts_metadata;
-
-        if (isTtsUpdate) return;
-
-        // 2. Only trigger if the article is published
-        if (!result.publishedAt) return;
-
-        // 3. Defer execution outside the database transaction
-        setImmediate(() => {
-            (strapi.service('api::article.tts') as any).processTts(result.id).catch((err: any) => {
-                strapi.log.error(`[TTS] Post-publish background processing failed: ${err.message}`);
-            });
-        });
+        if (shouldTriggerTts(result)) {
+            strapi.log.info('--------------------------------------------------');
+            strapi.log.info(`[TTS] LOUD: AFTER_UPDATE for docId=${result.documentId} - Scheduling synthesis`);
+            triggerWebhook(result.documentId);
+        }
     },
 };
 
 function calculateWordCount(blocks: any[]) {
     if (!blocks || !Array.isArray(blocks)) return 0;
-
     let text = '';
-
     for (const block of blocks) {
-        if (block.__component === 'content.rich-text' && block.content) {
-            text += block.content + ' ';
-        }
-        if (block.__component === 'content.quote' && block.quote_text) {
-            text += block.quote_text + ' ';
-        }
+        if (block.__component === 'content.rich-text' && block.content) text += block.content + ' ';
+        if (block.__component === 'content.quote' && block.quote_text) text += block.quote_text + ' ';
     }
-
-    // Basic split by whitespace
     return text.trim().split(/\s+/).filter(w => w.length > 0).length;
 }
 
 function slugify(text: string) {
-    return text
-        .toString()
-        .toLowerCase()
-        .trim()
-        .replace(/\s+/g, '-')     // Replace spaces with -
-        .replace(/[^\w\-]+/g, '') // Remove all non-word chars
-        .replace(/\-\-+/g, '-')   // Replace multiple - with single -
-        .replace(/^-+/, '')       // Trim - from start of text
-        .replace(/-+$/, '');      // Trim - from end of text
+    return text.toString().toLowerCase().trim()
+        .replace(/\s+/g, '-')
+        .replace(/[^\w\-]+/g, '')
+        .replace(/\-\-+/g, '-')
+        .replace(/^-+/, '')
+        .replace(/-+$/, '');
 }

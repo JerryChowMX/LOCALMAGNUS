@@ -6,8 +6,8 @@ import type { KaraokeModel, PlaybackStatus } from '../types';
 
 interface UseTtsControllerProps {
     model: KaraokeModel | null;
-    audioRef: React.RefObject<HTMLAudioElement>;
-    containerRef: React.RefObject<HTMLElement>;
+    audioRef: React.RefObject<HTMLAudioElement | null>;
+    containerRef: React.RefObject<HTMLElement | null>;
     onStatusChange?: (status: PlaybackStatus) => void;
 }
 

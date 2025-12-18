@@ -36,8 +36,8 @@ export class GoogleCloudTtsProvider implements TtsProvider {
 
     async synthesize(text: string, options: { voice?: string; language?: string } = {}): Promise<TtsSynthesisResult> {
         const {
-            voice = 'es-MX-Neural2-A',
-            language = 'es-MX'
+            voice = 'es-US-Standard-A',
+            language = 'es-US'
         } = options;
 
         const request = {

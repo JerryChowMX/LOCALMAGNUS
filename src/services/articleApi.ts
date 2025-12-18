@@ -146,7 +146,14 @@ function normalizeArticle(data: any): StrapiArticle {
           name: ra.category.name || ra.category.data?.attributes?.name
         } : undefined
       };
-    }) || []
+    }) || [],
+    tts_status: attrs.tts_status || 'none',
+    tts_audio: attrs.tts_audio ? {
+      url: attrs.tts_audio.url || attrs.tts_audio.data?.attributes?.url
+    } : undefined,
+    tts_metadata: attrs.tts_metadata ? {
+      url: attrs.tts_metadata.url || attrs.tts_metadata.data?.attributes?.url
+    } : undefined
   };
 }
 
@@ -205,7 +212,9 @@ export const articleApi = {
       'populate[category][populate]': '*',
       'populate[tags][populate]': '*',
       'populate[related_articles][populate][hero_image][populate]': '*',
-      'populate[related_articles][populate][category][populate]': '*'
+      'populate[related_articles][populate][category][populate]': '*',
+      'populate[tts_audio][populate]': '*',
+      'populate[tts_metadata][populate]': '*',
     });
 
     // Add status parameter for draft preview support

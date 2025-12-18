@@ -1,0 +1,82 @@
+.article-tts-entry-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding: 8px 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.tts-entry-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: var(--font-primary, 'EB Garamond', serif);
+    font-size: 1.1rem;
+    color: #444;
+    transition: all 0.2s ease;
+}
+
+.tts-entry-button:hover {
+    color: #000;
+}
+
+.tts-entry-button.active {
+    color: #c00;
+    /* Subtle red for stop state */
+}
+
+.tts-icon {
+    font-size: 0.9rem;
+}
+
+.tts-text {
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.8rem;
+}
+
+.tts-divider {
+    width: 1px;
+    height: 16px;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.tts-status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-label {
+    font-size: 0.75rem;
+    color: #888;
+    font-style: italic;
+}
+
+.status-dot {
+    width: 4px;
+    height: 4px;
+    background: #10b981;
+    border-radius: 50%;
+    box-shadow: 0 0 4px #10b981;
+}
+
+/* Dark mode adjustment if needed */
+.dark-mode .article-tts-entry-container {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .tts-entry-button {
+    color: #ccc;
+}
+
+.dark-mode .tts-entry-button:hover {
+    color: #fff;
+}

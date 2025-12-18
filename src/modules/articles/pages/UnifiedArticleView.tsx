@@ -19,6 +19,10 @@ import { Podcast } from '../components/FormatViews/Podcast';
 import { Presentacion } from '../components/FormatViews/Presentacion';
 import { Infografia } from '../components/FormatViews/Infografia';
 
+// TTS Components
+import { ArticleTtsEntry } from '../tts/components/ArticleTtsEntry';
+import { TtsExperience } from '../tts/components/TtsExperience';
+
 // Hooks & Utils
 import { useStrapiArticle } from '../../../hooks/useStrapiArticles';
 import { usePreviewMode } from '../../../hooks/usePreviewMode';
@@ -27,6 +31,7 @@ import { extractTextFromBlocks } from '../../../lib/articleUtils';
 
 // Styles
 import '../templates/StandardOneArticle.css';
+import { useRef } from 'react';
 
 export const UnifiedArticleView = () => {
     const { date, slug } = useParams<{ date: string; slug: string }>();
@@ -40,9 +45,20 @@ export const UnifiedArticleView = () => {
         status: isPreview ? previewStatus : undefined
     });
 
+    console.log('[DEBUG] UnifiedArticleView: Raw Article Data:', article);
+    if (article) {
+        console.log('[DEBUG] TTS Fields:', {
+            status: article.tts_status,
+            audio: article.tts_audio,
+            metadata: article.tts_metadata
+        });
+    }
+
     const [isChatOpen, setIsChatOpen] = useState(false);
     const [isCommentsOpen, setIsCommentsOpen] = useState(false);
     const [activeFormat, setActiveFormat] = useState<ArticleFormatId>('nota-original');
+    const [isTtsActive, setIsTtsActive] = useState(false);
+    const articleContainerRef = useRef<HTMLDivElement>(null);
 
     // Format Date
     const formatDate = (dateString: string) => {
@@ -169,9 +185,25 @@ export const UnifiedArticleView = () => {
                                 </ReactMarkdown>
                             </div>
                         )}
+
+                        <ArticleTtsEntry
+                            ttsStatus={article.tts_status}
+                            isActive={isTtsActive}
+                            onStart={() => setIsTtsActive(true)}
+                            onStop={() => setIsTtsActive(false)}
+                        />
                     </div>
 
-                    <div className="standard-article-wrapper">
+                    <div className="standard-article-wrapper" ref={articleContainerRef}>
+                        {isTtsActive && article.tts_audio && article.tts_metadata && (
+                            <TtsExperience
+                                audioUrl={`${STRAPI_ORIGIN}${article.tts_audio.url}`}
+                                metadataUrl={`${STRAPI_ORIGIN}${article.tts_metadata.url}`}
+                                articleText={extractTextFromBlocks(article.blocks || [])}
+                                containerRef={articleContainerRef}
+                                onEnded={() => setIsTtsActive(false)}
+                            />
+                        )}
                         <ArticleHero
                             image={articleAttrs.image}
                             title={article.title}
