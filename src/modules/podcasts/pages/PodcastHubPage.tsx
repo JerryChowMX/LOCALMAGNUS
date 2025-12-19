@@ -29,7 +29,7 @@ const styles = {
     topSection: {
         flex: '1',
         position: 'relative' as const,
-        backgroundColor: '#000',
+        backgroundColor: 'var(--surface-base)', // Dark mode compatible
         overflow: 'hidden'
     },
     // The image itself
@@ -40,7 +40,7 @@ const styles = {
         right: 0,
         bottom: 0,
         backgroundImage: url ? `url(${url})` : undefined,
-        backgroundColor: '#333',
+        backgroundColor: 'var(--bg-tertiary)', // Fallback uses token
         backgroundSize: 'cover',
         backgroundPosition: 'center',
     }),
@@ -66,7 +66,7 @@ const styles = {
         left: '24px',
         right: '24px',
         zIndex: 20,
-        color: 'white',
+        color: '#F2EEE8', // Warm Milk - always visible on dark gradient
         textAlign: 'center' as const
     },
     // Top right action button (Playlist)
@@ -80,11 +80,11 @@ const styles = {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'rgba(0, 0, 0, 0.4)',
+        background: 'var(--overlay-bg)',
         borderRadius: '0', // Sharp corners
         border: 'none',
         cursor: 'pointer',
-        color: 'white'
+        color: '#F2EEE8' // Warm Milk - visible on dark overlay
     },
     // Updated Bottom Section layout
     bottomSection: {
@@ -127,7 +127,7 @@ const styles = {
     fill: (percent: number) => ({
         width: `${percent}%`,
         height: '100%',
-        backgroundColor: '#3B82F6',
+        backgroundColor: 'var(--magnus-blue)',
         borderRadius: '2px',
         transition: 'none'
     }),
@@ -321,7 +321,7 @@ export const PodcastHubPage = () => {
                         fontSize: '24px',
                         lineHeight: '1.2',
                         marginBottom: '8px',
-                        color: 'white',
+                        color: '#F2EEE8', // Warm Milk - always visible on dark gradient
                         fontWeight: '700'
                     }}>
                         {currentPodcast.title}
