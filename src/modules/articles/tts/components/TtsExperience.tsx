@@ -1,6 +1,7 @@
 import { useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
 import { useTtsModel } from '../hooks/useTtsModel';
 import { useTtsController } from '../hooks/useTtsController';
+import type { BlockTokenMapping } from '../../../../tts';
 
 interface TtsExperienceProps {
     audioUrl: string;
@@ -15,8 +16,12 @@ interface TtsExperienceProps {
     onTimeUpdate?: (currentTime: number, duration: number) => void;
     /** Callback when active word changes - parent uses this for CSS highlighting */
     onActiveWordChange?: (wordIndex: number) => void;
-    /** Callback when verification status changes */
-    onVerificationChange?: (isVerified: boolean, error?: string) => void;
+    /** Callback when verification status changes - includes blockMappings for Phase 3 */
+    onVerificationChange?: (
+        isVerified: boolean,
+        error?: string,
+        blockMappings?: Map<string, BlockTokenMapping>
+    ) => void;
 }
 
 export interface TtsExperienceHandle {
@@ -53,12 +58,12 @@ export const TtsExperience = forwardRef<TtsExperienceHandle, TtsExperienceProps>
     }), []);
 
     // 1. Load metadata and verify canonical contract
-    const { wordTimings, isVerified, verification } = useTtsModel(metadataUrl, articleBlocks, articleId);
+    const { wordTimings, blockMappings, isVerified, verification } = useTtsModel(metadataUrl, articleBlocks, articleId);
 
-    // Notify parent of verification status
+    // Notify parent of verification status AND blockMappings
     useEffect(() => {
-        onVerificationChange?.(isVerified, verification?.error);
-    }, [isVerified, verification, onVerificationChange]);
+        onVerificationChange?.(isVerified, verification?.error, blockMappings || undefined);
+    }, [isVerified, verification, blockMappings, onVerificationChange]);
 
     // 2. Control Karaoke - only if verified
     // PHASE 2: Passing empty timings until Phase 3 instrumentation is ready

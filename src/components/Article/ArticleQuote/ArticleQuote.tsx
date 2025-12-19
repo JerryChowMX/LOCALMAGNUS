@@ -2,28 +2,43 @@ import React from 'react';
 import { InstrumentedText } from '../../../modules/articles/tts/components/InstrumentedText';
 import './ArticleQuote.css';
 
+/**
+ * PHASE 3: Pure Component Interface
+ * No refs. No mutation.
+ */
 interface ArticleQuoteProps {
     quote: string;
-    author: string;
-    /** When provided, enables TTS word instrumentation for karaoke highlighting */
-    wordIndexRef?: React.MutableRefObject<number>;
+    author?: string;
+    /** Global start index for quote text from blockMappings (-1 = no instrumentation) */
+    quoteStartIndex?: number;
+    /** Global start index for author text from blockMappings (-1 = no instrumentation) */
+    authorStartIndex?: number;
 }
 
 /**
- * ArticleQuote: Simplified inline quote component for articles.
- * Designed for clean reading flow and TTS karaoke compatibility.
+ * ArticleQuote - PHASE 3 PURE COMPONENT
  * 
- * IMPORTANT: Decorative characters (" ") and em-dash (—) are placed OUTSIDE
- * the InstrumentedText to avoid desyncing word indices with backend TTS.
+ * Decorative characters (" " and —) are placed OUTSIDE InstrumentedText
+ * to avoid desyncing word indices with backend TTS.
+ * 
+ * If start indices are < 0 or undefined, renders without instrumentation.
  */
-export const ArticleQuote: React.FC<ArticleQuoteProps> = ({ quote, author, wordIndexRef }) => {
-    // Render text with optional instrumentation for TTS karaoke
+export const ArticleQuote: React.FC<ArticleQuoteProps> = ({
+    quote,
+    author,
+    quoteStartIndex,
+    authorStartIndex
+}) => {
+    // Determine if instrumentation is enabled
+    const shouldInstrumentQuote = quoteStartIndex !== undefined && quoteStartIndex >= 0;
+    const shouldInstrumentAuthor = authorStartIndex !== undefined && authorStartIndex >= 0 && author;
+
     const renderQuoteText = () => {
-        if (wordIndexRef) {
+        if (shouldInstrumentQuote) {
             return (
                 <>
                     <span className="article-quote-mark">"</span>
-                    <InstrumentedText text={quote} wordIndexRef={wordIndexRef} />
+                    <InstrumentedText text={quote} globalStartIndex={quoteStartIndex} />
                     <span className="article-quote-mark">"</span>
                 </>
             );
@@ -33,11 +48,11 @@ export const ArticleQuote: React.FC<ArticleQuoteProps> = ({ quote, author, wordI
 
     const renderAuthor = () => {
         if (!author) return null;
-        if (wordIndexRef) {
+        if (shouldInstrumentAuthor) {
             return (
                 <>
                     <span className="article-quote-dash">— </span>
-                    <InstrumentedText text={author} wordIndexRef={wordIndexRef} />
+                    <InstrumentedText text={author} globalStartIndex={authorStartIndex!} />
                 </>
             );
         }
@@ -62,3 +77,4 @@ export const ArticleQuote: React.FC<ArticleQuoteProps> = ({ quote, author, wordI
 };
 
 export default ArticleQuote;
+

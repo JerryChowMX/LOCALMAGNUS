@@ -28,6 +28,7 @@ import { useStrapiArticle } from '../../../hooks/useStrapiArticles';
 import { usePreviewMode } from '../../../hooks/usePreviewMode';
 import { routes } from '../../../app/routes';
 import { extractTextFromBlocks } from '../../../lib/articleUtils';
+import type { BlockTokenMapping } from '../../../tts';
 
 // Styles
 import '../templates/StandardOneArticle.css';
@@ -53,10 +54,11 @@ export const UnifiedArticleView = () => {
     const [ttsCurrentTime, setTtsCurrentTime] = useState(0);
     const [ttsDuration, setTtsDuration] = useState(0);
     const [ttsPlaybackRate, setTtsPlaybackRate] = useState(1);
-    const [activeWordIndex, setActiveWordIndex] = useState(-1); // For CSS-based highlighting
+    const [activeWordIndex, setActiveWordIndex] = useState(-1);
+    const [blockMappings, setBlockMappings] = useState<Map<string, BlockTokenMapping> | null>(null);
+    const [isVerified, setIsVerified] = useState(false);
     const articleContainerRef = useRef<HTMLDivElement>(null);
     const ttsRef = useRef<TtsExperienceHandle>(null);
-    const ttsWordIndexRef = useRef<number>(0);
 
     // Handler for back navigation
     const handleBack = useCallback(() => {
@@ -168,14 +170,10 @@ export const UnifiedArticleView = () => {
     }, [articleAttrs]);
 
     // 3. Stable Instrumented Article Content (ROBUST KARAOKE)
-    // We split this into header and body to allow the TTS player to sit in between
-    // without triggering re-instrumentation on every time update.
-    // NOTE: Title and summary are NOT instrumented because the TTS audio only reads body content.
+    // Header is NOT instrumented because TTS only reads body content.
+    // Body instrumentation uses verified blockMappings (PHASE 3)
     const instrumented = useMemo(() => {
         if (!article || !articleAttrs) return null;
-
-        // Reset counter at the start - body content starts at index 0
-        ttsWordIndexRef.current = 0;
 
         // Header is NOT instrumented - TTS doesn't read title/summary
         const header = (
@@ -196,14 +194,14 @@ export const UnifiedArticleView = () => {
             </div>
         );
 
-        // Body IS instrumented - this is what the TTS audio reads
-        // Using key to force fresh instance on each article
+        // Body IS instrumented - uses verified blockMappings from TTS
+        // PHASE 3: Pure rendering with deterministic indices
         const body = (
             <NotaOriginal
                 key={`nota-body-${article.id}`}
                 article={articleAttrs as any}
-                wordIndexRef={ttsWordIndexRef}
-                startIndex={0}
+                blockMappings={blockMappings}
+                isTtsActive={isTtsActive && isVerified}
             />
         );
 
@@ -260,15 +258,40 @@ export const UnifiedArticleView = () => {
                     </div>
                 )}
 
-                {/* PHASE 2: Highlighting disabled until verification system is complete */}
-                {/* Phase 3 will enable this with verified indices from blockMappings */}
-                {/* Legacy +40 offset removed - no more render-order indexing */}
+                {/* PHASE 3: CSS Highlighting - Only when verified */}
+                {isTtsActive && isVerified && activeWordIndex >= 0 && (
+                    <style>{`
+                        [data-tts-scope="article-body"] [data-tts-word="${activeWordIndex}"] {
+                            background-color: rgba(138, 180, 248, 0.5) !important;
+                            box-shadow: 0 0 0 3px rgba(138, 180, 248, 0.3) !important;
+                            border-radius: 3px !important;
+                        }
+                        [data-theme="dark"] [data-tts-scope="article-body"] [data-tts-word="${activeWordIndex}"] {
+                            background-color: rgba(59, 130, 246, 0.4) !important;
+                            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+                        }
+                    `}</style>
+                )}
+
+                {/* Dev Banner: Verification Failed */}
+                {import.meta.env.DEV && isTtsActive && !isVerified && blockMappings === null && (
+                    <div style={{
+                        background: '#fef3cd',
+                        color: '#856404',
+                        padding: '8px 16px',
+                        fontSize: '13px',
+                        borderRadius: '4px',
+                        marginBottom: '16px'
+                    }}>
+                        ⚠️ TTS highlighting disabled: verification failed or legacy metadata
+                    </div>
+                )}
 
                 {/* Article Content Structure */}
                 <div
                     className="standard-article-container"
                     data-tts-scope="article-body"
-                    data-active-word={isTtsActive ? activeWordIndex : undefined}
+                    data-active-word={isTtsActive && isVerified ? activeWordIndex : undefined}
                 >
                     {/* Instrumented Header */}
                     {instrumented.header}
@@ -350,8 +373,10 @@ export const UnifiedArticleView = () => {
                             console.log('[UAV] onActiveWordChange received:', wordIndex);
                             setActiveWordIndex(wordIndex);
                         }}
-                        onVerificationChange={(isVerified, error) => {
-                            if (!isVerified) {
+                        onVerificationChange={(verified, error, mappings) => {
+                            setIsVerified(verified);
+                            setBlockMappings(mappings || null);
+                            if (!verified) {
                                 console.warn('[UAV] TTS verification failed:', error);
                             }
                         }}

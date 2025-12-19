@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import type { FC } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -7,14 +6,18 @@ import { AudioPlayer } from '../../../../components/AudioPlayer/AudioPlayer';
 import { STRAPI_ORIGIN } from '../../../../lib/env';
 import type { Article, ContentBlock } from '../../types';
 import { InstrumentedText } from '../../tts/components/InstrumentedText';
+import type { BlockTokenMapping } from '../../../../tts';
 import './FormatViews.css';
 
+/**
+ * PHASE 3: Pure Component Interface
+ */
 interface NotaOriginalProps {
     article: Article['attributes'];
-    /** When provided, enables TTS word instrumentation for karaoke highlighting */
-    wordIndexRef?: React.MutableRefObject<number>;
-    /** Starting word index for TTS instrumentation (overrides wordIndexRef.current) */
-    startIndex?: number;
+    /** Block mappings from verified backend metadata */
+    blockMappings: Map<string, BlockTokenMapping> | null;
+    /** Whether TTS is active (controls instrumentation) */
+    isTtsActive: boolean;
 }
 
 // MAGNUS Typography components for ReactMarkdown (non-instrumented)
@@ -40,109 +43,83 @@ const magnusComponents = {
 };
 
 /**
- * Dev-only component that queries DOM after render to count instrumented words.
+ * Strip markdown to plain text - matches backend exactly.
+ * CRITICAL: This must mirror the backend's markdownToPlainText function.
  */
-const DevWordCounter: React.FC = () => {
-    const [count, setCount] = useState(0);
-
-    useEffect(() => {
-        // Query DOM after initial render to count actual instrumented words
-        const timer = setTimeout(() => {
-            const wordSpans = document.querySelectorAll('[data-tts-word]');
-            setCount(wordSpans.length);
-        }, 500); // Small delay to ensure DOM is fully rendered
-        return () => clearTimeout(timer);
-    }, []); // Empty deps - run once on mount
-
-    return (
-        <div style={{
-            padding: '8px 12px',
-            background: '#f0f0f0',
-            fontSize: '12px',
-            color: '#666',
-            marginTop: '20px',
-            borderRadius: '4px'
-        }}>
-            🔍 TTS Word Count: {count}
-        </div>
-    );
+const markdownToPlainText = (markdown: string): string => {
+    return markdown
+        .replace(/\*\*(.+?)\*\*/g, '$1')      // Bold
+        .replace(/\*(.+?)\*/g, '$1')          // Italic
+        .replace(/_(.+?)_/g, '$1')            // Underscore italic
+        .replace(/~~(.+?)~~/g, '$1')          // Strikethrough
+        .replace(/`([^`]+)`/g, '$1')          // Inline code
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Links
+        .replace(/^#{1,6}\s+/gm, '')          // Headers
+        .replace(/^[-*+]\s+/gm, '')           // List items
+        .replace(/^\d+\.\s+/gm, '')           // Numbered lists
+        .replace(/^>\s*/gm, '')               // Blockquotes
+        .replace(/\n{2,}/g, '\n')             // Multiple newlines
+        .trim();
 };
 
 /**
- * Recursively process children to instrument string text nodes.
+ * Validate that all required TTS-enabled blocks have mappings.
+ * Returns false if any required mapping is missing.
  */
-export const instrumentChildren = (
-    children: React.ReactNode,
-    wordIndexRef: React.MutableRefObject<number>
-): React.ReactNode => {
-    return React.Children.map(children, (child) => {
-        // String nodes get instrumented
-        if (typeof child === 'string') {
-            return <InstrumentedText text={child} wordIndexRef={wordIndexRef} />;
-        }
-        // Numbers also need to be converted to strings for TTS
-        if (typeof child === 'number') {
-            return <InstrumentedText text={String(child)} wordIndexRef={wordIndexRef} />;
-        }
-        // React elements with children need recursive processing
-        if (React.isValidElement(child)) {
-            const props = child.props as { children?: React.ReactNode };
-            if (props.children) {
-                return React.cloneElement(child, {
-                    ...props,
-                    children: instrumentChildren(props.children, wordIndexRef)
-                } as any);
+const validateAllMappingsPresent = (
+    blocks: ContentBlock[],
+    blockMappings: Map<string, BlockTokenMapping>
+): { valid: boolean; missingBlocks: string[] } => {
+    const missingBlocks: string[] = [];
+
+    for (const block of blocks) {
+        const componentType = (block as any).__component;
+        const blockId = (block as any).id?.toString();
+
+        // Only check blocks that need TTS
+        if (componentType === 'content.rich-text' || componentType === 'shared.rich-text') {
+            const key = `${blockId}:content`;
+            if (!blockMappings.has(key)) {
+                missingBlocks.push(key);
             }
         }
-        // Everything else passes through unchanged
-        return child;
-    });
+
+        if (componentType === 'content.quote' || componentType === 'shared.quote') {
+            const quoteKey = `${blockId}:quote_text`;
+            if (!blockMappings.has(quoteKey)) {
+                missingBlocks.push(quoteKey);
+            }
+            // author is optional, don't require it
+        }
+    }
+
+    return {
+        valid: missingBlocks.length === 0,
+        missingBlocks
+    };
 };
 
 /**
- * Creates ReactMarkdown components with TTS word instrumentation.
- * Text nodes get wrapped with data-tts-word spans for karaoke targeting.
+ * Get mapping key for a block.
  */
-export const createInstrumentedComponents = (wordIndexRef: React.MutableRefObject<number>, renderId?: string) => ({
-    h1: ({ children }: any) => (
-        <h1 className="article-content-h1">{instrumentChildren(children, wordIndexRef)}</h1>
-    ),
-    h2: ({ children }: any) => (
-        <h2 className="article-content-h2">{instrumentChildren(children, wordIndexRef)}</h2>
-    ),
-    h3: ({ children }: any) => (
-        <h3 className="article-content-h3">{instrumentChildren(children, wordIndexRef)}</h3>
-    ),
-    p: ({ children }: any) => {
-        console.log(`[COMP-${renderId}] p() called, ref.current =`, wordIndexRef.current);
-        return <p className="article-content-p">{instrumentChildren(children, wordIndexRef)}</p>;
-    },
-    li: ({ children }: any) => (
-        <li className="article-content-li">{instrumentChildren(children, wordIndexRef)}</li>
-    ),
-    strong: ({ children }: any) => (
-        <strong style={{ fontWeight: 700 }}>{instrumentChildren(children, wordIndexRef)}</strong>
-    ),
-    em: ({ children }: any) => (
-        <em>{instrumentChildren(children, wordIndexRef)}</em>
-    ),
-    a: ({ children, href }: any) => (
-        <a href={href}>{instrumentChildren(children, wordIndexRef)}</a>
-    )
-});
+const getBlockMappingKey = (blockId: string, fieldPath: string): string => {
+    return `${blockId}:${fieldPath}`;
+};
 
-export const NotaOriginal: FC<NotaOriginalProps> = ({ article, wordIndexRef, startIndex = 0 }) => {
-    // Create a FRESH ref object on every render - NOT useMemo
-    // This ensures React StrictMode double-render both start at 0
-    const localWordIndexRef = { current: startIndex };
-    const renderId = Math.random().toString(36).substring(7);
+export const NotaOriginal: FC<NotaOriginalProps> = ({ article, blockMappings, isTtsActive }) => {
+    // PHASE 3 FIX #2: Atomic validation - all required mappings or none
+    // If any required mapping is missing, disable instrumentation for the ENTIRE article
+    let canInstrument = isTtsActive && blockMappings !== null;
 
-    console.log(`[NOTA-${renderId}] Fresh local ref starting at`, localWordIndexRef.current);
-
-    // Use instrumented components with the LOCAL ref (not parent's ref)
-    const components = wordIndexRef
-        ? createInstrumentedComponents(localWordIndexRef)
-        : magnusComponents;
+    if (canInstrument && blockMappings) {
+        const validation = validateAllMappingsPresent(article.content, blockMappings);
+        if (!validation.valid) {
+            if (import.meta.env.DEV) {
+                console.error('[NotaOriginal] Missing TTS mappings, disabling instrumentation:', validation.missingBlocks);
+            }
+            canInstrument = false;
+        }
+    }
 
     return (
         <div
@@ -152,17 +129,47 @@ export const NotaOriginal: FC<NotaOriginalProps> = ({ article, wordIndexRef, sta
             {article.content.map((block: ContentBlock, index: number) => {
                 const componentType = (block as any).__component || (block as any).type || (block as any).__typename;
 
+                // PHASE 3 FIX #3: Backend ID required - no index fallbacks
+                const blockId = (block as any).id?.toString();
+                if (!blockId && canInstrument) {
+                    if (import.meta.env.DEV) {
+                        console.error(`[NotaOriginal] Block at index ${index} has no ID - cannot instrument`);
+                    }
+                    // Will fall back to non-instrumented render below
+                }
+
                 // RICH TEXT (supports both shared.rich-text and content.rich-text)
                 if (componentType === 'shared.rich-text' || componentType === 'content.rich-text' || componentType === 'ComponentArticleRichText' || componentType === 'paragraph') {
-                    // Strapi content.rich-text has a 'content' field with markdown/HTML
-                    // shared.rich-text has 'blocks' array
                     const richTextContent = (block as any).content || (block as any).text;
                     if (richTextContent && typeof richTextContent === 'string') {
+                        // Get mapping for this block
+                        const mapping = canInstrument && blockId
+                            ? blockMappings?.get(getBlockMappingKey(blockId, 'content'))
+                            : undefined;
+
+                        // PHASE 3 FIX #1: Pure flat-text instrumentation
+                        // Strip markdown to plain text (matches backend exactly)
+                        // Render as single InstrumentedText with globalStartIndex
+                        if (mapping) {
+                            const plainText = markdownToPlainText(richTextContent);
+                            return (
+                                <div key={index} className="article-rich-text-block">
+                                    <p className="article-content-p">
+                                        <InstrumentedText
+                                            text={plainText}
+                                            globalStartIndex={mapping.globalStartIndex}
+                                        />
+                                    </p>
+                                </div>
+                            );
+                        }
+
+                        // Non-instrumented: use ReactMarkdown for styling
                         return (
                             <div key={index} className="article-rich-text-block">
                                 <ReactMarkdown
                                     remarkPlugins={[remarkGfm]}
-                                    components={components}
+                                    components={magnusComponents}
                                 >
                                     {richTextContent}
                                 </ReactMarkdown>
@@ -180,12 +187,24 @@ export const NotaOriginal: FC<NotaOriginalProps> = ({ article, wordIndexRef, sta
 
                 // QUOTE (supports both shared.quote and content.quote)
                 if (componentType === 'shared.quote' || componentType === 'content.quote' || componentType === 'ComponentArticleQuote') {
+                    const quoteText = (block as any).quote || (block as any).text || (block as any).quote_text || '';
+                    const authorText = (block as any).author || (block as any).author_title || '';
+
+                    // Get mappings for quote fields (only if we have valid blockId)
+                    const quoteMapping = canInstrument && blockId
+                        ? blockMappings?.get(getBlockMappingKey(blockId, 'quote_text'))
+                        : undefined;
+                    const authorMapping = canInstrument && blockId
+                        ? blockMappings?.get(getBlockMappingKey(blockId, 'author'))
+                        : undefined;
+
                     return (
                         <ArticleQuote
                             key={index}
-                            quote={(block as any).quote || (block as any).text || (block as any).quote_text || ''}
-                            author={(block as any).author || (block as any).author_title || ''}
-                            wordIndexRef={localWordIndexRef}
+                            quote={quoteText}
+                            author={authorText}
+                            quoteStartIndex={quoteMapping?.globalStartIndex ?? -1}
+                            authorStartIndex={authorMapping?.globalStartIndex ?? -1}
                         />
                     );
                 }
@@ -310,11 +329,6 @@ export const NotaOriginal: FC<NotaOriginalProps> = ({ article, wordIndexRef, sta
                 <div style={{ marginBottom: '40px', textAlign: 'left' }}>
                     <ArticleAuthor name={article.author.name} />
                 </div>
-            )}
-
-            {/* Dev mode: show word count for debugging */}
-            {import.meta.env.DEV && wordIndexRef && (
-                <DevWordCounter />
             )}
 
             {/* Spacer for bottom sheet */}
