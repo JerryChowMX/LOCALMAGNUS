@@ -13,6 +13,8 @@ interface NotaOriginalProps {
     article: Article['attributes'];
     /** When provided, enables TTS word instrumentation for karaoke highlighting */
     wordIndexRef?: React.MutableRefObject<number>;
+    /** Starting word index for TTS instrumentation (overrides wordIndexRef.current) */
+    startIndex?: number;
 }
 
 // MAGNUS Typography components for ReactMarkdown (non-instrumented)
@@ -101,7 +103,7 @@ export const instrumentChildren = (
  * Creates ReactMarkdown components with TTS word instrumentation.
  * Text nodes get wrapped with data-tts-word spans for karaoke targeting.
  */
-export const createInstrumentedComponents = (wordIndexRef: React.MutableRefObject<number>) => ({
+export const createInstrumentedComponents = (wordIndexRef: React.MutableRefObject<number>, renderId?: string) => ({
     h1: ({ children }: any) => (
         <h1 className="article-content-h1">{instrumentChildren(children, wordIndexRef)}</h1>
     ),
@@ -111,9 +113,10 @@ export const createInstrumentedComponents = (wordIndexRef: React.MutableRefObjec
     h3: ({ children }: any) => (
         <h3 className="article-content-h3">{instrumentChildren(children, wordIndexRef)}</h3>
     ),
-    p: ({ children }: any) => (
-        <p className="article-content-p">{instrumentChildren(children, wordIndexRef)}</p>
-    ),
+    p: ({ children }: any) => {
+        console.log(`[COMP-${renderId}] p() called, ref.current =`, wordIndexRef.current);
+        return <p className="article-content-p">{instrumentChildren(children, wordIndexRef)}</p>;
+    },
     li: ({ children }: any) => (
         <li className="article-content-li">{instrumentChildren(children, wordIndexRef)}</li>
     ),
@@ -128,10 +131,17 @@ export const createInstrumentedComponents = (wordIndexRef: React.MutableRefObjec
     )
 });
 
-export const NotaOriginal: FC<NotaOriginalProps> = ({ article, wordIndexRef }) => {
-    // Use instrumented components when wordIndexRef is provided
+export const NotaOriginal: FC<NotaOriginalProps> = ({ article, wordIndexRef, startIndex = 0 }) => {
+    // Create a FRESH ref object on every render - NOT useMemo
+    // This ensures React StrictMode double-render both start at 0
+    const localWordIndexRef = { current: startIndex };
+    const renderId = Math.random().toString(36).substring(7);
+
+    console.log(`[NOTA-${renderId}] Fresh local ref starting at`, localWordIndexRef.current);
+
+    // Use instrumented components with the LOCAL ref (not parent's ref)
     const components = wordIndexRef
-        ? createInstrumentedComponents(wordIndexRef)
+        ? createInstrumentedComponents(localWordIndexRef)
         : magnusComponents;
 
     return (
@@ -175,7 +185,7 @@ export const NotaOriginal: FC<NotaOriginalProps> = ({ article, wordIndexRef }) =
                             key={index}
                             quote={(block as any).quote || (block as any).text || (block as any).quote_text || ''}
                             author={(block as any).author || (block as any).author_title || ''}
-                            wordIndexRef={wordIndexRef}
+                            wordIndexRef={localWordIndexRef}
                         />
                     );
                 }

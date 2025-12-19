@@ -2,45 +2,61 @@ import React from 'react';
 
 interface InstrumentedTextProps {
     text: string;
-    wordIndexRef: React.MutableRefObject<number>;
+    /** Mutable ref for sequential counting (legacy mode) */
+    wordIndexRef?: React.MutableRefObject<number>;
+    /** Fixed starting index for pre-computed mode */
+    startIndex?: number;
 }
 
 /**
- * Tokenizes text into words and non-words (whitespace, punctuation).
- * Uses Unicode-aware regex for proper Spanish/international text support.
+ * Tokenizes text into words using same regex as backend (/\S+/g).
+ * This ensures word count matches backend TTS extraction.
  */
-const tokenize = (text: string): string[] =>
-    text.match(/[\p{L}\p{N}]+|[^\p{L}\p{N}]+/gu) ?? [];
-
-/**
- * Checks if a token is a "word" (contains letters or numbers).
- */
-const isWordToken = (t: string): boolean => /[\p{L}\p{N}]/u.test(t);
+const tokenize = (text: string): string[] => {
+    const matches = text.match(/\S+/g);
+    return matches || [];
+};
 
 /**
  * Wraps each word in a span with data-tts-word attribute for karaoke highlighting.
- * Non-word tokens (spaces, punctuation) are rendered as-is to preserve layout.
+ * Supports two modes:
+ * 1. wordIndexRef: Legacy mode using mutable ref counter
+ * 2. startIndex: Pre-computed mode with fixed starting index
  */
-export const InstrumentedText: React.FC<InstrumentedTextProps> = ({ text, wordIndexRef }) => {
-    const tokens = tokenize(text);
+export const InstrumentedText: React.FC<InstrumentedTextProps> = ({
+    text,
+    wordIndexRef,
+    startIndex = 0
+}) => {
+    const words = tokenize(text);
+    let localIndex = startIndex;
+
+    // Log when we're about to assign indices 0-5 (to trace where they go)
+    if (wordIndexRef && wordIndexRef.current < 10 && words.length > 0) {
+        console.log('[INST] Assigning indices', wordIndexRef.current, 'to', wordIndexRef.current + words.length - 1, 'for text:', text.substring(0, 50));
+    }
 
     return (
         <>
-            {tokens.map((token, idx) => {
-                // Non-word tokens (spaces, punctuation) rendered without wrapper
-                if (!isWordToken(token)) {
-                    return <React.Fragment key={idx}>{token}</React.Fragment>;
+            {words.map((word, idx) => {
+                // Calculate the word index
+                let wordIndex: number;
+                if (wordIndexRef) {
+                    // Legacy mode: use mutable ref
+                    wordIndex = wordIndexRef.current++;
+                } else {
+                    // Pre-computed mode: use local counter from startIndex
+                    wordIndex = localIndex++;
                 }
 
-                // Word tokens get a span with data-tts-word index
-                const wordIndex = wordIndexRef.current++;
-                if (wordIndex === 0) {
-                    console.log('[INSTRUMENT] Word 0 generated:', token);
-                }
+                // Add space between words (except before first)
+                const prefix = idx > 0 ? ' ' : '';
+
                 return (
-                    <span key={idx} data-tts-word={wordIndex}>
-                        {token}
-                    </span>
+                    <React.Fragment key={idx}>
+                        {prefix}
+                        <span data-tts-word={wordIndex}>{word}</span>
+                    </React.Fragment>
                 );
             })}
         </>

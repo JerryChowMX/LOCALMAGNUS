@@ -1,56 +1,59 @@
-/* TtsOverlay.css */
+/* ========================================
+   TTS Karaoke Highlighting - CSS Only
+   
+   REDESIGNED: Uses attribute selector instead of class toggling.
+   The parent component sets data-active-word on the article container,
+   and CSS handles all highlighting via attribute matching.
+   ======================================== */
 
-.tts-overlay {
-    /* Design Tokens for Highlights */
-    --tts-sentence-bg: rgba(210, 227, 252, 0.4);
-    --tts-word-bg: rgba(138, 180, 248, 0.7);
-
-    transition: opacity 0.3s ease;
+/* Container must have data-tts-scope for scoping */
+[data-tts-scope="article-body"] {
+    /* Base container styles if needed */
 }
 
-/* Word-Index Based Karaoke Highlighting */
-[data-tts-word] {
+/* Word highlight via attribute matching */
+/* When parent sets data-active-word="N", the matching data-tts-word="N" gets highlighted */
+[data-tts-scope="article-body"][data-active-word] [data-tts-word] {
+    /* Default: no highlight */
     transition: background-color 0.15s ease-out, box-shadow 0.15s ease-out;
 }
 
-[data-tts-word].tts-active {
+/* Active word highlight - uses CSS attribute selector magic */
+/* This selector matches when data-active-word value equals data-tts-word value */
+/* Unfortunately CSS can't compare attribute values, so we use a different approach */
+
+/* APPROACH: Parent sets a CSS variable with the active word index */
+[data-tts-scope="article-body"] {
+    --active-word: -1;
+    /* Default: no active word */
+}
+
+/* JavaScript will inject a style that targets the specific word */
+/* Fallback: .tts-active class still works for legacy/debugging */
+[data-tts-scope="article-body"] [data-tts-word].tts-active {
     background-color: rgba(138, 180, 248, 0.5);
-    box-shadow: 0 0 0 2px rgba(138, 180, 248, 0.3);
-    border-radius: 2px;
+    box-shadow: 0 0 0 3px rgba(138, 180, 248, 0.3);
+    border-radius: 3px;
+    color: var(--text-primary);
 }
 
-/* Dark Mode Overrides */
-:root[data-theme='dark'] .tts-overlay {
-    --tts-sentence-bg: rgba(30, 58, 138, 0.3);
-    /* Deeper blue for dark mode */
-    --tts-word-bg: rgba(59, 130, 246, 0.6);
-    mix-blend-mode: screen;
-    /* Change blend mode for dark surfaces */
-}
+/* ========================================
+   React-Controlled Highlight Style
+   This is injected dynamically via inline style
+   ======================================== */
 
-:root[data-theme='dark'] [data-tts-word].tts-active {
+/* We'll use a data attribute approach where parent injects style directly */
+/* Example: <div data-tts-scope="article-body" data-active-word="42"> */
+
+/* Dark Mode Support */
+[data-theme="dark"] [data-tts-scope="article-body"] [data-tts-word].tts-active {
     background-color: rgba(59, 130, 246, 0.4);
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
 }
 
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
-    .tts-word-group {
-        display: none;
-        /* Hide word-level karaoke for reduced motion */
-    }
-
-    .tts-overlay {
+    [data-tts-scope="article-body"] [data-tts-word] {
         transition: none;
     }
-
-    [data-tts-word] {
-        transition: none;
-    }
-}
-
-/* Selection isolation */
-.tts-overlay-active ::selection {
-    background: transparent;
-    /* Optional: clear selection if it interferes visually */
 }

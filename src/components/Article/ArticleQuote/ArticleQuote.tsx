@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { IconCopy, IconShare, IconCheck, IconQuote } from '@tabler/icons-react';
+import React from 'react';
 import { InstrumentedText } from '../../../modules/articles/tts/components/InstrumentedText';
-import '../Quote/Quote.css';
+import './ArticleQuote.css';
 
 interface ArticleQuoteProps {
     quote: string;
@@ -10,85 +9,56 @@ interface ArticleQuoteProps {
     wordIndexRef?: React.MutableRefObject<number>;
 }
 
-export const ArticleQuote = ({ quote, author, wordIndexRef }: ArticleQuoteProps) => {
-    const [showAuthor, setShowAuthor] = useState(false);
-    const [copied, setCopied] = useState(false);
-
-    const handleCopy = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        navigator.clipboard.writeText(`"${quote}" - ${author}`);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-    };
-
-    const handleShare = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        if (navigator.share) {
-            navigator.share({
-                title: 'Magnus Quote',
-                text: `"${quote}" - ${author}`,
-            }).catch(console.error);
-        } else {
-            console.log("Share API not available");
-        }
-    };
-
-    const toggleAuthor = () => setShowAuthor(!showAuthor);
-
+/**
+ * ArticleQuote: Simplified inline quote component for articles.
+ * Designed for clean reading flow and TTS karaoke compatibility.
+ * 
+ * IMPORTANT: Decorative characters (" ") and em-dash (—) are placed OUTSIDE
+ * the InstrumentedText to avoid desyncing word indices with backend TTS.
+ */
+export const ArticleQuote: React.FC<ArticleQuoteProps> = ({ quote, author, wordIndexRef }) => {
     // Render text with optional instrumentation for TTS karaoke
-    const renderText = (text: string) => {
+    const renderQuoteText = () => {
         if (wordIndexRef) {
-            return <InstrumentedText text={text} wordIndexRef={wordIndexRef} />;
+            return (
+                <>
+                    <span className="article-quote-mark">"</span>
+                    <InstrumentedText text={quote} wordIndexRef={wordIndexRef} />
+                    <span className="article-quote-mark">"</span>
+                </>
+            );
         }
-        return text;
+        return `"${quote}"`;
+    };
+
+    const renderAuthor = () => {
+        if (!author) return null;
+        if (wordIndexRef) {
+            return (
+                <>
+                    <span className="article-quote-dash">— </span>
+                    <InstrumentedText text={author} wordIndexRef={wordIndexRef} />
+                </>
+            );
+        }
+        return `— ${author}`;
     };
 
     return (
-        <div className="quote-wrapper">
-
-            {/* Component Container */}
-            <div className="quote-content-container">
-                <div
-                    className="quote-card"
-                    onClick={toggleAuthor}
-                >
-                    <IconQuote size={32} className="quote-icon-main" />
-
-                    {/* Content Container - Grid for alignment */}
-                    <div className="quote-grid">
-                        {/* Quote - Sets the height, simply fades out */}
-                        <p className={`quote-text-element ${showAuthor ? 'hidden' : ''}`}>
-                            {renderText(quote)}
-                        </p>
-
-                        {/* Author - Overlay */}
-                        <div className={`quote-author-element ${showAuthor ? 'visible' : ''}`}>
-                            <span className="quote-author-name">
-                                {renderText(author)}
-                            </span>
-                        </div>
-                    </div>
-
-                </div>
-
-                {/* Floating Actions */}
-                <div className="quote-actions">
-                    <button
-                        onClick={handleCopy}
-                        title="Copy text"
-                        className="quote-action-btn"
-                    >
-                        {copied ? <IconCheck size={16} /> : <IconCopy size={16} />}
-                    </button>
-                    <button
-                        onClick={handleShare}
-                        title="Share"
-                        className="quote-action-btn"
-                    >
-                        <IconShare size={16} />
-                    </button>
-                </div>
+        <blockquote className="article-quote">
+            <div className="article-quote-bar" aria-hidden="true" />
+            <div className="article-quote-content">
+                <p className="article-quote-text">
+                    {renderQuoteText()}
+                </p>
+                {author && (
+                    <cite className="article-quote-author">
+                        {renderAuthor()}
+                    </cite>
+                )}
             </div>
-        </div>
+        </blockquote>
     );
 };
+
+export default ArticleQuote;

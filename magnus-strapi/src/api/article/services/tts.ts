@@ -26,15 +26,24 @@ export default () => {
     return {
         /**
          * Strips markdown formatting to plain text for TTS.
+         * MUST match frontend's markdownToPlainText exactly.
+         * Pipeline version: 1.0.0
          */
         markdownToPlainText(md: string): string {
             return String(md)
-                .replace(/```[\s\S]*?```/g, '')       // code fences
-                .replace(/`[^`]*`/g, '')              // inline code
-                .replace(/!\[[^\]]*]\([^)]*\)/g, '')  // images
-                .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1') // links → text
-                .replace(/[#>*_~\-]+/g, ' ')          // common md chars
-                .replace(/\s+/g, ' ')
+                .replace(/```[\s\S]*?```/g, '')           // code fences
+                .replace(/`([^`]+)`/g, '$1')              // inline code → preserve text
+                .replace(/!\[[^\]]*\]\([^)]*\)/g, '')     // images → remove
+                .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')  // [text](url) → text
+                .replace(/\*\*([^*]+)\*\*/g, '$1')        // **bold** → bold
+                .replace(/\*([^*]+)\*/g, '$1')            // *italic* → italic
+                .replace(/_([^_]+)_/g, '$1')              // _italic_ → italic
+                .replace(/^#{1,6}\s*/gm, '')              // headers → remove markers
+                .replace(/^[-*+]\s+/gm, '')               // list markers → remove
+                .replace(/^\d+\.\s+/gm, '')               // numbered lists → remove
+                .replace(/^>\s*/gm, '')                   // blockquotes → remove marker
+                .replace(/\n+/g, ' ')                     // newlines → space
+                .replace(/\s+/g, ' ')                     // collapse whitespace
                 .trim();
         },
 
@@ -42,36 +51,95 @@ export default () => {
          * Extracts spoken text from content blocks.
          * ONLY includes: rich-text body, quote text, quote author
          * EXCLUDES: captions, hero image, titles, UI elements
+         * 
+         * Returns both canonical text AND block ranges for frontend sync.
          */
-        extractCanonicalText(blocks: any[]): string {
-            if (!blocks || !Array.isArray(blocks)) return '';
-            const parts: string[] = [];
+        extractCanonicalTextWithRanges(blocks: any[]): {
+            canonicalText: string;
+            blockRanges: Array<{ blockId: string; fieldPath: string; startToken: number; tokenCount: number }>;
+        } {
+            if (!blocks || !Array.isArray(blocks)) {
+                return { canonicalText: '', blockRanges: [] };
+            }
 
-            for (const block of blocks) {
+            const parts: string[] = [];
+            const blockRanges: Array<{ blockId: string; fieldPath: string; startToken: number; tokenCount: number }> = [];
+            let currentToken = 0;
+
+            for (let i = 0; i < blocks.length; i++) {
+                const block = blocks[i];
+                const blockId = block.id?.toString() || `block-${i}`;
+
                 switch (block.__component) {
                     case 'content.rich-text': {
                         const content = block.content || '';
                         const plain = this.markdownToPlainText(content);
-                        if (plain.trim()) parts.push(plain.trim());
+                        const normalized = this.normalizeText(plain);
+                        if (normalized) {
+                            const tokens = normalized.match(/\S+/g) || [];
+                            blockRanges.push({
+                                blockId,
+                                fieldPath: 'content',
+                                startToken: currentToken,
+                                tokenCount: tokens.length
+                            });
+                            currentToken += tokens.length;
+                            parts.push(normalized);
+                        }
                         break;
                     }
                     case 'content.quote': {
-                        const quote = (block.quote_text || '').trim();
-                        const author = (block.author || '').trim();
-                        if (quote) parts.push(quote);
-                        if (author) parts.push(author);
+                        const quote = this.normalizeText(block.quote_text || '');
+                        const author = this.normalizeText(block.author || '');
+
+                        if (quote) {
+                            const quoteTokens = quote.match(/\S+/g) || [];
+                            blockRanges.push({
+                                blockId,
+                                fieldPath: 'quote_text',
+                                startToken: currentToken,
+                                tokenCount: quoteTokens.length
+                            });
+                            currentToken += quoteTokens.length;
+                            parts.push(quote);
+                        }
+
+                        if (author) {
+                            const authorTokens = author.match(/\S+/g) || [];
+                            blockRanges.push({
+                                blockId,
+                                fieldPath: 'author',
+                                startToken: currentToken,
+                                tokenCount: authorTokens.length
+                            });
+                            currentToken += authorTokens.length;
+                            parts.push(author);
+                        }
                         break;
                     }
                     // EXCLUDED: content.single-image captions, gallery captions, etc.
                 }
             }
 
-            // Join with paragraph breaks for natural pauses
-            return this.normalizeText(parts.join('\n\n'));
+            // Join with spaces (already normalized)
+            const canonicalText = parts.join(' ');
+            return { canonicalText, blockRanges };
         },
 
+        /**
+         * Legacy wrapper for backward compatibility
+         */
+        extractCanonicalText(blocks: any[]): string {
+            return this.extractCanonicalTextWithRanges(blocks).canonicalText;
+        },
+
+        /**
+         * Normalizes text for TTS consistency.
+         * Uses NFC (canonical composition) - MUST match frontend exactly.
+         * Pipeline version: 1.0.0
+         */
         normalizeText(text: string): string {
-            return text.normalize('NFKD')
+            return text.normalize('NFC')
                 .replace(/[\u2013\u2014]/g, '-')
                 .replace(/[\u2018\u2019]/g, "'")
                 .replace(/[\u201C\u201D]/g, '"')
@@ -119,6 +187,7 @@ export default () => {
         async processTts(documentId: string, retryCount = 0, forceRegenerate = false) {
             const MAX_RETRIES = 5;
             const RETRY_DELAY_MS = 3000;
+            const PIPELINE_VERSION = '1.0.0';
 
             strapi.log.info(`[TTS] LOUD: processTts for ${documentId} (attempt ${retryCount + 1})${forceRegenerate ? ' [FORCE]' : ''}`);
 
@@ -139,8 +208,12 @@ export default () => {
                     return;
                 }
 
-                const canonicalText = this.extractCanonicalText(article.content_blocks);
+                // Extract canonical text WITH block ranges for frontend sync
+                const { canonicalText, blockRanges } = this.extractCanonicalTextWithRanges(article.content_blocks);
                 const currentHash = this.generateContentHash(canonicalText);
+                const tokenCount = (canonicalText.match(/\S+/g) || []).length;
+
+                strapi.log.info(`[TTS] LOUD: Extracted ${tokenCount} tokens from ${blockRanges.length} blocks`);
 
                 // If content hasn't changed and not forcing, we're done.
                 if (!forceRegenerate && article.tts_status === 'ready' && article.tts_hash === currentHash && article.tts_audio) {
@@ -169,11 +242,43 @@ export default () => {
                 }
 
                 const { audioBuffer, wordTimings } = result;
-                strapi.log.info(`[TTS] LOUD: Synthesis SUCCESS (${audioBuffer.length} bytes). Uploading...`);
+                strapi.log.info(`[TTS] LOUD: Synthesis SUCCESS (${audioBuffer.length} bytes, ${wordTimings.length} word timings)`);
 
-                // 3. ASSET UPLOAD
+                // CRITICAL VALIDATION: Token count must match word timings
+                if (wordTimings.length !== tokenCount) {
+                    const mismatchError = `Token count mismatch: extracted ${tokenCount} tokens but Google returned ${wordTimings.length} timings`;
+                    strapi.log.error(`[TTS] LOUD: ${mismatchError}`);
+
+                    await (strapi as any).documents('api::article.article').update({
+                        documentId,
+                        status: 'published',
+                        data: {
+                            tts_status: 'error',
+                            tts_last_error: mismatchError
+                        }
+                    });
+                    return; // DO NOT ship broken metadata
+                }
+
+                strapi.log.info(`[TTS] LOUD: Token validation PASSED (${tokenCount} tokens)`);
+
+                // 3. BUILD ENHANCED METADATA with contract fields
+                const enhancedMetadata = {
+                    wordTimings,
+                    canonicalText,
+                    tokenCount,
+                    pipelineVersion: PIPELINE_VERSION,
+                    canonicalTextHash: currentHash,
+                    blockRanges
+                };
+
+                // 4. ASSET UPLOAD
                 const audioFile = await this.uploadToMediaLibrary(audioBuffer, `tts_${documentId}.mp3`, 'audio/mpeg');
-                const metadataFile = await this.uploadToMediaLibrary(Buffer.from(JSON.stringify(wordTimings)), `tts_${documentId}_meta.json`, 'application/json');
+                const metadataFile = await this.uploadToMediaLibrary(
+                    Buffer.from(JSON.stringify(enhancedMetadata)),
+                    `tts_${documentId}_meta.json`,
+                    'application/json'
+                );
 
                 // 4. ONE FINAL WRITE
                 await (strapi as any).documents('api::article.article').update({

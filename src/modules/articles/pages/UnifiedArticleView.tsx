@@ -22,8 +22,6 @@ import { Infografia } from '../components/FormatViews/Infografia';
 // TTS Components
 import { ArticleTtsEntry } from '../tts/components/ArticleTtsEntry';
 import { TtsExperience, type TtsExperienceHandle } from '../tts/components/TtsExperience';
-import { InstrumentedText } from '../tts/components/InstrumentedText';
-import { createInstrumentedComponents } from '../components/FormatViews/NotaOriginal';
 
 // Hooks & Utils
 import { useStrapiArticle } from '../../../hooks/useStrapiArticles';
@@ -55,6 +53,7 @@ export const UnifiedArticleView = () => {
     const [ttsCurrentTime, setTtsCurrentTime] = useState(0);
     const [ttsDuration, setTtsDuration] = useState(0);
     const [ttsPlaybackRate, setTtsPlaybackRate] = useState(1);
+    const [activeWordIndex, setActiveWordIndex] = useState(-1); // For CSS-based highlighting
     const articleContainerRef = useRef<HTMLDivElement>(null);
     const ttsRef = useRef<TtsExperienceHandle>(null);
     const ttsWordIndexRef = useRef<number>(0);
@@ -171,26 +170,25 @@ export const UnifiedArticleView = () => {
     // 3. Stable Instrumented Article Content (ROBUST KARAOKE)
     // We split this into header and body to allow the TTS player to sit in between
     // without triggering re-instrumentation on every time update.
+    // NOTE: Title and summary are NOT instrumented because the TTS audio only reads body content.
     const instrumented = useMemo(() => {
         if (!article || !articleAttrs) return null;
 
-        // Reset counter at the start of this stable block
+        // Reset counter at the start - body content starts at index 0
         ttsWordIndexRef.current = 0;
 
+        // Header is NOT instrumented - TTS doesn't read title/summary
         const header = (
             <div className="standard-article-header">
                 <Text variant="caption" className="standard-article-date">
                     {formatDate(article.publishedAt)}
                 </Text>
                 <Heading level={1} className="standard-article-title">
-                    <InstrumentedText text={article.title} wordIndexRef={ttsWordIndexRef} />
+                    {article.title}
                 </Heading>
                 {articleAttrs.summary && (
                     <div className="standard-article-dek">
-                        <ReactMarkdown
-                            remarkPlugins={[remarkGfm]}
-                            components={createInstrumentedComponents(ttsWordIndexRef)}
-                        >
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
                             {articleAttrs.summary}
                         </ReactMarkdown>
                     </div>
@@ -198,10 +196,14 @@ export const UnifiedArticleView = () => {
             </div>
         );
 
+        // Body IS instrumented - this is what the TTS audio reads
+        // Using key to force fresh instance on each article
         const body = (
             <NotaOriginal
+                key={`nota-body-${article.id}`}
                 article={articleAttrs as any}
                 wordIndexRef={ttsWordIndexRef}
+                startIndex={0}
             />
         );
 
@@ -258,8 +260,16 @@ export const UnifiedArticleView = () => {
                     </div>
                 )}
 
+                {/* PHASE 2: Highlighting disabled until verification system is complete */}
+                {/* Phase 3 will enable this with verified indices from blockMappings */}
+                {/* Legacy +40 offset removed - no more render-order indexing */}
+
                 {/* Article Content Structure */}
-                <div className="standard-article-container" data-tts-scope="article-body">
+                <div
+                    className="standard-article-container"
+                    data-tts-scope="article-body"
+                    data-active-word={isTtsActive ? activeWordIndex : undefined}
+                >
                     {/* Instrumented Header */}
                     {instrumented.header}
 
@@ -327,11 +337,24 @@ export const UnifiedArticleView = () => {
                         ref={ttsRef}
                         audioUrl={`${STRAPI_ORIGIN}${article.tts_audio.url}`}
                         metadataUrl={`${STRAPI_ORIGIN}${article.tts_metadata.url}`}
-                        articleText={extractTextFromBlocks(article.blocks || [])}
+                        articleBlocks={article.blocks || []}
+                        articleId={article.documentId}
                         isPaused={isTtsPaused}
                         playbackRate={ttsPlaybackRate}
-                        onEnded={() => setIsTtsActive(false)}
+                        onEnded={() => {
+                            setIsTtsActive(false);
+                            setActiveWordIndex(-1);
+                        }}
                         onTimeUpdate={handleTtsTimeUpdate}
+                        onActiveWordChange={(wordIndex) => {
+                            console.log('[UAV] onActiveWordChange received:', wordIndex);
+                            setActiveWordIndex(wordIndex);
+                        }}
+                        onVerificationChange={(isVerified, error) => {
+                            if (!isVerified) {
+                                console.warn('[UAV] TTS verification failed:', error);
+                            }
+                        }}
                     />
                 )}
             </div>
