@@ -1,0 +1,218 @@
+/* PodcastHubPage Styles */
+/* Extracted from inline styles for better maintainability */
+
+.podcast-player {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-primary);
+    overflow: hidden;
+}
+
+/* === TOP SECTION: Immersive Cover === */
+.podcast-player__top-section {
+    flex: 1;
+    position: relative;
+    background-color: var(--surface-base);
+    overflow: hidden;
+}
+
+.podcast-player__background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--bg-tertiary);
+    background-size: cover;
+    background-position: center;
+}
+
+.podcast-player__gradient-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+}
+
+.podcast-player__header-space {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+}
+
+.podcast-player__text-overlay {
+    position: absolute;
+    bottom: 24px;
+    left: 24px;
+    right: 24px;
+    z-index: 20;
+    color: #F2EEE8; /* Warm Milk - always visible on dark gradient */
+    text-align: center;
+}
+
+.podcast-player__text-overlay .episode-tag {
+    opacity: 0.9;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+.podcast-player__text-overlay .episode-title {
+    font-size: 24px;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    color: #F2EEE8; /* Warm Milk - always visible on dark gradient */
+    font-weight: 700;
+}
+
+.podcast-player__playlist-btn {
+    position: absolute;
+    top: 115px;
+    right: 16px;
+    z-index: 40;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--overlay-bg);
+    border-radius: 0;
+    border: none;
+    cursor: pointer;
+    color: #F2EEE8; /* Warm Milk - visible on dark overlay */
+}
+
+/* === BOTTOM SECTION: Controls === */
+.podcast-player__bottom-section {
+    height: auto;
+    padding: 32px 24px;
+    background-color: var(--bg-primary);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 32px;
+    border-top: 1px solid var(--border-subtle);
+}
+
+/* Progress Row */
+.podcast-player__progress-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+}
+
+.podcast-player__time {
+    min-width: 35px;
+}
+
+.podcast-player__time--end {
+    text-align: right;
+}
+
+.podcast-player__progress-bar-container {
+    flex: 1;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    touch-action: none;
+}
+
+.podcast-player__track {
+    width: 100%;
+    height: 4px;
+    background-color: var(--bg-tertiary);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.podcast-player__fill {
+    height: 100%;
+    background-color: var(--magnus-blue);
+    border-radius: 2px;
+    transition: none;
+}
+
+/* Controls Row */
+.podcast-player__controls-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 8px;
+}
+
+.podcast-player__action-icon {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: var(--text-secondary);
+    background: none;
+    border: none;
+}
+
+.podcast-player__speed-btn {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: var(--text-secondary);
+    background: none;
+    border: none;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.podcast-player__nav-btn {
+    width: 56px;
+    height: 56px;
+    background-color: var(--bg-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    color: var(--text-primary);
+}
+
+.podcast-player__nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.podcast-player__play-btn {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--text-primary);
+}
+
+/* Loading State */
+.podcast-player--loading {
+    justify-content: center;
+    align-items: center;
+}

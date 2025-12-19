@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-// Removed PageWrapper to allow full-screen immersive design without padding/width constraints
 import { usePodcastEngine } from '../hooks/usePodcastEngine';
 import { podcastApi } from '../../../services/podcastApi';
 import { HeaderCenteredStack } from '../../../components/Header/HeaderCenteredStack';
 import { Icons } from '../../../components/Icons';
 import { Heading, Text, Caption } from '../../../components/Typography/Typography';
 import { IconHeart, IconChevronLeft, IconChevronRight, IconPlaylist } from '@tabler/icons-react';
+import './PodcastHubPage.css';
 
 // Helper
 const formatTime = (seconds: number) => {
@@ -14,169 +14,6 @@ const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
     const s = Math.floor(seconds % 60);
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-};
-
-// Styles
-const styles = {
-    container: {
-        height: '100vh',
-        width: '100vw',
-        display: 'flex',
-        flexDirection: 'column' as const,
-        backgroundColor: 'var(--bg-primary)', // Adapts to Dark Mode
-        overflow: 'hidden'
-    },
-    topSection: {
-        flex: '1',
-        position: 'relative' as const,
-        backgroundColor: 'var(--surface-base)', // Dark mode compatible
-        overflow: 'hidden'
-    },
-    // The image itself
-    backgroundImage: (url?: string) => ({
-        position: 'absolute' as const,
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundImage: url ? `url(${url})` : undefined,
-        backgroundColor: 'var(--bg-tertiary)', // Fallback uses token
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-    }),
-    // Gradient overlay for text readability
-    gradientOverlay: {
-        position: 'absolute' as const,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: '60%',
-        background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent)'
-    },
-    headerSpace: {
-        position: 'absolute' as const,
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 50
-    },
-    textOverlay: {
-        position: 'absolute' as const,
-        bottom: '24px',
-        left: '24px',
-        right: '24px',
-        zIndex: 20,
-        color: '#F2EEE8', // Warm Milk - always visible on dark gradient
-        textAlign: 'center' as const
-    },
-    // Top right action button (Playlist)
-    topRightAction: {
-        position: 'absolute' as const,
-        top: '115px', // Below header
-        right: '16px',
-        zIndex: 40,
-        width: '44px',
-        height: '44px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: 'var(--overlay-bg)',
-        borderRadius: '0', // Sharp corners
-        border: 'none',
-        cursor: 'pointer',
-        color: '#F2EEE8' // Warm Milk - visible on dark overlay
-    },
-    // Updated Bottom Section layout
-    bottomSection: {
-        height: 'auto',
-        padding: '32px 24px',
-        backgroundColor: 'var(--bg-primary)',
-        display: 'flex',
-        flexDirection: 'column' as const,
-        justifyContent: 'flex-start',
-        gap: '32px',
-        borderTop: '1px solid var(--border-subtle)'
-    },
-    // Progress Row (Time - Bar - Time)
-    progressRow: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '12px',
-        width: '100%',
-        color: 'var(--text-secondary)',
-        fontSize: '12px',
-        fontFamily: 'Inter, sans-serif',
-        fontWeight: 500
-    },
-    progressBarContainer: {
-        flex: 1,
-        height: '24px',
-        display: 'flex',
-        alignItems: 'center',
-        cursor: 'pointer',
-        position: 'relative' as const,
-        touchAction: 'none' as const
-    },
-    track: {
-        width: '100%',
-        height: '4px',
-        backgroundColor: 'var(--bg-tertiary)',
-        borderRadius: '2px',
-        overflow: 'hidden'
-    },
-    fill: (percent: number) => ({
-        width: `${percent}%`,
-        height: '100%',
-        backgroundColor: 'var(--magnus-blue)',
-        borderRadius: '2px',
-        transition: 'none'
-    }),
-
-    // Unified Controls Row: [Heart] [Prev] [Play] [Next] [Speed]
-    controlsRow: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '100%',
-        padding: '0 8px'
-    },
-    // Side action icons (Heart, Speed)
-    actionIcon: {
-        width: '44px',
-        height: '44px',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        cursor: 'pointer',
-        color: 'var(--text-secondary)',
-        background: 'none',
-        border: 'none'
-    },
-    // Square navigation buttons (Prev, Next)
-    squareBtn: {
-        width: '56px',
-        height: '56px',
-        backgroundColor: 'var(--bg-secondary)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        border: 'none',
-        borderRadius: '0',
-        cursor: 'pointer',
-        color: 'var(--text-primary)'
-    },
-    // Central play button (icon only, no container)
-    playBtn: {
-        width: '64px',
-        height: '64px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        border: 'none',
-        background: 'none',
-        cursor: 'pointer',
-        color: 'var(--text-primary)'
-    }
 };
 
 export const PodcastHubPage = () => {
@@ -267,8 +104,8 @@ export const PodcastHubPage = () => {
 
     if (!currentPodcast) {
         return (
-            <div style={{ ...styles.container, justifyContent: 'center', alignItems: 'center' }}>
-                <div style={styles.headerSpace}>
+            <div className="podcast-player podcast-player--loading">
+                <div className="podcast-player__header-space">
                     <HeaderCenteredStack
                         variant="dark"
                         currentDate={currentDate}
@@ -276,23 +113,26 @@ export const PodcastHubPage = () => {
                         onBack={() => navigate('/')}
                     />
                 </div>
-                <Text variant="body" style={{ color: '#000' }}>Cargando podcasts...</Text>
+                <Text variant="body">Cargando podcasts...</Text>
             </div>
         );
     }
 
     return (
-        <div style={styles.container}>
+        <div className="podcast-player">
             {/* TOP SECTION: IMMERSIVE */}
-            <div style={styles.topSection}>
+            <div className="podcast-player__top-section">
                 {/* Background Image */}
-                <div style={styles.backgroundImage(currentPodcast.coverUrl)} />
+                <div
+                    className="podcast-player__background-image"
+                    style={{ backgroundImage: currentPodcast.coverUrl ? `url(${currentPodcast.coverUrl})` : undefined }}
+                />
 
                 {/* Gradient Scrim */}
-                <div style={styles.gradientOverlay} />
+                <div className="podcast-player__gradient-overlay" />
 
                 {/* Header (Absolute) */}
-                <div style={styles.headerSpace}>
+                <div className="podcast-player__header-space">
                     <HeaderCenteredStack
                         variant="dark"
                         currentDate={currentDate}
@@ -302,66 +142,57 @@ export const PodcastHubPage = () => {
                 </div>
 
                 {/* Playlist Button (Top Right) */}
-                <button style={styles.topRightAction}>
+                <button className="podcast-player__playlist-btn">
                     <IconPlaylist size={22} stroke={1.5} />
                 </button>
 
                 {/* Text Overlay */}
-                <div style={styles.textOverlay}>
-                    <Caption style={{
-                        opacity: 0.9,
-                        marginBottom: '8px',
-                        letterSpacing: '1px',
-                        fontSize: '11px',
-                        textTransform: 'uppercase'
-                    }}>
+                <div className="podcast-player__text-overlay">
+                    <Caption className="episode-tag">
                         EPISODIO {currentIndex + 1}
                     </Caption>
-                    <Heading level={2} style={{
-                        fontSize: '24px',
-                        lineHeight: '1.2',
-                        marginBottom: '8px',
-                        color: '#F2EEE8', // Warm Milk - always visible on dark gradient
-                        fontWeight: '700'
-                    }}>
+                    <Heading level={2} className="episode-title">
                         {currentPodcast.title}
                     </Heading>
                 </div>
             </div>
 
             {/* BOTTOM SECTION: CONTROLS */}
-            <div style={styles.bottomSection}>
+            <div className="podcast-player__bottom-section">
 
                 {/* Progress Row (Time - Bar - Time) */}
-                <div style={styles.progressRow}>
-                    <span style={{ minWidth: '35px' }}>{formatTime(currentTime)}</span>
+                <div className="podcast-player__progress-row">
+                    <span className="podcast-player__time">{formatTime(currentTime)}</span>
 
                     <div
                         ref={progressBarRef}
-                        style={styles.progressBarContainer}
+                        className="podcast-player__progress-bar-container"
                         onPointerDown={handlePointerDown}
                         onPointerMove={handlePointerMove}
                         onPointerUp={handlePointerUp}
                     >
-                        <div style={styles.track}>
-                            <div style={styles.fill(currentProgress)} />
+                        <div className="podcast-player__track">
+                            <div
+                                className="podcast-player__fill"
+                                style={{ width: `${currentProgress}%` }}
+                            />
                         </div>
                     </div>
 
-                    <span style={{ minWidth: '35px', textAlign: 'right' }}>{formatTime(displayDuration)}</span>
+                    <span className="podcast-player__time podcast-player__time--end">{formatTime(displayDuration)}</span>
                 </div>
 
                 {/* Unified Controls Row: [Heart] [Prev] [Play] [Next] [Speed] */}
-                <div style={styles.controlsRow}>
+                <div className="podcast-player__controls-row">
                     {/* Heart (Favorite) */}
-                    <button style={styles.actionIcon}>
+                    <button className="podcast-player__action-icon">
                         <IconHeart size={24} stroke={1.5} />
                     </button>
 
                     {/* Previous */}
                     <button
                         onClick={previous}
-                        style={{ ...styles.squareBtn, opacity: currentIndex === 0 ? 0.5 : 1 }}
+                        className="podcast-player__nav-btn"
                         disabled={currentIndex === 0}
                     >
                         <IconChevronLeft size={24} stroke={2} />
@@ -370,7 +201,7 @@ export const PodcastHubPage = () => {
                     {/* Play/Pause (Center) */}
                     <button
                         onClick={isPlaying ? pause : play}
-                        style={styles.playBtn}
+                        className="podcast-player__play-btn"
                     >
                         {isPlaying ? (
                             <Icons.pause size={48} fill="currentColor" />
@@ -382,7 +213,7 @@ export const PodcastHubPage = () => {
                     {/* Next */}
                     <button
                         onClick={next}
-                        style={styles.squareBtn}
+                        className="podcast-player__nav-btn"
                     >
                         <IconChevronRight size={24} stroke={2} />
                     </button>
@@ -390,7 +221,7 @@ export const PodcastHubPage = () => {
                     {/* Speed */}
                     <button
                         onClick={toggleSpeed}
-                        style={{ ...styles.actionIcon, fontWeight: 600, fontSize: '14px' }}
+                        className="podcast-player__speed-btn"
                     >
                         {playbackRate}x
                     </button>
