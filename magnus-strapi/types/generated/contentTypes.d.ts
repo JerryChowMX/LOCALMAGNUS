@@ -711,6 +711,47 @@ export interface ApiEpaperEpaper extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiPodcastPodcast extends Struct.CollectionTypeSchema {
+  collectionName: 'podcasts';
+  info: {
+    description: 'Daily audio content';
+    displayName: 'Podcast';
+    pluralName: 'podcasts';
+    singularName: 'podcast';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    audio_file: Schema.Attribute.Media<'files' | 'audios'> &
+      Schema.Attribute.Required;
+    author: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Magnus Audio'>;
+    cover_art: Schema.Attribute.Media<'images'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    duration: Schema.Attribute.Integer;
+    info: Schema.Attribute.Text;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::podcast.podcast'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    related_article: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::article.article'
+    >;
+    slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiTagTag extends Struct.CollectionTypeSchema {
   collectionName: 'tags';
   info: {
@@ -1313,6 +1354,7 @@ declare module '@strapi/strapi' {
       'api::category.category': ApiCategoryCategory;
       'api::comment.comment': ApiCommentComment;
       'api::epaper.epaper': ApiEpaperEpaper;
+      'api::podcast.podcast': ApiPodcastPodcast;
       'api::tag.tag': ApiTagTag;
       'api::video-post.video-post': ApiVideoPostVideoPost;
       'plugin::content-releases.release': PluginContentReleasesRelease;

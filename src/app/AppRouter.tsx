@@ -34,6 +34,8 @@ const StagingMenu = lazy(() => import('../modules/staging/StagingMenu').then(mod
 const PlaygroundRouter = lazy(() => import('./routes/PlaygroundRouter').then(module => ({ default: module.PlaygroundRouter })));
 const StrapiTestPage = lazy(() => import('../modules/playground/pages/StrapiTestPage'));
 const StandardOneRoute = lazy(() => import('./routes/article/StandardOneRoute').then(module => ({ default: module.StandardOneRoute })));
+const PodcastTestPage = lazy(() => import('../modules/podcasts/pages/PodcastTestPage').then(module => ({ default: module.PodcastTestPage })));
+const PodcastHubPage = lazy(() => import('../modules/podcasts/pages/PodcastHubPage').then(module => ({ default: module.PodcastHubPage })));
 
 // Error Pages
 const NotFoundPage = lazy(() => import('../modules/errors/pages/NotFoundPage').then(module => ({ default: module.NotFoundPage })));
@@ -100,6 +102,11 @@ export const AppRouter = () => {
                             <Route path="/EPaper/:date" element={<EpaperHubPage />} />
                             <Route path="/EPaper/:date/:editionNumber" element={<EpaperEditionPage />} />
 
+
+                            {/* Podcasts del Día Routes */}
+                            <Route path="/PodcastsDelDia" element={<RedirectToToday />} />
+                            <Route path="/PodcastsDelDia/:date" element={<PodcastHubPage />} />
+
                             {/* Resumen */}
                             <Route path={routes.ejecutivo} element={<ResumenEjecutivoPage />} />
 
@@ -113,6 +120,10 @@ export const AppRouter = () => {
                                 }
                             />
                         </Route>
+
+
+                        {/* Podcasts Test Route (Phase 0) */}
+                        <Route path="/test-podcasts" element={<PodcastTestPage />} />
 
                         {/* 404 Catch-all */}
                         <Route path="*" element={<NotFoundPage />} />

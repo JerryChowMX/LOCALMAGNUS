@@ -63,6 +63,15 @@ export const HomeHubsPage: React.FC = () => {
                     variant="glass"
                     size="lg"
                     fullWidth
+                    onClick={() => navigate(`/PodcastsDelDia/${today}`)}
+                >
+                    Podcasts del día
+                </Button>
+
+                <Button
+                    variant="glass"
+                    size="lg"
+                    fullWidth
                     onClick={() => navigate(`/EPaper/${today}`)}
                 >
                     E-Paper
