@@ -134,7 +134,7 @@ export const ArticleTtsEntry: React.FC<ArticleTtsEntryProps> = ({
     // Handle drag start
     const handleDragStart = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
         if (!isActive || !onSeek) return;
-        e.preventDefault();
+        // e.preventDefault(); // REMOVED: Breaks passive listeners in React 18
         setIsDragging(true);
 
         const time = getPositionFromEvent(e);

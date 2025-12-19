@@ -3,12 +3,14 @@ import type { PlaybackStatus } from '../types';
 
 /**
  * Word timing from backend TTS metadata.
- * Uses backend field names: start_time/end_time (milliseconds)
+ * MATCHES RUNTIME DATA: { startMs, endMs, charIndex, wordLength }
  */
 interface TtsWordTiming {
-    word: string;
-    start_time: number;  // milliseconds
-    end_time: number;    // milliseconds
+    startMs: number;
+    endMs: number;
+    charIndex: number;
+    wordLength: number;
+    word?: string; // Optional or missing in new format
 }
 
 interface UseTtsControllerProps {
@@ -30,23 +32,44 @@ function findActiveWordIndex(timings: TtsWordTiming[], timeMs: number): number {
     let right = timings.length - 1;
     let result = -1;
 
+    // Fast tracking optimization: check cached index first? 
+    // For now, standard binary search is fast enough for < 2000 items.
+
     while (left <= right) {
         const mid = Math.floor((left + right) / 2);
         const timing = timings[mid];
 
-        if (timing.start_time <= timeMs && timeMs < timing.end_time) {
+        if (timing.startMs <= timeMs && timeMs < timing.endMs) {
             return mid;
         }
 
-        if (timing.start_time <= timeMs) {
-            result = mid;
+        if (timing.startMs <= timeMs) {
+            result = mid; // Candidate (if we are in a gap, showing the previous word is safer than next)
             left = mid + 1;
         } else {
             right = mid - 1;
         }
     }
 
-    return result;
+    // Strict gap check: if we found a "previous" word but we are actually in a silence gap > 500ms,
+    // we might want to return -1. But for now, returning the last passed word is acceptable.
+    // However, exact match logic above handles 'inside' the word.
+    // If we exit loop, we are in a gap or before first / after last.
+
+    // Check if result is valid (within reasonable margin? or just stick to exact hit?)
+    // The previous implementation returned 'result' which acts as "floor".
+    // Let's refine: If we didn't hit 'inside' (start <= t < end), we are in a gap.
+    // Returning -1 during gaps is cleaner for karaoke.
+
+    if (result !== -1) {
+        const timing = timings[result];
+        // If we are strictly inside the word, we returned early.
+        // If we are here, it means timeMs >= timing.startMs but timeMs >= timing.endMs
+        // So we are AFTER the word.
+        return -1;
+    }
+
+    return -1;
 }
 
 /**
@@ -70,9 +93,12 @@ export const useTtsController = ({
     const rafIdRef = useRef<number>(undefined);
     const isPlayingRef = useRef<boolean>(false);
 
-    // CRITICAL: Keep fresh reference to wordTimings to avoid stale closure
+    // CRITICAL: Keep fresh reference to wordTimings and callback to avoid stale closure
     const wordTimingsRef = useRef(wordTimings);
     wordTimingsRef.current = wordTimings; // Always update on re-render
+
+    const onActiveWordChangeRef = useRef(onActiveWordChange);
+    onActiveWordChangeRef.current = onActiveWordChange; // Always update on re-render
 
     /**
      * Main update loop - calculates active word and notifies via callback
@@ -81,7 +107,7 @@ export const useTtsController = ({
     const updateActiveWord = useCallback(() => {
         const timings = wordTimingsRef.current; // Read from ref, not closure
         if (!audioRef.current || timings.length === 0) {
-            console.log('[TTS-CTRL] Waiting... audio:', !!audioRef.current, 'timings:', timings.length);
+            // console.log('[TTS-CTRL] Waiting... audio:', !!audioRef.current, 'timings:', timings.length);
             rafIdRef.current = requestAnimationFrame(updateActiveWord);
             return;
         }
@@ -94,11 +120,15 @@ export const useTtsController = ({
             console.log('[TTS-CTRL] Word changed:', currentWordRef.current, '->', newWordIndex, 'time:', timeMs);
             currentWordRef.current = newWordIndex;
             setActiveWordIndex(newWordIndex);
-            onActiveWordChange?.(newWordIndex);
+
+            // USE REF to ensure we call the LATEST callback, not the one from closure creation time
+            if (onActiveWordChangeRef.current) {
+                onActiveWordChangeRef.current(newWordIndex);
+            }
         }
 
         rafIdRef.current = requestAnimationFrame(updateActiveWord);
-    }, [audioRef, onActiveWordChange]); // wordTimings removed - using ref instead
+    }, [audioRef]); // Removed onActiveWordChange dependency - using ref instead
 
     /**
      * Start the update loop
@@ -145,11 +175,14 @@ export const useTtsController = ({
      * Seek to specific time and update active word immediately
      */
     const seekTo = useCallback((timeMs: number) => {
-        const newWordIndex = findActiveWordIndex(wordTimings, timeMs);
+        // Use ref for timings to ensure we have latest data
+        const newWordIndex = findActiveWordIndex(wordTimingsRef.current, timeMs);
         currentWordRef.current = newWordIndex;
         setActiveWordIndex(newWordIndex);
-        onActiveWordChange?.(newWordIndex);
-    }, [onActiveWordChange]); // Removed wordTimings - using ref
+        onActiveWordChangeRef.current?.(newWordIndex);
+    }, []); // No deps needed, using refs
+
+    // Stable callback refs to prevent effect cleanup on every render
 
     // Stable callback refs to prevent effect cleanup on every render
     const startTrackingRef = useRef(startTracking);
@@ -171,12 +204,16 @@ export const useTtsController = ({
 
         console.log('[TTS-CTRL] Attaching audio event listeners');
 
+        // FIX: Check if already playing (race condition fix)
+        if (!audio.paused && !isPlayingRef.current) {
+            console.log('[TTS-CTRL] Audio already playing on mount - starting tracking');
+            startTrackingRef.current();
+        }
+
         const handlePlay = () => {
-            console.log('[TTS-CTRL] Audio play event');
             startTrackingRef.current();
         };
         const handlePause = () => {
-            console.log('[TTS-CTRL] Audio pause event');
             stopTrackingRef.current();
         };
         const handleEnded = () => {
@@ -185,7 +222,6 @@ export const useTtsController = ({
         };
         const handleSeeked = () => {
             const timeMs = audio.currentTime * 1000;
-            console.log('[TTS-CTRL] Audio seeked event, time:', timeMs);
             seekToRef.current(timeMs);
         };
 

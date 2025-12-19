@@ -206,7 +206,7 @@ export const UnifiedArticleView = () => {
         );
 
         return { header, body };
-    }, [article?.id, articleAttrs]);
+    }, [article?.id, articleAttrs, blockMappings, isTtsActive, isVerified]);
 
     // --- LOADING & ERROR STATES (Must be AFTER hooks) ---
 

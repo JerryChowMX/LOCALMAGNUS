@@ -8,9 +8,11 @@ import {
 } from '../../../../tts';
 
 interface TtsWordTiming {
-    word: string;
-    start_time: number;
-    end_time: number;
+    startMs: number;
+    endMs: number;
+    charIndex: number;
+    wordLength: number;
+    word?: string;
 }
 
 interface UseTtsModelResult {
