@@ -1,135 +1,241 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { TtsPlaybackController } from '../TtsPlaybackController';
-import { WebMeasurementAdapter } from '../adapters/WebMeasurementAdapter';
-import type { Rect } from '../adapters/WebMeasurementAdapter';
-import type { KaraokeModel, PlaybackStatus } from '../types';
+import type { PlaybackStatus } from '../types';
+
+interface TtsWordTiming {
+    startMs: number;
+    endMs: number;
+    charIndex: number;
+    wordLength: number;
+}
 
 interface UseTtsControllerProps {
-    model: KaraokeModel | null;
+    /** Array of word timings from TTS metadata */
+    wordTimings: TtsWordTiming[];
+    /** Reference to the audio element */
     audioRef: React.RefObject<HTMLAudioElement | null>;
-    containerRef: React.RefObject<HTMLElement | null>;
+    /** Callback when playback status changes */
     onStatusChange?: (status: PlaybackStatus) => void;
 }
 
+/**
+ * Binary search to find the active word timing for a given time.
+ */
+function findActiveWordIndex(timings: TtsWordTiming[], timeMs: number): number {
+    let left = 0;
+    let right = timings.length - 1;
+    let result = -1;
+
+    while (left <= right) {
+        const mid = Math.floor((left + right) / 2);
+        const timing = timings[mid];
+
+        if (timing.startMs <= timeMs && timeMs < timing.endMs) {
+            return mid;
+        }
+
+        if (timing.startMs <= timeMs) {
+            result = mid;
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+
+    return result;
+}
+
+/**
+ * Check if element is within visible viewport with margin.
+ */
+function isInViewport(el: Element, margin: number = 100): boolean {
+    const rect = el.getBoundingClientRect();
+    return rect.top >= margin && rect.bottom <= window.innerHeight - margin;
+}
+
+/**
+ * TTS Controller Hook - Word-Index Based Karaoke Highlighting
+ * 
+ * Uses CSS class `.tts-active` on span elements with `data-tts-word` attributes.
+ * No rect overlays, no char-offset scanning.
+ */
 export const useTtsController = ({
-    model,
+    wordTimings,
     audioRef,
-    containerRef,
     onStatusChange
 }: UseTtsControllerProps) => {
     const [status, setStatus] = useState<PlaybackStatus>('idle');
-    const [sentenceRects, setSentenceRects] = useState<Rect[]>([]);
-    const [wordRects, setWordRects] = useState<Rect[]>([]);
+    const [activeWordIndex, setActiveWordIndex] = useState<number>(-1);
 
-    // Internal state
-    const controllerRef = useRef<TtsPlaybackController | null>(null);
-    const adapterRef = useRef<WebMeasurementAdapter | null>(null);
+    // Track current word to avoid redundant DOM updates
+    const currentWordRef = useRef<number>(-1);
     const rafIdRef = useRef<number>(undefined);
+    const isPlayingRef = useRef<boolean>(false);
 
-    // Caching for rects
-    const rectCacheRef = useRef<Map<string, Rect[]>>(new Map());
-
-    const updateVisuals = useCallback(() => {
-        if (!controllerRef.current || !adapterRef.current || !audioRef.current) return;
-
-        // Advance the controller with current audio time
-        controllerRef.current.tick(audioRef.current.currentTime * 1000);
-
-        const state = controllerRef.current.getCurrentState();
-
-        if (state.activeSentence) {
-            const sKey = `s-${state.sentenceIndex}`;
-            if (!rectCacheRef.current.has(sKey)) {
-                rectCacheRef.current.set(sKey, adapterRef.current.measureRange(state.activeSentence.charStart, state.activeSentence.charEnd));
-            }
-            setSentenceRects(rectCacheRef.current.get(sKey) || []);
-        } else {
-            setSentenceRects([]);
+    /**
+     * Main highlight update loop - runs on rAF during playback
+     */
+    const updateHighlight = useCallback(() => {
+        if (!audioRef.current || wordTimings.length === 0) {
+            rafIdRef.current = requestAnimationFrame(updateHighlight);
+            return;
         }
 
-        if (state.activeWord) {
-            const wKey = `w-${state.wordIndex}`;
-            if (!rectCacheRef.current.has(wKey)) {
-                rectCacheRef.current.set(wKey, adapterRef.current.measureRange(state.activeWord.charStart, state.activeWord.charEnd));
+        const timeMs = audioRef.current.currentTime * 1000;
+        const newWordIndex = findActiveWordIndex(wordTimings, timeMs);
+
+        // Only update DOM if word changed
+        if (newWordIndex !== currentWordRef.current) {
+            // ROBUST OFFSET DETECTION
+            // Calculate once for the whole update block
+            const scopeEl = document.querySelector('[data-tts-scope="article-body"]');
+            const firstDomEl = scopeEl?.querySelector('[data-tts-word]') as HTMLElement | null;
+            const offset = firstDomEl ? Number(firstDomEl.dataset.ttsWord) || 0 : 0;
+
+            // Remove highlight from previous word
+            if (currentWordRef.current >= 0) {
+                const prevTargetIndex = currentWordRef.current + offset;
+                const prevEl = document.querySelector(
+                    `[data-tts-scope="article-body"] [data-tts-word="${prevTargetIndex}"]`
+                );
+                prevEl?.classList.remove('tts-active');
             }
-            setWordRects(rectCacheRef.current.get(wKey) || []);
-        } else {
-            setWordRects([]);
+
+            // Add highlight to new word
+            if (newWordIndex >= 0) {
+                const targetIndex = newWordIndex + offset;
+                const selector = `[data-tts-scope="article-body"] [data-tts-word="${targetIndex}"]`;
+                let newEl = document.querySelector(selector) as HTMLElement | null;
+
+                if (newEl) {
+                    newEl.classList.add('tts-active');
+                    console.log(`[TTS-CTRL] Highlighted word ${newWordIndex} (DOM index ${targetIndex}): "${newEl.innerText}"`);
+                    // Auto-scroll if word is outside viewport
+                    if (!isInViewport(newEl)) {
+                        newEl.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                    }
+                } else {
+                    console.warn(`[TTS-CTRL] Word element not found! Selector: ${selector}, Offset used: ${offset}, Audio word index: ${newWordIndex}`);
+                }
+            }
+
+            currentWordRef.current = newWordIndex;
+            setActiveWordIndex(newWordIndex);
         }
 
-        rafIdRef.current = requestAnimationFrame(updateVisuals);
-    }, [audioRef]);
+        rafIdRef.current = requestAnimationFrame(updateHighlight);
+    }, [audioRef, wordTimings]);
 
-    // Initialize controller and adapter
-    useEffect(() => {
-        if (!containerRef.current) return;
+    /**
+     * Cleanup highlight when stopping or unmounting
+     */
+    const clearAllHighlights = useCallback(() => {
+        const activeElements = document.querySelectorAll('[data-tts-scope="article-body"] .tts-active');
+        activeElements.forEach(el => el.classList.remove('tts-active'));
+        currentWordRef.current = -1;
+        setActiveWordIndex(-1);
+    }, []);
 
-        adapterRef.current = new WebMeasurementAdapter(containerRef.current);
-        controllerRef.current = new TtsPlaybackController(
-            undefined,
-            (newStatus) => {
-                setStatus(newStatus);
-                onStatusChange?.(newStatus);
-            }
-        );
-
-        if (model) {
-            controllerRef.current.setModel(model);
-        }
-
-        // Cleanup
-        return () => {
-            if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
-        };
-    }, [containerRef, model, onStatusChange]);
-
-    // Start/Stop rAF loop based on playback status
+    /**
+     * Handle audio events
+     */
     useEffect(() => {
         const audio = audioRef.current;
         if (!audio) return;
 
         const handlePlay = () => {
-            controllerRef.current?.setStatus('playing');
-            rafIdRef.current = requestAnimationFrame(updateVisuals);
+            isPlayingRef.current = true;
+            setStatus('playing');
+            onStatusChange?.('playing');
+            // Only start RAF if we have wordTimings
+            if (wordTimings.length > 0) {
+                rafIdRef.current = requestAnimationFrame(updateHighlight);
+            }
         };
 
         const handlePause = () => {
-            controllerRef.current?.setStatus('paused');
+            isPlayingRef.current = false;
+            setStatus('paused');
+            onStatusChange?.('paused');
             if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+            // Keep highlight visible when paused (freeze)
         };
 
         const handleEnded = () => {
-            controllerRef.current?.setStatus('ended');
+            isPlayingRef.current = false;
+            setStatus('ended');
+            onStatusChange?.('ended');
             if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+            clearAllHighlights();
+        };
+
+        const handleSeeked = () => {
+            // Force update on seek
+            if (status === 'playing') {
+                // Update will happen naturally on next rAF
+            } else {
+                // Update immediately for paused/idle state
+                const timeMs = audio.currentTime * 1000;
+                const newWordIndex = findActiveWordIndex(wordTimings, timeMs);
+
+                if (newWordIndex !== currentWordRef.current) {
+                    if (currentWordRef.current >= 0) {
+                        const prevEl = document.querySelector(
+                            `[data-tts-scope="article-body"] [data-tts-word="${currentWordRef.current}"]`
+                        );
+                        prevEl?.classList.remove('tts-active');
+                    }
+
+                    if (newWordIndex >= 0) {
+                        // Apply offset detection here too
+                        const scopeEl = document.querySelector('[data-tts-scope="article-body"]');
+                        const firstDomEl = scopeEl?.querySelector('[data-tts-word]') as HTMLElement | null;
+                        const offset = firstDomEl ? Number(firstDomEl.dataset.ttsWord) || 0 : 0;
+
+                        const targetIndex = newWordIndex + offset;
+                        const newEl = document.querySelector(
+                            `[data-tts-scope="article-body"] [data-tts-word="${targetIndex}"]`
+                        );
+                        newEl?.classList.add('tts-active');
+                    }
+
+                    currentWordRef.current = newWordIndex;
+                    setActiveWordIndex(newWordIndex);
+                }
+            }
         };
 
         audio.addEventListener('play', handlePlay);
         audio.addEventListener('pause', handlePause);
         audio.addEventListener('ended', handleEnded);
+        audio.addEventListener('seeked', handleSeeked);
 
         return () => {
             audio.removeEventListener('play', handlePlay);
             audio.removeEventListener('pause', handlePause);
             audio.removeEventListener('ended', handleEnded);
+            audio.removeEventListener('seeked', handleSeeked);
+            if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+            clearAllHighlights();
         };
-    }, [audioRef, updateVisuals]);
+    }, [audioRef, updateHighlight, clearAllHighlights, onStatusChange, status, wordTimings]);
 
-    // Handle Resize Invalidation
+    /**
+     * Critical: Restart karaoke when wordTimings arrive while audio is already playing.
+     * This handles the race condition where play fires before metadata loads.
+     */
     useEffect(() => {
-        if (!containerRef.current) return;
-
-        const observer = new ResizeObserver(() => {
-            rectCacheRef.current.clear(); // Invalidate all cached rects on resize
-        });
-
-        observer.observe(containerRef.current);
-        return () => observer.disconnect();
-    }, [containerRef]);
+        if (isPlayingRef.current && wordTimings.length > 0 && audioRef.current && !audioRef.current.paused) {
+            console.log('[TTS-CTRL] Word timings arrived while playing - starting karaoke loop now!');
+            // Cancel any existing RAF to avoid duplicates
+            if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+            rafIdRef.current = requestAnimationFrame(updateHighlight);
+        }
+    }, [wordTimings.length, audioRef, updateHighlight]);
 
     return {
         status,
-        sentenceRects,
-        wordRects,
-        isVisible: status === 'playing' || status === 'paused'
+        activeWordIndex,
+        isVisible: status === 'playing' || status === 'paused',
+        clearHighlights: clearAllHighlights
     };
 };

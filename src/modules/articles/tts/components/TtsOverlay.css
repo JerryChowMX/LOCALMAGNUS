@@ -8,6 +8,17 @@
     transition: opacity 0.3s ease;
 }
 
+/* Word-Index Based Karaoke Highlighting */
+[data-tts-word] {
+    transition: background-color 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+
+[data-tts-word].tts-active {
+    background-color: rgba(138, 180, 248, 0.5);
+    box-shadow: 0 0 0 2px rgba(138, 180, 248, 0.3);
+    border-radius: 2px;
+}
+
 /* Dark Mode Overrides */
 :root[data-theme='dark'] .tts-overlay {
     --tts-sentence-bg: rgba(30, 58, 138, 0.3);
@@ -15,6 +26,11 @@
     --tts-word-bg: rgba(59, 130, 246, 0.6);
     mix-blend-mode: screen;
     /* Change blend mode for dark surfaces */
+}
+
+:root[data-theme='dark'] [data-tts-word].tts-active {
+    background-color: rgba(59, 130, 246, 0.4);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
 }
 
 /* Reduced Motion Support */
@@ -25,6 +41,10 @@
     }
 
     .tts-overlay {
+        transition: none;
+    }
+
+    [data-tts-word] {
         transition: none;
     }
 }

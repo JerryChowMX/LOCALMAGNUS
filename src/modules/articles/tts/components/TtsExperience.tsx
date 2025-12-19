@@ -1,13 +1,12 @@
-import React, { useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
+import { useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
 import { useTtsModel } from '../hooks/useTtsModel';
 import { useTtsController } from '../hooks/useTtsController';
-import { TtsOverlay } from './TtsOverlay';
+import './TtsOverlay.css'; // Import CSS for .tts-active styles
 
 interface TtsExperienceProps {
     audioUrl: string;
     metadataUrl: string;
     articleText: string;
-    containerRef: React.RefObject<HTMLElement | null>;
     isPaused?: boolean;
     playbackRate?: number;
     onEnded?: () => void;
@@ -19,14 +18,13 @@ export interface TtsExperienceHandle {
 }
 
 /**
- * TtsExperience: Orchestrates the full audio-visual TTS system.
- * Handles audio element, model loading, and overlay syncing.
+ * TtsExperience: Orchestrates the TTS audio playback and karaoke highlighting.
+ * Uses word-index based highlighting via CSS classes on data-tts-word spans.
  */
 export const TtsExperience = forwardRef<TtsExperienceHandle, TtsExperienceProps>(({
     audioUrl,
     metadataUrl,
     articleText,
-    containerRef,
     isPaused = false,
     playbackRate = 1,
     onEnded,
@@ -43,14 +41,15 @@ export const TtsExperience = forwardRef<TtsExperienceHandle, TtsExperienceProps>
         }
     }), []);
 
-    // 1. Load the model (Words & Sentences)
-    const { model, isLoading: isModelLoading } = useTtsModel(metadataUrl, articleText);
+    // 1. Load the word timings from metadata
+    const { wordTimings } = useTtsModel(metadataUrl, articleText);
 
-    // 2. Control Playback & Sync Visuals
-    const { sentenceRects, wordRects, isVisible } = useTtsController({
-        model,
-        audioRef,
-        containerRef
+    console.log('[TTS-EXP] audioRef:', !!audioRef.current, 'wordTimings:', wordTimings.length);
+
+    // 2. Control Karaoke Highlighting
+    const { clearHighlights } = useTtsController({
+        wordTimings,
+        audioRef
     });
 
     // 3. Handle pause/resume based on isPaused prop
@@ -58,11 +57,16 @@ export const TtsExperience = forwardRef<TtsExperienceHandle, TtsExperienceProps>
         const audio = audioRef.current;
         if (!audio) return;
 
+        console.log('[TTS-EXP] isPaused changed to:', isPaused, 'audio:', audio.src);
+
         if (isPaused) {
             audio.pause();
         } else {
-            audio.play().catch(() => {
-                // Ignore autoplay errors
+            console.log('[TTS-EXP] Calling audio.play()...');
+            audio.play().then(() => {
+                console.log('[TTS-EXP] audio.play() success');
+            }).catch((e) => {
+                console.warn('[TTS-EXP] audio.play() error:', e);
             });
         }
     }, [isPaused]);
@@ -75,7 +79,14 @@ export const TtsExperience = forwardRef<TtsExperienceHandle, TtsExperienceProps>
         }
     }, [playbackRate]);
 
-    // 5. Sync time updates to parent
+    // 5. Clear highlights when unmounting or audio ends
+    useEffect(() => {
+        return () => {
+            clearHighlights();
+        };
+    }, [clearHighlights]);
+
+    // 6. Sync time updates to parent
     const handleTimeUpdate = () => {
         const audio = audioRef.current;
         if (audio && onTimeUpdate) {
@@ -92,7 +103,7 @@ export const TtsExperience = forwardRef<TtsExperienceHandle, TtsExperienceProps>
 
     return (
         <>
-            {/* Invisibly render the audio element, controlled by the overlay/entry hooks */}
+            {/* Audio element - hidden, controlled programmatically */}
             <audio
                 ref={audioRef}
                 src={audioUrl}
@@ -102,13 +113,7 @@ export const TtsExperience = forwardRef<TtsExperienceHandle, TtsExperienceProps>
                 onLoadedMetadata={handleLoadedMetadata}
                 style={{ display: 'none' }}
             />
-
-            {/* Render the SVG overlay inside the article container proxy */}
-            <TtsOverlay
-                sentenceRects={sentenceRects}
-                wordRects={wordRects}
-                isVisible={isVisible && !isModelLoading && !isPaused}
-            />
+            {/* No SVG overlay needed - highlighting is done via CSS classes */}
         </>
     );
 });

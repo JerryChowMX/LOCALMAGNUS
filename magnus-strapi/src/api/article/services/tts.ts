@@ -24,17 +24,50 @@ export default () => {
     const provider = new GoogleCloudTtsProvider();
 
     return {
+        /**
+         * Strips markdown formatting to plain text for TTS.
+         */
+        markdownToPlainText(md: string): string {
+            return String(md)
+                .replace(/```[\s\S]*?```/g, '')       // code fences
+                .replace(/`[^`]*`/g, '')              // inline code
+                .replace(/!\[[^\]]*]\([^)]*\)/g, '')  // images
+                .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1') // links → text
+                .replace(/[#>*_~\-]+/g, ' ')          // common md chars
+                .replace(/\s+/g, ' ')
+                .trim();
+        },
+
+        /**
+         * Extracts spoken text from content blocks.
+         * ONLY includes: rich-text body, quote text, quote author
+         * EXCLUDES: captions, hero image, titles, UI elements
+         */
         extractCanonicalText(blocks: any[]): string {
             if (!blocks || !Array.isArray(blocks)) return '';
-            let rawText = '';
+            const parts: string[] = [];
+
             for (const block of blocks) {
                 switch (block.__component) {
-                    case 'content.rich-text': if (block.content) rawText += block.content + ' '; break;
-                    case 'content.quote': if (block.quote_text) rawText += block.quote_text + ' '; break;
-                    case 'content.single-image': if (block.hero_image_caption) rawText += block.hero_image_caption + ' '; break;
+                    case 'content.rich-text': {
+                        const content = block.content || '';
+                        const plain = this.markdownToPlainText(content);
+                        if (plain.trim()) parts.push(plain.trim());
+                        break;
+                    }
+                    case 'content.quote': {
+                        const quote = (block.quote_text || '').trim();
+                        const author = (block.author || '').trim();
+                        if (quote) parts.push(quote);
+                        if (author) parts.push(author);
+                        break;
+                    }
+                    // EXCLUDED: content.single-image captions, gallery captions, etc.
                 }
             }
-            return this.normalizeText(rawText);
+
+            // Join with paragraph breaks for natural pauses
+            return this.normalizeText(parts.join('\n\n'));
         },
 
         normalizeText(text: string): string {

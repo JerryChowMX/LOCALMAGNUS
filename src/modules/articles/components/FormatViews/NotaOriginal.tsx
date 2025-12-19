@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import type { FC } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -5,13 +6,16 @@ import { ArticleRichText, ArticleQuote, ArticleAuthor, ArticleGallery, SingleIma
 import { AudioPlayer } from '../../../../components/AudioPlayer/AudioPlayer';
 import { STRAPI_ORIGIN } from '../../../../lib/env';
 import type { Article, ContentBlock } from '../../types';
+import { InstrumentedText } from '../../tts/components/InstrumentedText';
 import './FormatViews.css';
 
 interface NotaOriginalProps {
     article: Article['attributes'];
+    /** When provided, enables TTS word instrumentation for karaoke highlighting */
+    wordIndexRef?: React.MutableRefObject<number>;
 }
 
-// MAGNUS Typography components for ReactMarkdown
+// MAGNUS Typography components for ReactMarkdown (non-instrumented)
 const magnusComponents = {
     h1: ({ children }: any) => (
         <h1 className="article-content-h1">{children}</h1>
@@ -33,9 +37,107 @@ const magnusComponents = {
     )
 };
 
-export const NotaOriginal: FC<NotaOriginalProps> = ({ article }) => {
+/**
+ * Dev-only component that queries DOM after render to count instrumented words.
+ */
+const DevWordCounter: React.FC = () => {
+    const [count, setCount] = useState(0);
+
+    useEffect(() => {
+        // Query DOM after initial render to count actual instrumented words
+        const timer = setTimeout(() => {
+            const wordSpans = document.querySelectorAll('[data-tts-word]');
+            setCount(wordSpans.length);
+        }, 500); // Small delay to ensure DOM is fully rendered
+        return () => clearTimeout(timer);
+    }, []); // Empty deps - run once on mount
+
     return (
-        <div className="article-format-view-container standard-article-content">
+        <div style={{
+            padding: '8px 12px',
+            background: '#f0f0f0',
+            fontSize: '12px',
+            color: '#666',
+            marginTop: '20px',
+            borderRadius: '4px'
+        }}>
+            🔍 TTS Word Count: {count}
+        </div>
+    );
+};
+
+/**
+ * Recursively process children to instrument string text nodes.
+ */
+export const instrumentChildren = (
+    children: React.ReactNode,
+    wordIndexRef: React.MutableRefObject<number>
+): React.ReactNode => {
+    return React.Children.map(children, (child) => {
+        // String nodes get instrumented
+        if (typeof child === 'string') {
+            return <InstrumentedText text={child} wordIndexRef={wordIndexRef} />;
+        }
+        // Numbers also need to be converted to strings for TTS
+        if (typeof child === 'number') {
+            return <InstrumentedText text={String(child)} wordIndexRef={wordIndexRef} />;
+        }
+        // React elements with children need recursive processing
+        if (React.isValidElement(child)) {
+            const props = child.props as { children?: React.ReactNode };
+            if (props.children) {
+                return React.cloneElement(child, {
+                    ...props,
+                    children: instrumentChildren(props.children, wordIndexRef)
+                } as any);
+            }
+        }
+        // Everything else passes through unchanged
+        return child;
+    });
+};
+
+/**
+ * Creates ReactMarkdown components with TTS word instrumentation.
+ * Text nodes get wrapped with data-tts-word spans for karaoke targeting.
+ */
+export const createInstrumentedComponents = (wordIndexRef: React.MutableRefObject<number>) => ({
+    h1: ({ children }: any) => (
+        <h1 className="article-content-h1">{instrumentChildren(children, wordIndexRef)}</h1>
+    ),
+    h2: ({ children }: any) => (
+        <h2 className="article-content-h2">{instrumentChildren(children, wordIndexRef)}</h2>
+    ),
+    h3: ({ children }: any) => (
+        <h3 className="article-content-h3">{instrumentChildren(children, wordIndexRef)}</h3>
+    ),
+    p: ({ children }: any) => (
+        <p className="article-content-p">{instrumentChildren(children, wordIndexRef)}</p>
+    ),
+    li: ({ children }: any) => (
+        <li className="article-content-li">{instrumentChildren(children, wordIndexRef)}</li>
+    ),
+    strong: ({ children }: any) => (
+        <strong style={{ fontWeight: 700 }}>{instrumentChildren(children, wordIndexRef)}</strong>
+    ),
+    em: ({ children }: any) => (
+        <em>{instrumentChildren(children, wordIndexRef)}</em>
+    ),
+    a: ({ children, href }: any) => (
+        <a href={href}>{instrumentChildren(children, wordIndexRef)}</a>
+    )
+});
+
+export const NotaOriginal: FC<NotaOriginalProps> = ({ article, wordIndexRef }) => {
+    // Use instrumented components when wordIndexRef is provided
+    const components = wordIndexRef
+        ? createInstrumentedComponents(wordIndexRef)
+        : magnusComponents;
+
+    return (
+        <div
+            className="article-format-view-container standard-article-content"
+        >
             {/* Rich text content */}
             {article.content.map((block: ContentBlock, index: number) => {
                 const componentType = (block as any).__component || (block as any).type || (block as any).__typename;
@@ -50,7 +152,7 @@ export const NotaOriginal: FC<NotaOriginalProps> = ({ article }) => {
                             <div key={index} className="article-rich-text-block">
                                 <ReactMarkdown
                                     remarkPlugins={[remarkGfm]}
-                                    components={magnusComponents}
+                                    components={components}
                                 >
                                     {richTextContent}
                                 </ReactMarkdown>
@@ -73,6 +175,7 @@ export const NotaOriginal: FC<NotaOriginalProps> = ({ article }) => {
                             key={index}
                             quote={(block as any).quote || (block as any).text || (block as any).quote_text || ''}
                             author={(block as any).author || (block as any).author_title || ''}
+                            wordIndexRef={wordIndexRef}
                         />
                     );
                 }
@@ -197,6 +300,11 @@ export const NotaOriginal: FC<NotaOriginalProps> = ({ article }) => {
                 <div style={{ marginBottom: '40px', textAlign: 'left' }}>
                     <ArticleAuthor name={article.author.name} />
                 </div>
+            )}
+
+            {/* Dev mode: show word count for debugging */}
+            {import.meta.env.DEV && wordIndexRef && (
+                <DevWordCounter />
             )}
 
             {/* Spacer for bottom sheet */}

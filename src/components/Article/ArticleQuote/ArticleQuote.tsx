@@ -1,13 +1,16 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { IconCopy, IconShare, IconCheck, IconQuote } from '@tabler/icons-react';
+import { InstrumentedText } from '../../../modules/articles/tts/components/InstrumentedText';
 import '../Quote/Quote.css';
 
 interface ArticleQuoteProps {
     quote: string;
     author: string;
+    /** When provided, enables TTS word instrumentation for karaoke highlighting */
+    wordIndexRef?: React.MutableRefObject<number>;
 }
 
-export const ArticleQuote = ({ quote, author }: ArticleQuoteProps) => {
+export const ArticleQuote = ({ quote, author, wordIndexRef }: ArticleQuoteProps) => {
     const [showAuthor, setShowAuthor] = useState(false);
     const [copied, setCopied] = useState(false);
 
@@ -32,6 +35,14 @@ export const ArticleQuote = ({ quote, author }: ArticleQuoteProps) => {
 
     const toggleAuthor = () => setShowAuthor(!showAuthor);
 
+    // Render text with optional instrumentation for TTS karaoke
+    const renderText = (text: string) => {
+        if (wordIndexRef) {
+            return <InstrumentedText text={text} wordIndexRef={wordIndexRef} />;
+        }
+        return text;
+    };
+
     return (
         <div className="quote-wrapper">
 
@@ -47,13 +58,13 @@ export const ArticleQuote = ({ quote, author }: ArticleQuoteProps) => {
                     <div className="quote-grid">
                         {/* Quote - Sets the height, simply fades out */}
                         <p className={`quote-text-element ${showAuthor ? 'hidden' : ''}`}>
-                            {quote}
+                            {renderText(quote)}
                         </p>
 
                         {/* Author - Overlay */}
                         <div className={`quote-author-element ${showAuthor ? 'visible' : ''}`}>
                             <span className="quote-author-name">
-                                {author}
+                                {renderText(author)}
                             </span>
                         </div>
                     </div>

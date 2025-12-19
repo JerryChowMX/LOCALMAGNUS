@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -22,6 +22,8 @@ import { Infografia } from '../components/FormatViews/Infografia';
 // TTS Components
 import { ArticleTtsEntry } from '../tts/components/ArticleTtsEntry';
 import { TtsExperience, type TtsExperienceHandle } from '../tts/components/TtsExperience';
+import { InstrumentedText } from '../tts/components/InstrumentedText';
+import { createInstrumentedComponents } from '../components/FormatViews/NotaOriginal';
 
 // Hooks & Utils
 import { useStrapiArticle } from '../../../hooks/useStrapiArticles';
@@ -31,7 +33,7 @@ import { extractTextFromBlocks } from '../../../lib/articleUtils';
 
 // Styles
 import '../templates/StandardOneArticle.css';
-import { useRef } from 'react';
+
 
 export const UnifiedArticleView = () => {
     const { date, slug } = useParams<{ date: string; slug: string }>();
@@ -45,15 +47,6 @@ export const UnifiedArticleView = () => {
         status: isPreview ? previewStatus : undefined
     });
 
-    console.log('[DEBUG] UnifiedArticleView: Raw Article Data:', article);
-    if (article) {
-        console.log('[DEBUG] TTS Fields:', {
-            status: article.tts_status,
-            audio: article.tts_audio,
-            metadata: article.tts_metadata
-        });
-    }
-
     const [isChatOpen, setIsChatOpen] = useState(false);
     const [isCommentsOpen, setIsCommentsOpen] = useState(false);
     const [activeFormat, setActiveFormat] = useState<ArticleFormatId>('nota-original');
@@ -64,6 +57,16 @@ export const UnifiedArticleView = () => {
     const [ttsPlaybackRate, setTtsPlaybackRate] = useState(1);
     const articleContainerRef = useRef<HTMLDivElement>(null);
     const ttsRef = useRef<TtsExperienceHandle>(null);
+    const ttsWordIndexRef = useRef<number>(0);
+
+    // Handler for back navigation
+    const handleBack = useCallback(() => {
+        if (date) {
+            navigate(routes.notas(date));
+        } else {
+            navigate(-1);
+        }
+    }, [date, navigate]);
 
     // Handler for seeking in the audio
     const handleTtsSeek = (time: number) => {
@@ -106,7 +109,7 @@ export const UnifiedArticleView = () => {
         setTtsDuration(duration);
     };
 
-    // Format Date
+    // Format Date helper
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('es-ES', {
             day: 'numeric',
@@ -115,16 +118,98 @@ export const UnifiedArticleView = () => {
         });
     };
 
-    // Handle back navigation
-    const handleBack = () => {
-        if (date) {
-            navigate(routes.notas(date));
-        } else {
-            navigate(-1);
-        }
-    };
+    // 1. Transform Strapi article to component props format (Stable Memo)
+    const articleAttrs = useMemo(() => {
+        if (!article) return null;
+        return {
+            title: article.title,
+            summary: article.excerpt || article.summary || '',
+            publishedAt: article.publishedAt,
+            updatedAt: article.publishedAt,
+            image: article.hero_image ? {
+                url: `${STRAPI_ORIGIN}${article.hero_image.url}`,
+                caption: '',
+                alternativeText: article.hero_image.alternativeText
+            } : { url: '' },
+            author: article.author ? { name: article.author.name } : undefined,
+            category: article.category ? { name: article.category.name, slug: article.category.slug } : undefined,
+            content: article.blocks || [],
+            audio_summary: article.audio_summary ? {
+                id: 1,
+                episode_label: article.audio_summary.episode_label,
+                podcast_title: article.audio_summary.podcast_title,
+                audio_file: { url: `${STRAPI_ORIGIN}${article.audio_summary.audio_file?.url || ''}` },
+                title: article.title
+            } : undefined,
+            video_summary: article.video_summary ? {
+                video_file: { url: `${STRAPI_ORIGIN}${article.video_summary.video_file?.url || ''}` },
+                thumbnail: article.video_summary.thumbnail ? { url: `${STRAPI_ORIGIN}${article.video_summary.thumbnail.url}` } : undefined,
+                duration_seconds: article.video_summary.duration_seconds
+            } : undefined,
+            ppt_summary: article.ppt_summary ? {
+                ppt_file: { url: `${STRAPI_ORIGIN}${article.ppt_summary.ppt_file?.url || ''}` },
+                slide_count: article.ppt_summary.slide_count
+            } : undefined,
+            infographic_summary: article.infographic_summary ? {
+                image_file: { url: `${STRAPI_ORIGIN}${article.infographic_summary.image_file?.url || ''}` }
+            } : undefined
+        };
+    }, [article]);
 
-    // Loading state
+    // 2. Calculate available formats (Stable Memo)
+    const publishedFormats = useMemo(() => {
+        if (!articleAttrs) return ['nota-original'];
+        return [
+            'nota-original',
+            articleAttrs.video_summary && 'video',
+            articleAttrs.audio_summary && 'podcast',
+            articleAttrs.ppt_summary && 'presentacion',
+            articleAttrs.infographic_summary && 'infografia'
+        ].filter(Boolean) as string[];
+    }, [articleAttrs]);
+
+    // 3. Stable Instrumented Article Content (ROBUST KARAOKE)
+    // We split this into header and body to allow the TTS player to sit in between
+    // without triggering re-instrumentation on every time update.
+    const instrumented = useMemo(() => {
+        if (!article || !articleAttrs) return null;
+
+        // Reset counter at the start of this stable block
+        ttsWordIndexRef.current = 0;
+
+        const header = (
+            <div className="standard-article-header">
+                <Text variant="caption" className="standard-article-date">
+                    {formatDate(article.publishedAt)}
+                </Text>
+                <Heading level={1} className="standard-article-title">
+                    <InstrumentedText text={article.title} wordIndexRef={ttsWordIndexRef} />
+                </Heading>
+                {articleAttrs.summary && (
+                    <div className="standard-article-dek">
+                        <ReactMarkdown
+                            remarkPlugins={[remarkGfm]}
+                            components={createInstrumentedComponents(ttsWordIndexRef)}
+                        >
+                            {articleAttrs.summary}
+                        </ReactMarkdown>
+                    </div>
+                )}
+            </div>
+        );
+
+        const body = (
+            <NotaOriginal
+                article={articleAttrs as any}
+                wordIndexRef={ttsWordIndexRef}
+            />
+        );
+
+        return { header, body };
+    }, [article?.id, articleAttrs]);
+
+    // --- LOADING & ERROR STATES (Must be AFTER hooks) ---
+
     if (isLoading) {
         return (
             <PageWrapper>
@@ -136,8 +221,7 @@ export const UnifiedArticleView = () => {
         );
     }
 
-    // Error state
-    if (error || !article) {
+    if (error || !article || !articleAttrs || !instrumented) {
         return (
             <PageWrapper>
                 <HeaderContent onBack={handleBack} />
@@ -148,49 +232,7 @@ export const UnifiedArticleView = () => {
         );
     }
 
-    // Transform Strapi article to component props format
-    const articleAttrs = {
-        title: article.title,
-        summary: article.excerpt || article.summary || '',
-        publishedAt: article.publishedAt,
-        updatedAt: article.publishedAt,
-        image: article.hero_image ? {
-            url: `${STRAPI_ORIGIN}${article.hero_image.url}`,
-            caption: '',
-            alternativeText: article.hero_image.alternativeText
-        } : { url: '' },
-        author: article.author ? { name: article.author.name } : undefined,
-        category: article.category ? { name: article.category.name, slug: article.category.slug } : undefined,
-        content: article.blocks || [],
-        audio_summary: article.audio_summary ? {
-            id: 1,
-            episode_label: article.audio_summary.episode_label,
-            podcast_title: article.audio_summary.podcast_title,
-            audio_file: { url: `${STRAPI_ORIGIN}${article.audio_summary.audio_file?.url || ''}` },
-            title: article.title
-        } : undefined,
-        video_summary: article.video_summary ? {
-            video_file: { url: `${STRAPI_ORIGIN}${article.video_summary.video_file?.url || ''}` },
-            thumbnail: article.video_summary.thumbnail ? { url: `${STRAPI_ORIGIN}${article.video_summary.thumbnail.url}` } : undefined,
-            duration_seconds: article.video_summary.duration_seconds
-        } : undefined,
-        ppt_summary: article.ppt_summary ? {
-            ppt_file: { url: `${STRAPI_ORIGIN}${article.ppt_summary.ppt_file?.url || ''}` },
-            slide_count: article.ppt_summary.slide_count
-        } : undefined,
-        infographic_summary: article.infographic_summary ? {
-            image_file: { url: `${STRAPI_ORIGIN}${article.infographic_summary.image_file?.url || ''}` }
-        } : undefined
-    };
-
-    // Calculate available formats
-    const publishedFormats = [
-        'nota-original',
-        articleAttrs.video_summary && 'video',
-        articleAttrs.audio_summary && 'podcast',
-        articleAttrs.ppt_summary && 'presentacion',
-        articleAttrs.infographic_summary && 'infografia'
-    ].filter(Boolean) as string[];
+    // --- MAIN RENDER ---
 
     return (
         <PageWrapper>
@@ -216,37 +258,12 @@ export const UnifiedArticleView = () => {
                     </div>
                 )}
 
-                <div className="standard-article-container">
-                    <div className="standard-article-header">
-                        <Text variant="caption" className="standard-article-date">
-                            {formatDate(article.publishedAt)}
-                        </Text>
-                        <Heading level={1} className="standard-article-title">
-                            {article.title}
-                        </Heading>
-                        {articleAttrs.summary && (
-                            <div className="standard-article-dek">
-                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                    {articleAttrs.summary}
-                                </ReactMarkdown>
-                            </div>
-                        )}
-                    </div>
+                {/* Article Content Structure */}
+                <div className="standard-article-container" data-tts-scope="article-body">
+                    {/* Instrumented Header */}
+                    {instrumented.header}
 
                     <div className="standard-article-wrapper" ref={articleContainerRef}>
-                        {isTtsActive && article.tts_audio && article.tts_metadata && (
-                            <TtsExperience
-                                ref={ttsRef}
-                                audioUrl={`${STRAPI_ORIGIN}${article.tts_audio.url}`}
-                                metadataUrl={`${STRAPI_ORIGIN}${article.tts_metadata.url}`}
-                                articleText={extractTextFromBlocks(article.blocks || [])}
-                                containerRef={articleContainerRef}
-                                isPaused={isTtsPaused}
-                                playbackRate={ttsPlaybackRate}
-                                onEnded={() => setIsTtsActive(false)}
-                                onTimeUpdate={handleTtsTimeUpdate}
-                            />
-                        )}
                         <ArticleHero
                             image={articleAttrs.image}
                             title={article.title}
@@ -258,6 +275,7 @@ export const UnifiedArticleView = () => {
                             onFormatChange={setActiveFormat}
                         />
 
+                        {/* TTS Controller View - Now sits below format tabs */}
                         {activeFormat === 'nota-original' && (
                             <ArticleTtsEntry
                                 ttsStatus={article.tts_status}
@@ -284,21 +302,45 @@ export const UnifiedArticleView = () => {
                             />
                         )}
 
-                        <div>
-                            {activeFormat === 'nota-original' && <NotaOriginal article={articleAttrs as any} />}
-                            {activeFormat === 'video' && <Video article={articleAttrs as any} />}
-                            {activeFormat === 'podcast' && <Podcast article={articleAttrs as any} />}
-                            {activeFormat === 'presentacion' && <Presentacion article={articleAttrs as any} />}
-                            {activeFormat === 'infografia' && <Infografia article={articleAttrs as any} />}
+                        {/* Format Views */}
+                        <div className="article-format-view">
+                            {activeFormat === 'nota-original' && instrumented.body}
+                            {activeFormat === 'video' && articleAttrs.video_summary && (
+                                <Video article={articleAttrs as any} />
+                            )}
+                            {activeFormat === 'podcast' && articleAttrs.audio_summary && (
+                                <Podcast article={articleAttrs as any} />
+                            )}
+                            {activeFormat === 'presentacion' && articleAttrs.ppt_summary && (
+                                <Presentacion article={articleAttrs as any} />
+                            )}
+                            {activeFormat === 'infografia' && articleAttrs.infographic_summary && (
+                                <Infografia article={articleAttrs as any} />
+                            )}
                         </div>
                     </div>
                 </div>
+
+                {/* TTS Experience Engine (Hidden) */}
+                {isTtsActive && article.tts_audio && article.tts_metadata && (
+                    <TtsExperience
+                        ref={ttsRef}
+                        audioUrl={`${STRAPI_ORIGIN}${article.tts_audio.url}`}
+                        metadataUrl={`${STRAPI_ORIGIN}${article.tts_metadata.url}`}
+                        articleText={extractTextFromBlocks(article.blocks || [])}
+                        isPaused={isTtsPaused}
+                        playbackRate={ttsPlaybackRate}
+                        onEnded={() => setIsTtsActive(false)}
+                        onTimeUpdate={handleTtsTimeUpdate}
+                    />
+                )}
             </div>
 
             <AiChatBarCollapsed
                 onChatClick={() => setIsChatOpen(true)}
                 onCommentsClick={() => setIsCommentsOpen(true)}
             />
+
             {isChatOpen && (
                 <AiChatBarExpanded
                     onClose={() => setIsChatOpen(false)}
@@ -311,7 +353,13 @@ export const UnifiedArticleView = () => {
                     }}
                 />
             )}
-            {isCommentsOpen && <AiCommentsExpanded onClose={() => setIsCommentsOpen(false)} articleId={article.id} />}
+
+            {isCommentsOpen && (
+                <AiCommentsExpanded
+                    onClose={() => setIsCommentsOpen(false)}
+                    articleId={article.id}
+                />
+            )}
         </PageWrapper>
     );
 };

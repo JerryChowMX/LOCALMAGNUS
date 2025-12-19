@@ -95,7 +95,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, title, onLike, is
 
     return (
         <div className="audio-player">
-            <audio ref={audioRef} src={src} />
+            <audio ref={audioRef} src={src || undefined} />
 
             {title && (
                 <div className="audio-player__title">
