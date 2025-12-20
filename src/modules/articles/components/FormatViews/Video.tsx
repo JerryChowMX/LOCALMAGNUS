@@ -1,6 +1,7 @@
 import { useRef, useState, useCallback, useEffect, type FC } from 'react';
 import type { Article } from '../../types';
 import { Icons } from '../../../../components/Icons';
+import { usePodcastContext } from '../../../../contexts/PodcastContext';
 import './FormatViews.css';
 
 interface VideoProps {
@@ -15,6 +16,9 @@ export const Video: FC<VideoProps> = ({ article }) => {
     const holdTimer = useRef<number | null>(null);
     const isDragging = useRef(false);
     const isHolding = useRef(false);
+
+    // Audio focus management
+    const { pauseForOtherAudio } = usePodcastContext();
 
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
@@ -84,6 +88,8 @@ export const Video: FC<VideoProps> = ({ article }) => {
         if (!video) return;
 
         if (video.paused) {
+            // Pause global podcast before playing video
+            pauseForOtherAudio();
             // Enter fullscreen when starting playback
             if (!document.fullscreenElement && containerRef.current) {
                 try {
@@ -96,7 +102,7 @@ export const Video: FC<VideoProps> = ({ article }) => {
         } else {
             video.pause();
         }
-    }, [isSpeedBoosted]);
+    }, [isSpeedBoosted, pauseForOtherAudio]);
 
     // Time update
     const handleTimeUpdate = () => {

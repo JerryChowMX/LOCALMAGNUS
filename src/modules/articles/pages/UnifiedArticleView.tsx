@@ -26,6 +26,7 @@ import { TtsExperience, type TtsExperienceHandle } from '../tts/components/TtsEx
 // Hooks & Utils
 import { useStrapiArticle } from '../../../hooks/useStrapiArticles';
 import { usePreviewMode } from '../../../hooks/usePreviewMode';
+import { usePodcastContext } from '../../../contexts/PodcastContext';
 import { routes } from '../../../app/routes';
 import { extractTextFromBlocks } from '../../../lib/articleUtils';
 import type { BlockTokenMapping } from '../../../tts';
@@ -45,6 +46,9 @@ export const UnifiedArticleView = () => {
     const { article, isLoading, error } = useStrapiArticle(slug || '', {
         status: isPreview ? previewStatus : undefined
     });
+
+    // Audio focus management - pause global podcast when local audio plays
+    const { pauseForOtherAudio } = usePodcastContext();
 
     const [isChatOpen, setIsChatOpen] = useState(false);
     const [isCommentsOpen, setIsCommentsOpen] = useState(false);
@@ -318,6 +322,7 @@ export const UnifiedArticleView = () => {
                                 duration={ttsDuration}
                                 playbackRate={ttsPlaybackRate}
                                 onStart={() => {
+                                    pauseForOtherAudio(); // Pause global podcast
                                     setIsTtsActive(true);
                                     setIsTtsPaused(false);
                                     setTtsCurrentTime(0);

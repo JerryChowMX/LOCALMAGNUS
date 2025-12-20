@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { usePodcastEngine } from '../hooks/usePodcastEngine';
-import type { RepeatMode } from '../hooks/usePodcastEngine';
+import { usePodcastContext } from '../../../contexts/PodcastContext';
+import type { RepeatMode } from '../../../contexts/PodcastContext';
 import { podcastApi } from '../../../services/podcastApi';
 import { HeaderCenteredStack } from '../../../components/Header/HeaderCenteredStack';
 import { Icons } from '../../../components/Icons';
@@ -67,7 +67,7 @@ export const PodcastHubPage = () => {
     // Sleep timer countdown
     const [sleepTimerRemaining, setSleepTimerRemaining] = React.useState<number>(0);
 
-    // Engine
+    // Global Podcast Context (instead of local engine)
     const {
         playlist,
         currentPodcast,
@@ -88,7 +88,7 @@ export const PodcastHubPage = () => {
         loadPlaylist,
         jumpTo,
         shuffleQueue
-    } = usePodcastEngine();
+    } = usePodcastContext();
 
     // Local Dragging State for smooth scrubbing
     const [isDragging, setIsDragging] = React.useState(false);

@@ -57,6 +57,7 @@ const RedirectToToday = () => {
 
 import { SubscriptionGuard } from '../modules/monetization/components/SubscriptionGuard';
 import { Outlet } from 'react-router-dom';
+import { MiniPlayer } from '../components/MiniPlayer/MiniPlayer';
 
 const MonetizedLayout = () => (
     <SubscriptionGuard>
@@ -128,6 +129,9 @@ export const AppRouter = () => {
                         {/* 404 Catch-all */}
                         <Route path="*" element={<NotFoundPage />} />
                     </Routes>
+
+                    {/* Global floating mini player - inside Router for useLocation */}
+                    <MiniPlayer />
                 </Suspense>
             </AuthProvider>
         </BrowserRouter>

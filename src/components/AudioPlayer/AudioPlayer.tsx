@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { trackArticleCompleted } from '../../lib/analytics';
 import type { ArticleViewedProps } from '../../lib/analytics';
 import { Icons } from '../Icons';
+import { usePodcastContext } from '../../contexts/PodcastContext';
 import './AudioPlayer.css';
 
 export interface AudioPlayerProps {
@@ -22,6 +23,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, title, onLike, is
     const [duration, setDuration] = useState(0);
     const [speed, setSpeed] = useState(1.0);
     const [liked, setLiked] = useState(isLiked);
+
+    // Audio focus management
+    const { pauseForOtherAudio } = usePodcastContext();
 
     useEffect(() => {
         const audio = audioRef.current;
@@ -52,6 +56,8 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, title, onLike, is
             if (isPlaying) {
                 audioRef.current.pause();
             } else {
+                // Pause global podcast before playing this audio
+                pauseForOtherAudio();
                 audioRef.current.play();
             }
             setIsPlaying(!isPlaying);

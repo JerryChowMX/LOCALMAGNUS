@@ -1,0 +1,188 @@
+/* === Mini Player - Floating Corner === */
+
+.mini-player {
+    position: fixed;
+    bottom: 81px;
+    /* 8px above chat bar */
+    /* Aligned with chat bar */
+    /* Above AI chat bar */
+    right: 16px;
+    width: 280px;
+    height: 56px;
+
+    /* Glassmorphism - Magnus style (50% opacity, 6px blur) */
+    background-color: rgba(255, 252, 246, 0.5);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid var(--glass-border);
+    border-radius: 0;
+    /* No rounded corners */
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+
+    cursor: pointer;
+    z-index: 1000;
+    overflow: hidden;
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mini-player:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 28px rgba(0, 0, 0, 0.16);
+}
+
+/* Progress bar at top */
+.mini-player__progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: var(--border-color);
+}
+
+.mini-player__progress-fill {
+    height: 100%;
+    background-color: var(--magnus-blue);
+    transition: width 0.3s linear;
+}
+
+/* Content layout */
+.mini-player__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 12px 12px 16px;
+    height: 100%;
+}
+
+/* Episode info */
+.mini-player__info {
+    flex: 1;
+    min-width: 0;
+    padding-right: 12px;
+}
+
+.mini-player__title {
+    display: block;
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-body-small);
+    font-weight: var(--font-weight-medium);
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Controls */
+.mini-player__controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.mini-player__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: none;
+    border: none;
+    border-radius: 0;
+    /* No rounded corners */
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.mini-player__btn:hover {
+    background-color: var(--surface-subtle);
+    color: var(--text-primary);
+}
+
+.mini-player__btn--play {
+    width: 36px;
+    height: 36px;
+    background-color: var(--magnus-blue);
+    color: white;
+    border-radius: 0;
+    /* No rounded corners */
+}
+
+.mini-player__btn--play:hover {
+    background-color: var(--magnus-blue-dark);
+    color: white;
+}
+
+/* === Minimized State === */
+.mini-player__minimized {
+    position: fixed;
+    bottom: 81px;
+    /* 8px above chat bar */
+    /* Aligned with chat bar */
+    /* Above AI chat bar */
+    right: 16px;
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Glassmorphism - Magnus style */
+    background-color: rgba(255, 252, 246, 0.5);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid var(--glass-border);
+    border-radius: 0;
+    /* No rounded corners */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+
+    color: var(--magnus-blue);
+    cursor: pointer;
+    z-index: 1000;
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mini-player__minimized:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.16);
+}
+
+/* Subtle pulse when playing */
+.mini-player__minimized--playing {
+    animation: mini-player-pulse 2s ease-in-out infinite;
+}
+
+@keyframes mini-player-pulse {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    50% {
+        box-shadow: 0 4px 16px rgba(30, 111, 168, 0.3);
+    }
+}
+
+/* === Dark Mode === */
+[data-theme="dark"] .mini-player {
+    background-color: rgba(30, 27, 24, 0.5);
+}
+
+[data-theme="dark"] .mini-player__minimized {
+    background-color: rgba(30, 27, 24, 0.5);
+}
+
+/* === Responsive === */
+@media (max-width: 400px) {
+    .mini-player {
+        left: 16px;
+        right: 16px;
+        width: auto;
+    }
+}
