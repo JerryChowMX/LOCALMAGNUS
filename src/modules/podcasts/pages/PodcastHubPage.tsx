@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { usePodcastEngine } from '../hooks/usePodcastEngine';
+import type { RepeatMode } from '../hooks/usePodcastEngine';
 import { podcastApi } from '../../../services/podcastApi';
 import { HeaderCenteredStack } from '../../../components/Header/HeaderCenteredStack';
 import { Icons } from '../../../components/Icons';
@@ -39,9 +40,6 @@ const SLEEP_TIMER_OPTIONS = [
     { label: 'Desactivar', value: 0 },
 ];
 
-// Repeat modes
-type RepeatMode = 'off' | 'all' | 'one';
-
 export const PodcastHubPage = () => {
     const { date } = useParams<{ date: string }>();
     const navigate = useNavigate();
@@ -64,11 +62,10 @@ export const PodcastHubPage = () => {
     const [sleepTimerMinutes, setSleepTimerMinutes] = React.useState<number>(0);
     const [sleepTimerEndOfEpisode, setSleepTimerEndOfEpisode] = React.useState(false);
     const [isShuffled, setIsShuffled] = React.useState(false);
-    const [repeatMode, setRepeatMode] = React.useState<RepeatMode>('off');
+    const [originalPlaylist, setOriginalPlaylist] = React.useState<typeof playlist>([]);
 
     // Sleep timer countdown
     const [sleepTimerRemaining, setSleepTimerRemaining] = React.useState<number>(0);
-    const sleepTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
     // Engine
     const {
@@ -80,14 +77,17 @@ export const PodcastHubPage = () => {
         currentTime,
         duration,
         playbackRate,
+        repeatMode,
         play,
         pause,
         next,
         previous,
         seek,
         setRate,
+        setRepeatMode,
         loadPlaylist,
-        jumpTo
+        jumpTo,
+        shuffleQueue
     } = usePodcastEngine();
 
     // Local Dragging State for smooth scrubbing
@@ -132,33 +132,34 @@ export const PodcastHubPage = () => {
     }, [showMenu]);
 
     // Effect: Sleep timer countdown
+    const timerActive = sleepTimerRemaining > 0;
+
     useEffect(() => {
-        if (sleepTimerRemaining > 0 && isPlaying) {
-            sleepTimerRef.current = setInterval(() => {
+        // Only start countdown if timer is active and playing
+        if (timerActive && isPlaying) {
+            const interval = setInterval(() => {
                 setSleepTimerRemaining(prev => {
                     if (prev <= 1) {
                         pause();
+                        setSleepTimerMinutes(0); // Reset the timer state
                         return 0;
                     }
                     return prev - 1;
                 });
             }, 1000);
-        }
 
-        return () => {
-            if (sleepTimerRef.current) {
-                clearInterval(sleepTimerRef.current);
-            }
-        };
-    }, [sleepTimerRemaining, isPlaying, pause]);
+            return () => clearInterval(interval);
+        }
+    }, [timerActive, isPlaying, pause]);
 
     // Effect: Sleep timer - end of episode
     useEffect(() => {
         if (sleepTimerEndOfEpisode && currentTime > 0 && duration > 0) {
-            // Check if episode is about to end (within 1 second)
-            if (duration - currentTime <= 1) {
+            // Check if episode is about to end (within 3 seconds for reliability)
+            if (duration - currentTime <= 3) {
                 pause();
                 setSleepTimerEndOfEpisode(false);
+                setSleepTimerMinutes(0); // Reset timer state
             }
         }
     }, [currentTime, duration, sleepTimerEndOfEpisode, pause]);
@@ -231,30 +232,28 @@ export const PodcastHubPage = () => {
             setSleepTimerRemaining(minutes * 60);
             setSleepTimerEndOfEpisode(false);
         }
-        setShowMenu(false);
         setShowSleepTimerSubmenu(false);
     };
 
     const handleShuffle = () => {
         if (!isShuffled && playlist.length > 1) {
-            // Shuffle the upcoming tracks (keep current playing)
-            const current = playlist[currentIndex];
-            const before = playlist.slice(0, currentIndex);
-            const after = playlist.slice(currentIndex + 1);
-
-            // Fisher-Yates shuffle for the after array
-            const shuffled = [...after];
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            // Store original order before shuffling
+            setOriginalPlaylist([...playlist]);
+            // Shuffle upcoming tracks
+            shuffleQueue();
+            setIsShuffled(true);
+        } else if (isShuffled && originalPlaylist.length > 0) {
+            // Restore original order
+            // Find current track in original playlist
+            const currentTrack = playlist[currentIndex];
+            const originalIndex = originalPlaylist.findIndex(p => p.id === currentTrack?.id);
+            loadPlaylist(originalPlaylist);
+            if (originalIndex >= 0) {
+                jumpTo(originalIndex);
             }
-
-            loadPlaylist([...before, current, ...shuffled]);
-            // Reset index to 0 since we rebuilt the playlist keeping current at position 0
-            // Actually, we need to keep the current song at current index
+            setOriginalPlaylist([]);
+            setIsShuffled(false);
         }
-        setIsShuffled(!isShuffled);
-        setShowMenu(false);
     };
 
     const handleShare = async () => {
@@ -278,20 +277,18 @@ export const PodcastHubPage = () => {
                 console.log('Copy failed:', err);
             }
         }
-        setShowMenu(false);
     };
 
     const handleRepeatToggle = () => {
         const modes: RepeatMode[] = ['off', 'all', 'one'];
         const nextIdx = (modes.indexOf(repeatMode) + 1) % modes.length;
         setRepeatMode(modes[nextIdx]);
-        setShowMenu(false);
     };
 
     const getRepeatLabel = () => {
         switch (repeatMode) {
             case 'off': return 'Repetir: Desactivado';
-            case 'all': return 'Repetir: Cola';
+            case 'all': return 'Repetir: Playlist';
             case 'one': return 'Repetir: Episodio';
         }
     };

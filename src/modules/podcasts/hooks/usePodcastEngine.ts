@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import type { Podcast } from '../types/podcast';
 
+export type RepeatMode = 'off' | 'all' | 'one';
+
 export interface UsePodcastEngineReturn {
     playlist: Podcast[];
     currentIndex: number;
@@ -10,14 +12,17 @@ export interface UsePodcastEngineReturn {
     currentTime: number;
     duration: number;
     playbackRate: number;
+    repeatMode: RepeatMode;
     play: () => void;
     pause: () => void;
     next: () => void;
     previous: () => void;
     seek: (percentage: number) => void;
     setRate: (rate: number) => void;
+    setRepeatMode: (mode: RepeatMode) => void;
     loadPlaylist: (podcasts: Podcast[]) => void;
     jumpTo: (index: number) => void;
+    shuffleQueue: () => void;
 }
 
 export const usePodcastEngine = (): UsePodcastEngineReturn => {
@@ -29,12 +34,14 @@ export const usePodcastEngine = (): UsePodcastEngineReturn => {
     const [playbackRate, setPlaybackRate] = useState(1.0);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
+    const [repeatMode, setRepeatModeState] = useState<RepeatMode>('off');
 
     // REFS
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const playlistRef = useRef<Podcast[]>([]);
     const currentIndexRef = useRef(0); // Mirror state for event listeners
     const autoAdvanceRef = useRef(false); // Track if we're auto-advancing to next track
+    const repeatModeRef = useRef<RepeatMode>('off');
 
     // Initialize Audio
     useEffect(() => {
@@ -57,6 +64,10 @@ export const usePodcastEngine = (): UsePodcastEngineReturn => {
     useEffect(() => {
         currentIndexRef.current = currentIndex;
     }, [currentIndex]);
+
+    useEffect(() => {
+        repeatModeRef.current = repeatMode;
+    }, [repeatMode]);
 
     // CORE LOGIC
     const playTrack = useCallback(async (index: number) => {
@@ -90,10 +101,27 @@ export const usePodcastEngine = (): UsePodcastEngineReturn => {
     }, []);
 
     const handleNext = useCallback(() => {
+        const mode = repeatModeRef.current;
+
+        // Repeat one: replay current track once, then continue
+        if (mode === 'one') {
+            if (audioRef.current) {
+                audioRef.current.currentTime = 0;
+                audioRef.current.play().catch(e => console.error('Repeat play error', e));
+            }
+            // Reset to 'off' so next time it continues normally
+            setRepeatModeState('off');
+            return;
+        }
+
         const nextIndex = currentIndexRef.current + 1;
         if (nextIndex < playlistRef.current.length) {
             autoAdvanceRef.current = true; // Signal auto-advance for the effect
             setCurrentIndex(nextIndex); // Trigger effect to play
+        } else if (mode === 'all') {
+            // Repeat all: loop back to beginning
+            autoAdvanceRef.current = true;
+            setCurrentIndex(0);
         } else {
             console.log('[PodcastEngine] Playlist ended');
             setIsPlaying(false);
@@ -222,6 +250,8 @@ export const usePodcastEngine = (): UsePodcastEngineReturn => {
             }
         },
         setRate: (rate: number) => setPlaybackRate(rate),
+        repeatMode,
+        setRepeatMode: (mode: RepeatMode) => setRepeatModeState(mode),
         loadPlaylist: (newPlaylist: Podcast[]) => {
             setPlaylist(newPlaylist);
             setCurrentIndex(0);
@@ -233,6 +263,30 @@ export const usePodcastEngine = (): UsePodcastEngineReturn => {
                 setCurrentIndex(index);
                 setProgress(0);
             }
+        },
+        shuffleQueue: () => {
+            setPlaylist(currentPlaylist => {
+                const idx = currentIndexRef.current;
+
+                if (currentPlaylist.length <= 1) return currentPlaylist;
+
+                // Keep tracks before and including current, shuffle the rest
+                const beforeAndCurrent = currentPlaylist.slice(0, idx + 1);
+                const after = currentPlaylist.slice(idx + 1);
+
+                if (after.length === 0) return currentPlaylist;
+
+                // Fisher-Yates shuffle
+                const shuffled = [...after];
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                }
+
+                const newPlaylist = [...beforeAndCurrent, ...shuffled];
+                playlistRef.current = newPlaylist;
+                return newPlaylist;
+            });
         }
     };
 };
