@@ -12,6 +12,8 @@
     align-items: center;
     justify-content: center;
     padding: var(--spacing-md);
+    min-height: 80px;
+    /* Preserve header presence */
 
     /* Glassmorphism */
     background: var(--glass-bg);

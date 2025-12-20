@@ -168,6 +168,15 @@ export const MiniPlayer = () => {
 
             {/* Controls row - mobile first with good spacing */}
             <div className="mini-player__controls">
+                {/* Close */}
+                <button
+                    className="mini-player__btn"
+                    onClick={handleClose}
+                    aria-label="Cerrar"
+                >
+                    <IconX size={20} stroke={2} />
+                </button>
+
                 {/* Previous */}
                 <button
                     className="mini-player__btn"
@@ -217,15 +226,6 @@ export const MiniPlayer = () => {
                     aria-label="Minimizar"
                 >
                     <IconMinus size={20} stroke={2} />
-                </button>
-
-                {/* Close */}
-                <button
-                    className="mini-player__btn"
-                    onClick={handleClose}
-                    aria-label="Cerrar"
-                >
-                    <IconX size={20} stroke={2} />
                 </button>
             </div>
         </div>
