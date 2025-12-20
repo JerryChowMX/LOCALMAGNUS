@@ -17,6 +17,18 @@ export default factories.createCoreController('api::aichat.aichat', ({ strapi })
             return ctx.badRequest('Message and Article Context are required');
         }
 
+        // Prompt length validation - prevent cost abuse via large prompts
+        const MAX_MESSAGE_LENGTH = 1000;
+        const MAX_ARTICLE_CONTEXT_LENGTH = 10000;
+
+        if (typeof message !== 'string' || message.length > MAX_MESSAGE_LENGTH) {
+            return ctx.badRequest(`Message must be a string with max ${MAX_MESSAGE_LENGTH} characters`);
+        }
+
+        if (typeof articleContext !== 'string' || articleContext.length > MAX_ARTICLE_CONTEXT_LENGTH) {
+            return ctx.badRequest(`Article context must be a string with max ${MAX_ARTICLE_CONTEXT_LENGTH} characters`);
+        }
+
         try {
             // Get the stream from the service
             const stream = await strapi.service('api::aichat.aichat').getStreamResponse({
