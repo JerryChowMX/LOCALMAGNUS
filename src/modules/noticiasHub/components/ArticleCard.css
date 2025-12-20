@@ -35,3 +35,10 @@
     line-height: 1.3;
     font-weight: 600;
 }
+
+/* Category badge inside card - override absolute positioning */
+.noticias-card__category {
+    position: static;
+    align-self: flex-start;
+    margin-bottom: var(--spacing-xs);
+}

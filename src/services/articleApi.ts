@@ -162,8 +162,10 @@ export const articleApi = {
     // Build Strapi REST API URL with explicit population for relations
     const params = new URLSearchParams();
 
-    // Use populate=* to populate all first-level relations
-    params.append('populate', '*');
+    // Explicitly populate relations with required fields
+    params.append('populate[hero_image][fields]', 'url,alternativeText');
+    params.append('populate[category][fields]', 'name,slug');
+    params.append('populate[author][fields]', 'name,slug');
 
     // Sorting and pagination
     params.append('sort[0]', 'publishedAt:desc');

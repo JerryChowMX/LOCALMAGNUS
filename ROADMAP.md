@@ -1,76 +1,111 @@
 # MAGNUS – Project Roadmap
 
-**Current Status:** Phase 3 Complete (Core Modules Refactored & Typography System Implemented).
-**Next Priority:** Phase 4 (Strapi Integration).
+**Current Status:** Phase 6 In Progress (Search & Discovery).
+**Last Updated:** December 2024
 
 ---
 
 ## ✅ Completed Phases
 
 ### Phase 1: Noticias Hub Refactor
--   [x] Audit and refactor `NoticiasHubPage`.
--   [x] Implement `HeaderHubs` and `HeaderContent`.
--   [x] Create strict component-level CSS.
--   [x] Establish "Golden Standard" for list views.
+- [x] Audit and refactor `NoticiasHubPage`.
+- [x] Implement `HeaderHubs` and `HeaderContent`.
+- [x] Create strict component-level CSS.
+- [x] Establish "Golden Standard" for list views.
 
 ### Phase 2: Resumen Hub Refactor
--   [x] Audit and refactor `ResumenHubPage` and sub-pages (Las 5, Opinión, etc.).
--   [x] Implement `ResumenOptionCard`, `ResumenArticleCard`.
--   [x] Enforce strict styling guidelines.
+- [x] Audit and refactor `ResumenHubPage` and sub-pages (Las 5, Opinión, etc.).
+- [x] Implement `ResumenOptionCard`, `ResumenArticleCard`.
+- [x] Enforce strict styling guidelines.
 
 ### Phase 3: EPaper Hub Refactor
--   [x] Audit and refactor `EpaperHubPage` and `EpaperEditionPage`.
--   [x] Implement `EpaperCard` and `PdfViewer`.
--   [x] Ensure module consistency.
+- [x] Audit and refactor `EpaperHubPage` and `EpaperEditionPage`.
+- [x] Implement `EpaperCard` and `PdfViewer`.
+- [x] Ensure module consistency.
 
 ### Typography System
--   [x] Implement `Blinker` (Display) and `Inter` (Body) fonts.
--   [x] Create strict typography tokens and utility classes.
--   [x] Refactor `Typography` component.
--   [x] Audit all modules for typography compliance.
+- [x] Implement `Blinker` (Display) and `Inter` (Body) fonts.
+- [x] Create strict typography tokens and utility classes.
+- [x] Refactor `Typography` component.
+- [x] Audit all modules for typography compliance.
+
+### Phase 4: Strapi Integration (Data Layer)
+- [x] **Setup**: Strapi project initialized with Content Types (Article, Edition, Author, Category, Tag).
+- [x] **API Client**: Robust `strapiClient.ts` with interceptors and error handling.
+- [x] **Services**: `articlesApi.ts`, `epaperApi.ts`, `podcastApi.ts`, `commentsApi.ts`, `perfilApi.ts`.
+- [x] **Hooks**: `useStrapiArticles`, `useComments`, `useSubscription`, etc.
+- [x] **Adapters**: `strapiAdapter.ts` for data transformation.
+- [x] **Media**: Image optimization and CDN URLs working.
+
+### Phase 5: Authentication & User Features
+- [x] **Auth System**: Login, Register, Forgot Password flows implemented.
+- [x] **Social Login**: Google OAuth integration.
+- [x] **Auth Context**: Global auth state with `AuthContext.tsx`.
+- [x] **Protected Routes**: `ProtectedRoute.tsx` for gated content.
+- [x] **User Profile**: `PerfilHubPage` with account settings.
+- [x] **Subscription/Paywall**: `PaymentWallPage`, `useSubscription` hook.
+- [x] **Comments**: Authenticated commenting system.
+
+### Podcasts Module
+- [x] Podcast Hub with episode listing.
+- [x] Audio player with global context.
+- [x] Persistent MiniPlayer across navigation.
+- [x] Drag-and-drop playlist reordering.
+- [x] Audio focus management (pause on video/TTS).
+
+### Videos Module
+- [x] Videos del Día hub.
+- [x] Video player with custom controls.
+- [x] Speed control (2x on hold).
+
+### Article Views
+- [x] Unified Article View with format tabs.
+- [x] PDF Viewer integration (Presentación).
+- [x] TTS Audio player.
+- [x] Video embeds.
+- [x] Fullscreen horizontal PPT display.
 
 ---
 
 ## 🚀 Upcoming Phases
 
-### Phase 4: Strapi Integration (Data Layer)
-**Goal:** Replace mock data with real content from Strapi CMS.
--   [ ] **Setup**: Initialize Strapi project and define Content Types (Article, Edition, Author, Category).
--   [ ] **API Client**: Create a robust HTTP client (Axios/Fetch) with interceptors.
--   [ ] **Services**: Implement `ArticlesService`, `EditionsService`, `ResumenService`.
--   [ ] **Integration**: Connect React components to use real data hooks.
--   [ ] **Media**: Handle image optimization and CDN URLs.
-
-### Phase 5: Authentication & User Features
-**Goal:** Enable user accounts, subscriptions, and personalization.
--   [ ] **Auth System**: Implement Login, Register, and Forgot Password flows.
--   [ ] **User Profile**: Create Profile page and "My Account" settings.
--   [ ] **Saved Articles**: Implement "Read Later" / Bookmarks functionality.
--   [ ] **Paywall/Access Control**: Restrict premium content based on subscription status.
-
 ### Phase 6: Search & Discovery
 **Goal:** Help users find content easily.
--   [ ] **Global Search**: Implement search bar in Header.
--   [ ] **Search Results Page**: Display results with filters (Date, Section, Type).
--   [ ] **Tags/Topics**: Implement tag navigation.
+- [ ] **Global Search**: Implement search bar in Header.
+- [ ] **Search Results Page**: Display results with filters (Date, Section, Type).
+- [ ] **Tags/Topics**: Implement tag-based navigation.
+- [ ] **Trending/Popular**: Show trending articles.
 
 ### Phase 7: Polish, Performance & Testing
 **Goal:** Ensure a production-ready, high-performance application.
--   [ ] **Performance**: Code splitting, lazy loading, bundle analysis.
--   [ ] **SEO**: Meta tags, Open Graph, Sitemap generation.
--   [ ] **Testing**: Unit tests (Vitest) for utils/hooks, E2E tests (Playwright) for critical flows.
--   [ ] **Accessibility**: Audit and fix a11y issues (ARIA, contrast, keyboard nav).
+- [ ] **Performance**: Code splitting, lazy loading, bundle analysis.
+- [ ] **SEO**: Meta tags, Open Graph, Sitemap generation.
+- [ ] **Testing**: Unit tests (Vitest), E2E tests (Playwright).
+- [ ] **Accessibility**: ARIA, contrast, keyboard navigation audit.
+- [ ] **Analytics**: PostHog integration for user tracking.
 
-### Phase 8: Mobile & Native (Future)
+### Phase 8: Mobile & Native
 **Goal:** Expand to mobile platforms.
--   [ ] **PWA**: Configure Progressive Web App capabilities.
--   [ ] **React Native / Expo**: Evaluate code sharing for native app.
+- [ ] **PWA**: Service worker, manifest.json, offline support.
+- [ ] **Capacitor**: Wrap React app for iOS/Android stores.
+- [ ] **Push Notifications**: Native push via Capacitor.
+- [ ] **App Store Submission**: iOS App Store & Google Play.
 
 ---
 
-## 📅 Timeline Estimates (Rough)
+## 📅 Timeline Estimates
 
--   **Phase 4 (Strapi)**: 1-2 Weeks
--   **Phase 5 (Auth)**: 1 Week
--   **Phase 6 (Search)**: 3-4 Days
--   **Phase 7 (Polish)**: 1 Week
+| Phase | Effort | Status |
+|-------|--------|--------|
+| Phase 1-5 | Complete | ✅ |
+| Phase 6 (Search) | 3-4 Days | 🔜 Next |
+| Phase 7 (Polish) | 1 Week | Pending |
+| Phase 8 (Native) | 1-2 Weeks | Pending |
+
+---
+
+## 📋 Notes
+
+- **Strapi CMS**: Running locally, articles being created and served.
+- **Auth**: JWT-based with refresh tokens.
+- **Design System**: Magnus brand guidelines, no rounded corners, strict typography.
