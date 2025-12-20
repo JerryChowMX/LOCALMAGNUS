@@ -91,7 +91,10 @@
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 20;
+    z-index: 35;
+    /* Above info overlay (z-index: 25) */
     padding: 20px 0 8px 0;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, transparent 100%);
+    pointer-events: auto;
+    /* Ensure touch events reach progress bar */
 }

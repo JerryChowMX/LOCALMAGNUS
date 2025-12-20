@@ -123,16 +123,27 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         return clientX > midpoint;
     };
 
-    // Touch start - detect hold for 2x speed
+    // Ref to track if we started a potential hold (to differentiate tap from hold attempt)
+    const potentialHoldRef = useRef(false);
+
+    // Touch start - detect hold for 2x speed (RIGHT SIDE ONLY)
     const handleTouchStart = (e: React.TouchEvent) => {
         const touch = e.touches[0];
-        if (!isRightSide(touch.clientX)) return;
 
-        holdTimeoutRef.current = setTimeout(() => {
-            isHoldingRef.current = true;
-            startSpeedUp();
-        }, 200); // 200ms hold threshold
+        // Only setup hold detection for right side
+        if (isRightSide(touch.clientX)) {
+            potentialHoldRef.current = true;
+            holdTimeoutRef.current = setTimeout(() => {
+                isHoldingRef.current = true;
+                startSpeedUp();
+            }, 400); // 400ms hold threshold (increased for better UX)
+        } else {
+            potentialHoldRef.current = false;
+        }
     };
+
+    // Ref to prevent double-toggle on touch devices (touchend + click both fire)
+    const touchHandledRef = useRef(false);
 
     // Touch end
     const handleTouchEnd = () => {
@@ -142,20 +153,30 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         }
 
         if (isHoldingRef.current) {
+            // Was actively speeding up - just end it, don't toggle play
             endSpeedUp();
         } else {
+            // Normal tap - toggle play/pause
+            touchHandledRef.current = true; // Flag to prevent click handler
             handleTap();
+            // Reset after a short delay to allow click event to pass
+            setTimeout(() => { touchHandledRef.current = false; }, 50);
         }
+
+        potentialHoldRef.current = false;
     };
 
-    // Mouse support for testing
+    // Mouse support for testing (RIGHT SIDE ONLY for speed)
     const handleMouseDown = (e: React.MouseEvent) => {
-        if (!isRightSide(e.clientX)) return;
-
-        holdTimeoutRef.current = setTimeout(() => {
-            isHoldingRef.current = true;
-            startSpeedUp();
-        }, 200);
+        if (isRightSide(e.clientX)) {
+            potentialHoldRef.current = true;
+            holdTimeoutRef.current = setTimeout(() => {
+                isHoldingRef.current = true;
+                startSpeedUp();
+            }, 400);
+        } else {
+            potentialHoldRef.current = false;
+        }
     };
 
     const handleMouseUp = () => {
@@ -167,10 +188,14 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         if (isHoldingRef.current) {
             endSpeedUp();
         }
+        potentialHoldRef.current = false;
     };
 
     const handleClick = () => {
-        // Only handle tap if not holding
+        // Skip if touch already handled this (prevents double-toggle on touch devices)
+        if (touchHandledRef.current) return;
+
+        // Only handle tap if not holding (or was holding)
         if (!isHoldingRef.current) {
             handleTap();
         }
@@ -245,7 +270,14 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
             {/* Progress bar */}
             {isActive && (
-                <div className="video-player__progress-container">
+                <div
+                    className="video-player__progress-container"
+                    onClick={(e) => e.stopPropagation()}
+                    onTouchStart={(e) => e.stopPropagation()}
+                    onTouchEnd={(e) => e.stopPropagation()}
+                    onMouseDown={(e) => e.stopPropagation()}
+                    onMouseUp={(e) => e.stopPropagation()}
+                >
                     <VideoProgressBar
                         currentTime={currentTime}
                         duration={duration}
@@ -257,14 +289,16 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
                             }
                         }}
                         onScrubStart={() => {
-                            const video = videoRef.current;
-                            if (video) {
-                                video.pause();
-                                setIsPaused(true);
-                            }
+                            // Don't pause - let video keep playing while scrubbing
                             onScrubChange?.(true);
                         }}
                         onScrubEnd={() => {
+                            // Auto-play when scrub ends
+                            const video = videoRef.current;
+                            if (video) {
+                                video.play().catch(() => { });
+                                setIsPaused(false);
+                            }
                             onScrubChange?.(false);
                         }}
                         variant="minimal"

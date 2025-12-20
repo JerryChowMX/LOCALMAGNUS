@@ -227,6 +227,10 @@ export const VideoFeedScroller: React.FC<VideoFeedScrollerProps> = ({
                                         className={`video-feed-scroller__info ${isScrubbing && isActive ? 'video-feed-scroller__info--hidden' : ''
                                             } ${isExpanded ? 'video-feed-scroller__info--expanded' : ''}`}
                                         onClick={(e) => e.stopPropagation()}
+                                        onTouchStart={(e) => e.stopPropagation()}
+                                        onTouchEnd={(e) => e.stopPropagation()}
+                                        onMouseDown={(e) => e.stopPropagation()}
+                                        onMouseUp={(e) => e.stopPropagation()}
                                     >
                                         {/* Title - always visible, tappable to expand */}
                                         <h2

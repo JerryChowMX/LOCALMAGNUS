@@ -19,10 +19,22 @@ export const VideoSideBar: React.FC<VideoSideBarProps> = ({
     onReadArticle,
     onShare,
 }) => {
+    // Stop all events from bubbling to parent (VideoPlayer) to prevent pause
+    const stopAllEvents = (e: React.SyntheticEvent) => {
+        e.stopPropagation();
+    };
+
     return (
-        <div className="video-side-bar">
+        <div
+            className="video-side-bar"
+            onClick={stopAllEvents}
+            onTouchStart={stopAllEvents}
+            onTouchEnd={stopAllEvents}
+            onMouseDown={stopAllEvents}
+            onMouseUp={stopAllEvents}
+        >
             {/* Like Button */}
-            <button className="video-side-bar__btn" onClick={(e) => { e.stopPropagation(); onLike?.(); }}>
+            <button className="video-side-bar__btn" onClick={() => onLike?.()}>
                 <Icons.heart
                     size={28}
                     strokeWidth={isLiked ? 0 : 1.5}
@@ -35,19 +47,19 @@ export const VideoSideBar: React.FC<VideoSideBarProps> = ({
             </button>
 
             {/* Comment Button */}
-            <button className="video-side-bar__btn" onClick={(e) => { e.stopPropagation(); onComment?.(); }}>
+            <button className="video-side-bar__btn" onClick={() => onComment?.()}>
                 <Icons.comment size={28} strokeWidth={1.5} />
             </button>
 
             {/* Read Article Button - Only shows if handler provided */}
             {onReadArticle && (
-                <button className="video-side-bar__btn" onClick={(e) => { e.stopPropagation(); onReadArticle(); }}>
+                <button className="video-side-bar__btn" onClick={() => onReadArticle()}>
                     <Icons.book size={28} strokeWidth={1.5} />
                 </button>
             )}
 
             {/* Share Button */}
-            <button className="video-side-bar__btn" onClick={(e) => { e.stopPropagation(); onShare?.(); }}>
+            <button className="video-side-bar__btn" onClick={() => onShare?.()}>
                 <Icons.share size={28} strokeWidth={1.5} />
             </button>
         </div>

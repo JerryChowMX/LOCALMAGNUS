@@ -100,15 +100,19 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-md);
+    /* 12px gap for easier targeting */
     margin-bottom: var(--spacing-xl);
 }
 
-/* Navigation Buttons - Editorial Style */
+/* Navigation Buttons - Editorial Style, Thumb-Friendly */
 .home-hubs__buttons .btn--lg,
 .home-hubs__buttons button {
-    padding: var(--spacing-md) var(--spacing-lg);
-    font-size: 0.95rem;
+    padding: var(--spacing-lg) var(--spacing-lg);
+    /* 16px vertical = ~52px height */
+    min-height: 52px;
+    /* Explicit minimum for touch */
+    font-size: 1rem;
     border: none !important;
     border-radius: 0;
     background: var(--cream-100);
@@ -160,12 +164,15 @@
 .home-hubs__footer button {
     color: var(--ink-500);
     font-weight: 500;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     background: transparent;
     border: none;
     cursor: pointer;
     text-decoration: none;
-    padding: var(--spacing-sm) var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    /* Larger touch target */
+    min-height: 44px;
+    /* Minimum recommended touch size */
     transition: color 0.15s ease;
 }
 
