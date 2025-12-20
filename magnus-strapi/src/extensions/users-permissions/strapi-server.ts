@@ -2,30 +2,19 @@
  * Extended Auth Controller for users-permissions plugin
  * 
  * Adds:
- * - Progressive login lockout after failed attempts
- * - Enhanced rate limiting beyond the global middleware
+ * - Progressive login lockout with Redis persistence
+ * - Dual bucket lockout (IP+account AND account-only)
  * - Password validation on registration
  */
 
-import type { Core } from '@strapi/strapi';
-
-// In-memory store for login attempts (use Redis in production)
-const loginAttempts = new Map<string, { count: number; lockUntil: number }>();
+import { safeGet, safeSet, safeDel, safeIncr, safeExpire } from '../../utils/redis';
 
 // Configuration
-const MAX_LOGIN_ATTEMPTS = 5;
-const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minutes
+const IP_LOCKOUT_ATTEMPTS = 5;
+const IP_LOCKOUT_DURATION_S = 900; // 15 minutes
+const ACCOUNT_LOCKOUT_ATTEMPTS = 20;
+const ACCOUNT_LOCKOUT_DURATION_S = 86400; // 24 hours
 const MIN_PASSWORD_LENGTH = 8;
-
-// Cleanup old entries periodically
-setInterval(() => {
-    const now = Date.now();
-    for (const [key, entry] of loginAttempts.entries()) {
-        if (now > entry.lockUntil && entry.count === 0) {
-            loginAttempts.delete(key);
-        }
-    }
-}, 5 * 60 * 1000);
 
 function getClientIp(ctx: any): string {
     return (
@@ -36,13 +25,32 @@ function getClientIp(ctx: any): string {
     );
 }
 
-function recordFailedLogin(identifier: string): { locked: boolean; remainingAttempts: number; lockUntil?: number } {
+interface LockoutEntry {
+    count: number;
+    lockUntil: number;
+}
+
+async function getLockoutEntry(key: string): Promise<LockoutEntry | null> {
+    const data = await safeGet(key);
+    if (!data) return null;
+    try {
+        return JSON.parse(data);
+    } catch {
+        return null;
+    }
+}
+
+async function recordFailedLogin(
+    key: string,
+    maxAttempts: number,
+    lockoutSeconds: number
+): Promise<{ locked: boolean; remainingAttempts: number; lockUntil?: number }> {
     const now = Date.now();
-    let entry = loginAttempts.get(identifier);
+    let entry = await getLockoutEntry(key);
 
     // Reset if lockout expired
-    if (entry && now > entry.lockUntil) {
-        entry = { count: 0, lockUntil: 0 };
+    if (entry && entry.lockUntil > 0 && now > entry.lockUntil) {
+        entry = null;
     }
 
     if (!entry) {
@@ -51,18 +59,19 @@ function recordFailedLogin(identifier: string): { locked: boolean; remainingAtte
 
     entry.count++;
 
-    if (entry.count >= MAX_LOGIN_ATTEMPTS) {
-        entry.lockUntil = now + LOCKOUT_DURATION_MS;
-        loginAttempts.set(identifier, entry);
+    if (entry.count >= maxAttempts) {
+        entry.lockUntil = now + lockoutSeconds * 1000;
+        await safeSet(key, JSON.stringify(entry), lockoutSeconds);
         return { locked: true, remainingAttempts: 0, lockUntil: entry.lockUntil };
     }
 
-    loginAttempts.set(identifier, entry);
-    return { locked: false, remainingAttempts: MAX_LOGIN_ATTEMPTS - entry.count };
+    // TTL slightly longer than lockout to handle edge cases
+    await safeSet(key, JSON.stringify(entry), lockoutSeconds + 60);
+    return { locked: false, remainingAttempts: maxAttempts - entry.count };
 }
 
-function isLocked(identifier: string): { locked: boolean; lockUntil?: number } {
-    const entry = loginAttempts.get(identifier);
+async function isLocked(key: string): Promise<{ locked: boolean; lockUntil?: number }> {
+    const entry = await getLockoutEntry(key);
     if (!entry) return { locked: false };
 
     const now = Date.now();
@@ -70,16 +79,11 @@ function isLocked(identifier: string): { locked: boolean; lockUntil?: number } {
         return { locked: true, lockUntil: entry.lockUntil };
     }
 
-    // Lockout expired, reset
-    if (entry.lockUntil > 0 && now > entry.lockUntil) {
-        loginAttempts.delete(identifier);
-    }
-
     return { locked: false };
 }
 
-function clearFailedLogins(identifier: string): void {
-    loginAttempts.delete(identifier);
+async function clearLockout(key: string): Promise<void> {
+    await safeDel(key);
 }
 
 function validatePassword(password: string): { valid: boolean; message?: string } {
@@ -87,12 +91,10 @@ function validatePassword(password: string): { valid: boolean; message?: string 
         return { valid: false, message: `Password must be at least ${MIN_PASSWORD_LENGTH} characters long` };
     }
 
-    // Check for at least one number
     if (!/\d/.test(password)) {
         return { valid: false, message: 'Password must contain at least one number' };
     }
 
-    // Check for at least one letter
     if (!/[a-zA-Z]/.test(password)) {
         return { valid: false, message: 'Password must contain at least one letter' };
     }
@@ -101,27 +103,39 @@ function validatePassword(password: string): { valid: boolean; message?: string 
 }
 
 export default (plugin: any) => {
-    // Store original callback
     const originalCallback = plugin.controllers.auth.callback;
 
-    // Override the callback (login) method
     plugin.controllers.auth.callback = async (ctx: any) => {
         const { identifier } = ctx.request.body;
         const ip = getClientIp(ctx);
-        const lockKey = `${identifier || 'unknown'}:${ip}`;
 
-        // Check if account/IP is locked
-        const lockStatus = isLocked(lockKey);
-        if (lockStatus.locked) {
-            const retryAfter = Math.ceil((lockStatus.lockUntil! - Date.now()) / 1000);
+        // Dual bucket keys
+        const ipBucketKey = `lockout:${identifier || 'unknown'}:${ip}`;
+        const accountBucketKey = `lockout:account:${identifier || 'unknown'}`;
+
+        // Check BOTH lockout buckets
+        const ipLockStatus = await isLocked(ipBucketKey);
+        const accountLockStatus = await isLocked(accountBucketKey);
+
+        if (ipLockStatus.locked || accountLockStatus.locked) {
+            const lockUntil = Math.max(
+                ipLockStatus.lockUntil || 0,
+                accountLockStatus.lockUntil || 0
+            );
+            const retryAfter = Math.ceil((lockUntil - Date.now()) / 1000);
+            const scope = accountLockStatus.locked ? 'account' : 'ip';
+
             ctx.status = 429;
             ctx.body = {
                 error: {
                     status: 429,
                     name: 'TooManyRequestsError',
-                    message: 'Account temporarily locked due to too many failed login attempts',
+                    message: scope === 'account'
+                        ? 'Account temporarily locked due to too many failed login attempts from multiple locations'
+                        : 'Too many failed login attempts. Please try again later.',
                     details: {
-                        retryAfter,
+                        retryAfter: Math.max(retryAfter, 0),
+                        scope,
                     },
                 },
             };
@@ -129,45 +143,49 @@ export default (plugin: any) => {
         }
 
         try {
-            // Call original login method
             await originalCallback(ctx);
 
-            // If successful (no error thrown and status is 200), clear failed attempts
+            // If successful, clear BOTH lockout buckets
             if (ctx.status === 200 && ctx.body?.jwt) {
-                clearFailedLogins(lockKey);
+                await clearLockout(ipBucketKey);
+                await clearLockout(accountBucketKey);
             }
         } catch (error) {
-            // Record failed attempt
-            const result = recordFailedLogin(lockKey);
+            // Record failed attempt in BOTH buckets
+            const ipResult = await recordFailedLogin(ipBucketKey, IP_LOCKOUT_ATTEMPTS, IP_LOCKOUT_DURATION_S);
+            const accountResult = await recordFailedLogin(accountBucketKey, ACCOUNT_LOCKOUT_ATTEMPTS, ACCOUNT_LOCKOUT_DURATION_S);
 
-            if (result.locked) {
+            // If either triggered lockout, return 429
+            if (ipResult.locked || accountResult.locked) {
+                const retryAfter = ipResult.locked ? IP_LOCKOUT_DURATION_S : ACCOUNT_LOCKOUT_DURATION_S;
+                const scope = accountResult.locked ? 'account' : 'ip';
+
                 ctx.status = 429;
                 ctx.body = {
                     error: {
                         status: 429,
                         name: 'TooManyRequestsError',
-                        message: 'Account locked due to too many failed login attempts. Try again in 15 minutes.',
+                        message: scope === 'account'
+                            ? 'Account locked due to too many failed attempts from multiple locations. Try again in 24 hours.'
+                            : 'Account locked due to too many failed attempts. Try again in 15 minutes.',
                         details: {
-                            retryAfter: Math.ceil(LOCKOUT_DURATION_MS / 1000),
+                            retryAfter,
+                            scope,
                         },
                     },
                 };
                 return;
             }
 
-            // Re-throw to let Strapi handle the error normally
             throw error;
         }
     };
 
-    // Store original register
     const originalRegister = plugin.controllers.auth.register;
 
-    // Override the register method to add password validation
     plugin.controllers.auth.register = async (ctx: any) => {
         const { password } = ctx.request.body;
 
-        // Validate password strength
         const validation = validatePassword(password);
         if (!validation.valid) {
             ctx.status = 400;
@@ -181,7 +199,6 @@ export default (plugin: any) => {
             return;
         }
 
-        // Call original register
         return originalRegister(ctx);
     };
 

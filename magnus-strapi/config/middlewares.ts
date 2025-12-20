@@ -46,6 +46,11 @@ export default [
     name: 'global::rate-limit',
     config: {},
   },
+  // Query validation middleware (sort field whitelist)
+  {
+    name: 'global::query-validator',
+    config: {},
+  },
   'strapi::poweredBy',
   'strapi::query',
   'strapi::body',

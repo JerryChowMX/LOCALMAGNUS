@@ -1,73 +1,46 @@
 /**
  * Rate Limiting Middleware for Strapi
  * 
- * Multi-bucket rate limiting with in-memory store.
+ * Multi-bucket rate limiting with Redis persistence.
  * Includes both per-minute rate limits AND daily quotas for expensive endpoints.
- * 
- * For production scaling, replace the Map store with Redis.
+ * Uses fail-open pattern: if Redis unavailable, allows requests.
  */
 
 import type { Core } from '@strapi/strapi';
+import { safeGet, safeSet, safeIncr, safeExpire, isRedisConnected } from '../utils/redis';
 
 interface RateLimitConfig {
     pattern: RegExp;
     limit: number;
     windowMs: number;
     useUserId?: boolean;
-    dailyQuota?: number; // For expensive endpoints
+    dailyQuota?: number;
+    globalDailyLimit?: number;
 }
-
-interface RateLimitEntry {
-    count: number;
-    resetTime: number;
-}
-
-interface DailyQuotaEntry {
-    count: number;
-    resetDate: string; // YYYY-MM-DD
-}
-
-// In-memory stores (replace with Redis for horizontal scaling)
-const rateLimitStore = new Map<string, RateLimitEntry>();
-const dailyQuotaStore = new Map<string, DailyQuotaEntry>();
 
 // Route-specific rate limits with optional daily quotas
 const rateLimits: RateLimitConfig[] = [
     // Auth endpoints - strict limit to prevent brute force
     { pattern: /^\/api\/auth\//i, limit: 5, windowMs: 60 * 1000 },
 
-    // Comments - moderate limit, prefer userId if authenticated
+    // Registration - very strict to prevent account farming
+    { pattern: /^\/api\/auth\/local\/register$/i, limit: 3, windowMs: 3600 * 1000 }, // 3/hour
+
+    // Comments - moderate limit
     { pattern: /^\/api\/comments$/i, limit: 10, windowMs: 60 * 1000, useUserId: true },
 
     // Articles - higher limit for reading
     { pattern: /^\/api\/articles/i, limit: 60, windowMs: 60 * 1000 },
 
-    // AI endpoints - strict per-user limit + daily quota
-    { pattern: /^\/api\/ai\//i, limit: 10, windowMs: 60 * 1000, useUserId: true, dailyQuota: 50 },
+    // AI endpoints - strict per-user limit + daily quota + global limit
+    { pattern: /^\/api\/ai\//i, limit: 10, windowMs: 60 * 1000, useUserId: true, dailyQuota: 50, globalDailyLimit: 10000 },
 
-    // TTS endpoints - strict per-user limit + daily quota
-    { pattern: /^\/api\/tts/i, limit: 5, windowMs: 60 * 1000, useUserId: true, dailyQuota: 30 },
+    // TTS endpoints - strict per-user limit + daily quota + global limit
+    { pattern: /^\/api\/tts/i, limit: 5, windowMs: 60 * 1000, useUserId: true, dailyQuota: 30, globalDailyLimit: 5000 },
 
     // Generate TTS (custom controller) - strict daily quota
-    { pattern: /^\/api\/articles\/.*\/generate-tts/i, limit: 3, windowMs: 60 * 1000, useUserId: true, dailyQuota: 10 },
+    { pattern: /^\/api\/articles\/.*\/generate-tts/i, limit: 3, windowMs: 60 * 1000, useUserId: true, dailyQuota: 10, globalDailyLimit: 1000 },
 ];
-
-// Cleanup old entries periodically (every 5 minutes)
-setInterval(() => {
-    const now = Date.now();
-    for (const [key, entry] of rateLimitStore.entries()) {
-        if (now > entry.resetTime) {
-            rateLimitStore.delete(key);
-        }
-    }
-    // Clean up daily quotas older than today
-    const today = new Date().toISOString().split('T')[0];
-    for (const [key, entry] of dailyQuotaStore.entries()) {
-        if (entry.resetDate !== today) {
-            dailyQuotaStore.delete(key);
-        }
-    }
-}, 5 * 60 * 1000);
 
 function getClientIp(ctx: any): string {
     return (
@@ -86,23 +59,11 @@ function getTodayString(): string {
     return new Date().toISOString().split('T')[0];
 }
 
-function checkDailyQuota(key: string, quota: number): { allowed: boolean; used: number; remaining: number } {
-    const today = getTodayString();
-    let entry = dailyQuotaStore.get(key);
-
-    // Reset if new day
-    if (!entry || entry.resetDate !== today) {
-        entry = { count: 0, resetDate: today };
-    }
-
-    if (entry.count >= quota) {
-        return { allowed: false, used: entry.count, remaining: 0 };
-    }
-
-    entry.count++;
-    dailyQuotaStore.set(key, entry);
-
-    return { allowed: true, used: entry.count, remaining: quota - entry.count };
+function getSecondsUntilMidnightUTC(): number {
+    const now = new Date();
+    const midnight = new Date(now);
+    midnight.setUTCHours(24, 0, 0, 0);
+    return Math.ceil((midnight.getTime() - now.getTime()) / 1000);
 }
 
 export default (config: any, { strapi }: { strapi: Core.Strapi }) => {
@@ -124,14 +85,38 @@ export default (config: any, { strapi }: { strapi: Core.Strapi }) => {
             }
         }
 
-        // Build the rate limit key
         const ip = getClientIp(ctx);
         const userId = getUserId(ctx);
-        const identifier = limitConfig.useUserId && userId ? `user:${userId}` : `ip:${ip}`;
+        const today = getTodayString();
 
-        // Check daily quota first (for expensive endpoints)
+        // --- GLOBAL DAILY LIMIT CHECK (for expensive endpoints) ---
+        if (limitConfig.globalDailyLimit) {
+            const routeType = path.split('/')[2] || 'unknown';
+            const globalKey = `global:${routeType}:${today}`;
+
+            const globalCount = await safeIncr(globalKey);
+            if (globalCount === 1) {
+                await safeExpire(globalKey, getSecondsUntilMidnightUTC());
+            }
+
+            ctx.set('X-GlobalBudget-Remaining', Math.max(0, limitConfig.globalDailyLimit - globalCount).toString());
+
+            if (globalCount > limitConfig.globalDailyLimit) {
+                ctx.status = 503;
+                ctx.body = {
+                    error: {
+                        status: 503,
+                        name: 'ServiceUnavailableError',
+                        message: 'Service temporarily unavailable. Daily system limit reached.',
+                    },
+                };
+                strapi.log.warn(`Global limit exceeded: ${globalKey} (${globalCount}/${limitConfig.globalDailyLimit})`);
+                return;
+            }
+        }
+
+        // --- PER-USER DAILY QUOTA CHECK (for expensive endpoints) ---
         if (limitConfig.dailyQuota) {
-            // Require auth for quota-limited endpoints
             if (!userId) {
                 ctx.status = 401;
                 ctx.body = {
@@ -144,56 +129,71 @@ export default (config: any, { strapi }: { strapi: Core.Strapi }) => {
                 return;
             }
 
-            const quotaKey = `daily:${path.split('/')[2]}:user:${userId}`;
-            const quotaResult = checkDailyQuota(quotaKey, limitConfig.dailyQuota);
+            const routeType = path.split('/')[2] || 'unknown';
+            const quotaKey = `quota:${routeType}:user:${userId}:${today}`;
 
-            // Set daily quota headers
+            const quotaCount = await safeIncr(quotaKey);
+            if (quotaCount === 1) {
+                await safeExpire(quotaKey, getSecondsUntilMidnightUTC());
+            }
+
+            const remaining = Math.max(0, limitConfig.dailyQuota - quotaCount);
             ctx.set('X-DailyQuota-Limit', limitConfig.dailyQuota.toString());
-            ctx.set('X-DailyQuota-Remaining', quotaResult.remaining.toString());
-            ctx.set('X-DailyQuota-Reset', 'midnight');
+            ctx.set('X-DailyQuota-Remaining', remaining.toString());
+            ctx.set('X-DailyQuota-Reset', 'midnight-utc');
 
-            if (!quotaResult.allowed) {
+            if (quotaCount > limitConfig.dailyQuota) {
                 ctx.status = 429;
                 ctx.body = {
                     error: {
                         status: 429,
                         name: 'DailyQuotaExceededError',
-                        message: `Daily quota of ${limitConfig.dailyQuota} requests exceeded. Resets at midnight.`,
+                        message: `Daily quota of ${limitConfig.dailyQuota} requests exceeded. Resets at midnight UTC.`,
                         details: {
                             limit: limitConfig.dailyQuota,
-                            used: quotaResult.used,
+                            used: quotaCount,
                         },
                     },
                 };
-
-                strapi.log.warn(`Daily quota exceeded: ${quotaKey} (${quotaResult.used}/${limitConfig.dailyQuota})`);
+                strapi.log.warn(`Daily quota exceeded: ${quotaKey} (${quotaCount}/${limitConfig.dailyQuota})`);
                 return;
             }
         }
 
-        // Per-minute rate limiting
-        const rateLimitKey = `${path}:${identifier}`;
-        const now = Date.now();
-        let entry = rateLimitStore.get(rateLimitKey);
+        // --- PER-MINUTE RATE LIMIT CHECK ---
+        const identifier = limitConfig.useUserId && userId ? `user:${userId}` : `ip:${ip}`;
+        const windowSeconds = Math.ceil(limitConfig.windowMs / 1000);
+        const rateLimitKey = `ratelimit:${path}:${identifier}`;
 
-        if (!entry || now > entry.resetTime) {
-            entry = {
-                count: 0,
-                resetTime: now + limitConfig.windowMs,
-            };
+        // Get current count
+        const currentData = await safeGet(rateLimitKey);
+        let count = 1;
+        let resetTime = Date.now() + limitConfig.windowMs;
+
+        if (currentData) {
+            try {
+                const parsed = JSON.parse(currentData);
+                if (parsed.resetTime > Date.now()) {
+                    count = parsed.count + 1;
+                    resetTime = parsed.resetTime;
+                }
+            } catch {
+                // Invalid data, start fresh
+            }
         }
 
-        entry.count++;
-        rateLimitStore.set(rateLimitKey, entry);
+        // Save updated count
+        const ttl = Math.ceil((resetTime - Date.now()) / 1000);
+        await safeSet(rateLimitKey, JSON.stringify({ count, resetTime }), Math.max(ttl, 1));
 
-        const remaining = Math.max(0, limitConfig.limit - entry.count);
-        const resetSeconds = Math.ceil((entry.resetTime - now) / 1000);
+        const remaining = Math.max(0, limitConfig.limit - count);
+        const resetSeconds = Math.ceil((resetTime - Date.now()) / 1000);
 
         ctx.set('RateLimit-Limit', limitConfig.limit.toString());
         ctx.set('RateLimit-Remaining', remaining.toString());
         ctx.set('RateLimit-Reset', resetSeconds.toString());
 
-        if (entry.count > limitConfig.limit) {
+        if (count > limitConfig.limit) {
             ctx.status = 429;
             ctx.body = {
                 error: {
@@ -205,8 +205,7 @@ export default (config: any, { strapi }: { strapi: Core.Strapi }) => {
                     },
                 },
             };
-
-            strapi.log.warn(`Rate limit exceeded: ${rateLimitKey} (${entry.count}/${limitConfig.limit})`);
+            strapi.log.warn(`Rate limit exceeded: ${rateLimitKey} (${count}/${limitConfig.limit})`);
             return;
         }
 

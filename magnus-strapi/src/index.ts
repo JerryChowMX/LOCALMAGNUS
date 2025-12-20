@@ -1,4 +1,5 @@
 // import type { Core } from '@strapi/strapi';
+import { initRedis } from './utils/redis';
 
 export default {
   /**
@@ -12,6 +13,10 @@ export default {
    * your application gets started.
    */
   async bootstrap({ strapi }) {
+    // Initialize Redis for rate limiting, quotas, and lockouts
+    initRedis();
+    strapi.log.info('🔗 Redis client initialized');
+
     try {
       // ===== PERMISSIONS SETUP =====
       strapi.log.info('🔐 Setting up permissions...');
