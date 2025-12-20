@@ -36,9 +36,10 @@
     font-weight: 600;
 }
 
-/* Category badge inside card - override absolute positioning */
+/* Category badge - absolute positioned top-right */
 .noticias-card__category {
-    position: static;
-    align-self: flex-start;
-    margin-bottom: var(--spacing-xs);
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    z-index: 5;
 }

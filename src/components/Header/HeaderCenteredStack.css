@@ -109,8 +109,8 @@
     color: var(--text-secondary);
     cursor: pointer;
 
-    font-family: var(--font-family-body);
-    font-size: var(--font-size-caption);
+    font-family: var(--font-family-display);
+    font-size: 14px;
     font-weight: var(--font-weight-semibold);
     text-transform: uppercase;
     letter-spacing: 0.15em;
