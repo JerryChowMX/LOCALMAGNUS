@@ -17,6 +17,7 @@ export interface UsePodcastEngineReturn {
     seek: (percentage: number) => void;
     setRate: (rate: number) => void;
     loadPlaylist: (podcasts: Podcast[]) => void;
+    jumpTo: (index: number) => void;
 }
 
 export const usePodcastEngine = (): UsePodcastEngineReturn => {
@@ -225,6 +226,13 @@ export const usePodcastEngine = (): UsePodcastEngineReturn => {
             setPlaylist(newPlaylist);
             setCurrentIndex(0);
             setProgress(0);
+        },
+        jumpTo: (index: number) => {
+            if (index >= 0 && index < playlistRef.current.length) {
+                autoAdvanceRef.current = true;
+                setCurrentIndex(index);
+                setProgress(0);
+            }
         }
     };
 };
