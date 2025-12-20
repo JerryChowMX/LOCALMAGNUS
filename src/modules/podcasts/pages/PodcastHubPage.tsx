@@ -6,6 +6,7 @@ import { podcastApi } from '../../../services/podcastApi';
 import { HeaderCenteredStack } from '../../../components/Header/HeaderCenteredStack';
 import { Icons } from '../../../components/Icons';
 import { Heading, Text, Caption } from '../../../components/Typography/Typography';
+import { MarqueeText } from '../../../components/Typography/MarqueeText';
 import {
     IconHeart,
     IconChevronLeft,
@@ -87,13 +88,50 @@ export const PodcastHubPage = () => {
         setRepeatMode,
         loadPlaylist,
         jumpTo,
-        shuffleQueue
+        shuffleQueue,
+        reorderPlaylist
     } = usePodcastContext();
 
     // Local Dragging State for smooth scrubbing
     const [isDragging, setIsDragging] = React.useState(false);
     const [dragProgress, setDragProgress] = React.useState(0);
     const progressBarRef = React.useRef<HTMLDivElement>(null);
+
+    // Drag and drop sorting state
+    const [draggedItemIndex, setDraggedItemIndex] = React.useState<number | null>(null);
+
+    // Handlers
+    const handleDragStart = (e: React.DragEvent<HTMLLIElement>, index: number) => {
+        setDraggedItemIndex(index);
+        e.dataTransfer.effectAllowed = 'move';
+        // Optional: Custom drag image or ghost styling
+        // e.dataTransfer.setDragImage(e.currentTarget, 20, 20);
+    };
+
+    const handleDragEnd = (e: React.DragEvent<HTMLLIElement>) => {
+        setDraggedItemIndex(null);
+    };
+
+    const handleDragOver = (e: React.DragEvent<HTMLLIElement>, index: number) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+    };
+
+    const handleDrop = (e: React.DragEvent<HTMLLIElement>, targetIndex: number) => {
+        e.preventDefault();
+        if (draggedItemIndex === null || draggedItemIndex === targetIndex) return;
+
+        // Calculate adjustments because upcomingTracks is a subset (playlist slice)
+        // upcomingTracks[0] corresponds to playlist[currentIndex + 1]
+        // So global fromIndex = currentIndex + 1 + draggedItemIndex
+        // global toIndex = currentIndex + 1 + targetIndex
+
+        const globalFromIndex = currentIndex + 1 + draggedItemIndex;
+        const globalToIndex = currentIndex + 1 + targetIndex;
+
+        reorderPlaylist(globalFromIndex, globalToIndex);
+        setDraggedItemIndex(null);
+    };
 
     const displayDuration = duration || 0;
     const currentProgress = isDragging ? dragProgress : engineProgress;
@@ -539,12 +577,20 @@ export const PodcastHubPage = () => {
                                 {upcomingTracks.map((track, idx) => (
                                     <li
                                         key={track.id || idx}
-                                        className="podcast-queue__item"
+                                        className={`podcast-queue__item ${draggedItemIndex === idx ? 'podcast-queue__item--dragging' : ''}`}
                                         onClick={() => handleSelectTrack(currentIndex + 1 + idx)}
+                                        draggable
+                                        onDragStart={(e) => handleDragStart(e, idx)}
+                                        onDragOver={(e) => handleDragOver(e, idx)}
+                                        onDrop={(e) => handleDrop(e, idx)}
+                                        onDragEnd={handleDragEnd}
                                     >
                                         <span className="podcast-queue__item-number">{currentIndex + 2 + idx}</span>
                                         <div className="podcast-queue__item-info">
-                                            <p className="podcast-queue__item-title">{track.title}</p>
+                                            <MarqueeText
+                                                text={track.title}
+                                                className="podcast-queue__item-title-wrapper"
+                                            />
                                             <p className="podcast-queue__item-subtitle">{track.author || 'Magnus Audio'}</p>
                                         </div>
                                         <div className="podcast-queue__item-drag">

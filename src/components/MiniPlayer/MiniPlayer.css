@@ -51,35 +51,20 @@
 }
 
 .mini-player__title {
-    display: inline-block;
+    /* Font styling for the marquee wrapper */
     font-family: var(--font-family-body);
     font-size: 14px;
     font-weight: var(--font-weight-semibold);
     color: var(--text-primary);
-    white-space: nowrap;
+    width: 100%;
 }
 
-/* Marquee animation - only applied when --animate class is present */
-.mini-player__title--animate {
-    animation: marquee 12s linear infinite;
-}
-
-.mini-player__title-spacer {
-    padding-left: 48px;
-}
-
-.mini-player__title-wrapper:hover .mini-player__title--animate {
-    animation-play-state: paused;
-}
-
-@keyframes marquee {
-    0% {
-        transform: translateX(0%);
-    }
-
-    100% {
-        transform: translateX(-50%);
-    }
+/* Ensure marquee content inherits font */
+.mini-player__title .marquee-content {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
 }
 
 /* Controls row - mobile first with generous touch targets */

@@ -29,6 +29,7 @@ export interface PodcastContextValue {
     loadPlaylist: (podcasts: Podcast[]) => void;
     jumpTo: (index: number) => void;
     shuffleQueue: () => void;
+    reorderPlaylist: (fromIndex: number, toIndex: number) => void;
 
     // Mini Player State
     isMinimized: boolean;
@@ -315,6 +316,41 @@ export const PodcastProvider = ({ children }: { children: ReactNode }) => {
                 }
 
                 const newPlaylist = [...beforeAndCurrent, ...shuffled];
+                playlistRef.current = newPlaylist;
+                return newPlaylist;
+            });
+        },
+        reorderPlaylist: (fromIndex: number, toIndex: number) => {
+            if (fromIndex === toIndex) return;
+
+            setPlaylist(currentPlaylist => {
+                if (fromIndex < 0 || fromIndex >= currentPlaylist.length) return currentPlaylist;
+                if (toIndex < 0 || toIndex >= currentPlaylist.length) return currentPlaylist;
+
+                const newPlaylist = [...currentPlaylist];
+                const [removed] = newPlaylist.splice(fromIndex, 1);
+                newPlaylist.splice(toIndex, 0, removed);
+
+                // Adjust current index if affected
+                const currentIdx = currentIndexRef.current;
+                let newCurrentIdx = currentIdx;
+
+                if (fromIndex === currentIdx) {
+                    // Moving the current track
+                    newCurrentIdx = toIndex;
+                } else if (fromIndex < currentIdx && toIndex >= currentIdx) {
+                    // Item moved from before current to after
+                    newCurrentIdx = currentIdx - 1;
+                } else if (fromIndex > currentIdx && toIndex <= currentIdx) {
+                    // Item moved from after current to before
+                    newCurrentIdx = currentIdx + 1;
+                }
+
+                if (newCurrentIdx !== currentIdx) {
+                    setCurrentIndex(newCurrentIdx);
+                    currentIndexRef.current = newCurrentIdx;
+                }
+
                 playlistRef.current = newPlaylist;
                 return newPlaylist;
             });

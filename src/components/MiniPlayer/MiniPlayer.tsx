@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useRef, useEffect, useState } from 'react';
 import { usePodcastContext } from '../../contexts/PodcastContext';
 import { useAuth } from '../../hooks/useAuth';
+import { MarqueeText } from '../Typography/MarqueeText';
 import {
     IconPlayerPlay,
     IconPlayerPause,
@@ -31,9 +31,6 @@ export const MiniPlayer = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
-    const titleRef = useRef<HTMLSpanElement>(null);
-    const wrapperRef = useRef<HTMLDivElement>(null);
-    const [shouldAnimate, setShouldAnimate] = useState(false);
 
     const {
         currentPodcast,
@@ -53,21 +50,6 @@ export const MiniPlayer = () => {
         pauseForVideo,
         clearSession,
     } = usePodcastContext();
-
-    // Check if title overflows and needs marquee
-    useEffect(() => {
-        const checkOverflow = () => {
-            if (titleRef.current && wrapperRef.current) {
-                const titleWidth = titleRef.current.scrollWidth;
-                const wrapperWidth = wrapperRef.current.clientWidth;
-                setShouldAnimate(titleWidth > wrapperWidth);
-            }
-        };
-
-        checkOverflow();
-        window.addEventListener('resize', checkOverflow);
-        return () => window.removeEventListener('resize', checkOverflow);
-    }, [currentPodcast?.title]);
 
     // Check if we should show the mini player
     const isOnHiddenRoute = HIDDEN_ROUTES.some(route =>
@@ -176,14 +158,11 @@ export const MiniPlayer = () => {
 
             {/* Title row - marquee only if overflows */}
             <div className="mini-player__title-row">
-                <div className="mini-player__title-wrapper" ref={wrapperRef}>
-                    <span
-                        className={`mini-player__title ${shouldAnimate ? 'mini-player__title--animate' : ''}`}
-                        ref={titleRef}
-                    >
-                        {currentPodcast?.title || 'Sin título'}
-                        {shouldAnimate && <span className="mini-player__title-spacer">{currentPodcast?.title || 'Sin título'}</span>}
-                    </span>
+                <div className="mini-player__title-wrapper">
+                    <MarqueeText
+                        text={currentPodcast?.title || 'Sin título'}
+                        className="mini-player__title"
+                    />
                 </div>
             </div>
 

@@ -391,14 +391,13 @@
     min-width: 0;
 }
 
-.podcast-queue__item-title {
+.podcast-queue__item-title-wrapper {
     font-size: var(--font-size-body);
     font-weight: var(--font-weight-medium);
     color: var(--text-primary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     margin: 0;
+    width: 100%;
+    /* Overflow handled by MarqueeText */
 }
 
 .podcast-queue__item-subtitle {
@@ -416,6 +415,13 @@
     justify-content: center;
     color: var(--text-disabled);
     flex-shrink: 0;
+    cursor: grab;
+}
+
+.podcast-queue__item--dragging {
+    opacity: 0.5;
+    background-color: var(--surface-hover);
+    border: 1px dashed var(--magnus-blue);
 }
 
 /* Empty Queue State */

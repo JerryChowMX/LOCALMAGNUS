@@ -1,0 +1,170 @@
+/* === Marquee Text Layout === */
+.marquee-wrapper {
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    max-width: 100%;
+    display: block;
+    /* Ensure it takes width */
+}
+
+.marquee-content {
+    display: inline-block;
+    white-space: nowrap;
+    /* Font styles should actally inherit from parent or via className, but keeping basics */
+}
+
+/* Spacer logic */
+.marquee-spacer {
+    display: inline-block;
+    padding-left: 48px;
+    /* Gap between repeat */
+}
+
+/* Animation */
+.marquee-content--animate {
+    animation: marquee-scroll 12s linear infinite;
+    /* Pause on hover of wrapper */
+}
+
+.marquee-wrapper:hover .marquee-content--animate {
+    animation-play-state: paused;
+}
+
+@keyframes marquee-scroll {
+    0% {
+        transform: translateX(0%);
+    }
+
+    100% {
+        transform: translateX(-50%);
+        /* Move left by 50% because content is doubled (text + spacer + text) 
+           Wait, logic in component is: {text} {spacer containing text}
+           So total width is (TextWidth + 48px + TextWidth).
+           To loop seamlessly, we need to move exactly (TextWidth + 48px).
+           
+           Wait, if I use translateX(-50%), I'm assuming the content width is exactly double.
+           Let's refine the logic.
+           Text: "Hello World"
+           Render: "Hello World" <spacer>"Hello World"</spacer>
+           
+           Move from 0 to -(Width of first part + spacer padding).
+           
+           Actually, the standard marquee trick is:
+           Content: [A][Space][A]
+           Translate X from 0% to -50% ONLY works if [A][Space][A] is perfectly symmetrical? No. 
+           It works if we move by the length of [A][Space].
+           
+           If the container has [A][Space][A], the total width is W(A) + W(Space) + W(A).
+           We want to move from 0 to -(W(A) + W(Space)).
+           
+           If we use transform: translateX(-50%), we are moving by half the total width.
+           Half width = (2*W(A) + W(Space)) / 2 = W(A) + 0.5*W(Space).
+           This is WRONG. We need to move by W(A) + W(Space).
+           
+           Correction: The marquee needs to duplicate the content specifically for the animation.
+           Structure:
+           <span>
+             <span class="segment">Content</span>
+             <span class="segment" style="padding-left: 48px">Content</span>
+           </span>
+           
+           Wait, if I just use the text logic:
+           {text} {spacer w/ text}
+           
+           Actually, easier implementation for percentage based transform:
+           Outer flex container.
+           Inner animation container moving from 0 to -100% of single element?
+           
+           Let's try standard approach:
+           0% { transform: translateX(0); }
+           100% { transform: translateX( calc(-100% + 100% of visible container?) ); } No.
+           
+           Re-evaluating the component logic:
+           {text}
+           {shouldAnimate && <span className="marquee-spacer">{text}</span>}
+           
+           The `marquee-spacer` class usually has padding-left.
+           So we have: [Text] [Padding+Text]
+           
+           The second text acts as the "incoming" text. When the first text scrolls out completely, the second text should be exactly where the first one started...
+           BUT the padding is part of the second block.
+           
+           Ideally:
+           Start: [Text] [Gap] [Text] visible at left edge.
+           End: [Gap] [Text] at left edge? No.
+           End: The start of the SECOND [Text] should be at the left edge.
+           
+           Distance to move = Width(Text) + Width(Gap).
+           
+           If I wrap both in a container, width = W(T) + W(G) + W(T).
+           Moving -50% moves (W(T) + 0.5*W(G) + 0.5*W(T)). Incorrect.
+           
+           Solution:
+           Allow the animation to use `transform: translateX(-50%)` effectively usually implies we have two identical blocks.
+           But here we have padding.
+           
+           Better approach:
+           <span>{text}</span>
+           <span style="padding-left: 48px">{text}</span>
+           
+           Make both `display: inline-block`.
+           
+           And animating the wrapper of these two?
+           If we just assume 50% for simplicity, it might jerk.
+           
+           Let's stick to the CSS that was working in MiniPlayer.tsx?
+           MiniPlayer CSS:
+            @keyframes marquee {
+                0% { transform: translateX(0%); }
+                100% { transform: translateX(-50%); }
+            }
+           
+           And TSX:
+           {currentPodcast?.title}
+           {shouldAnimate && <span className="mini-player__title-spacer">{currentPodcast?.title}</span>}
+           
+           .mini-player__title-spacer { padding-left: 48px; }
+           
+           If this was "working" (smooth loop), then let's analyze why.
+           
+           Maybe the user didn't notice the jerk, or maybe it wasn't working perfectly smoothly.
+           To make it perfectly smooth 0 -> -50%:
+           Content must be perfectly symmetrical.
+           Content = [Chunk 1] [Chunk 2]
+           Chunk 1 must be identical to Chunk 2.
+           
+           My implementation:
+           Chunk 1 = Text
+           Chunk 2 = Padding + Text
+           
+           These are NOT identical in width.
+           
+           Fix: Put the padding on BOTH, or use a gap flex container?
+           Or:
+           <span>{text}</span> <span style="display:inline-block; width: 48px;"></span> <span>{text}</span> <span style="display:inline-block; width: 48px;"></span>
+           Then move -50%.
+           
+           Let's adjust `MarqueeText.tsx` logic to ensure smoothness?
+           Actually, let's keep it simple first. I'll duplicate the structure that was "working" but apply padding to the right of the text elements instead?
+           
+           Props: Text.
+           Render:
+           <span style="padding-right: 48px">{text}</span>
+           <span style="padding-right: 48px">{text}</span>
+           
+           Now both halves are identical (Text + 48px padding).
+           Total width = 2 * (Text + 48px).
+           Moving -50% moves exactly (Text + 48px).
+           Start: [Text][48] [Text][48]
+           End: [Text][48] is gone. View starts at second [Text].
+           Loop -> Sits perfectly.
+           
+           I will update the component logic in the next step to do this.
+           For now, let's write the CSS to support this.
+*/
+
+        .marquee-content--animate>span {
+            display: inline-block;
+            padding-right: 48px;
+        }
