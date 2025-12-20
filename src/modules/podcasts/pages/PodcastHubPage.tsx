@@ -382,6 +382,7 @@ export const PodcastHubPage = () => {
                 <button
                     onClick={next}
                     className="podcast-player__nav-btn"
+                    disabled={currentIndex >= playlist.length - 1}
                 >
                     <IconChevronRight size={24} stroke={2} />
                 </button>

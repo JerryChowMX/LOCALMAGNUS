@@ -1,7 +1,16 @@
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useRef, useEffect, useState } from 'react';
 import { usePodcastContext } from '../../contexts/PodcastContext';
 import { useAuth } from '../../hooks/useAuth';
-import { IconPlayerPlay, IconPlayerPause, IconX, IconMinus, IconHeadphones } from '@tabler/icons-react';
+import {
+    IconPlayerPlay,
+    IconPlayerPause,
+    IconX,
+    IconMinus,
+    IconHeadphones,
+    IconChevronLeft,
+    IconChevronRight
+} from '@tabler/icons-react';
 import './MiniPlayer.css';
 
 // Routes where mini player should be hidden
@@ -22,18 +31,43 @@ export const MiniPlayer = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
+    const titleRef = useRef<HTMLSpanElement>(null);
+    const wrapperRef = useRef<HTMLDivElement>(null);
+    const [shouldAnimate, setShouldAnimate] = useState(false);
+
     const {
         currentPodcast,
+        playlist,
+        currentIndex,
         isPlaying,
         progress,
+        playbackRate,
         hasActiveSession,
         isMinimized,
         setMinimized,
         play,
         pause,
+        next,
+        previous,
+        setRate,
         pauseForVideo,
         clearSession,
     } = usePodcastContext();
+
+    // Check if title overflows and needs marquee
+    useEffect(() => {
+        const checkOverflow = () => {
+            if (titleRef.current && wrapperRef.current) {
+                const titleWidth = titleRef.current.scrollWidth;
+                const wrapperWidth = wrapperRef.current.clientWidth;
+                setShouldAnimate(titleWidth > wrapperWidth);
+            }
+        };
+
+        checkOverflow();
+        window.addEventListener('resize', checkOverflow);
+        return () => window.removeEventListener('resize', checkOverflow);
+    }, [currentPodcast?.title]);
 
     // Check if we should show the mini player
     const isOnHiddenRoute = HIDDEN_ROUTES.some(route =>
@@ -56,6 +90,21 @@ export const MiniPlayer = () => {
         !isOnHiddenRoute;
 
     if (!shouldShow) return null;
+
+    // Can navigate prev/next?
+    const canPrevious = currentIndex > 0;
+    const canNext = currentIndex < playlist.length - 1;
+
+    // Speed toggle - cycle through speeds
+    const handleSpeedToggle = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        const speeds = [1, 1.25, 1.5, 2];
+        // Find closest match or default to 0
+        let currentIdx = speeds.findIndex(s => Math.abs(s - playbackRate) < 0.01);
+        if (currentIdx === -1) currentIdx = 0;
+        const nextIdx = (currentIdx + 1) % speeds.length;
+        setRate(speeds[nextIdx]);
+    };
 
     // Handle navigation to full player
     const handleNavigateToPlayer = () => {
@@ -89,6 +138,18 @@ export const MiniPlayer = () => {
         }
     };
 
+    // Handle previous
+    const handlePrevious = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (canPrevious) previous();
+    };
+
+    // Handle next
+    const handleNext = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (canNext) next();
+    };
+
     // Minimized state - show small icon
     if (isMinimized) {
         return (
@@ -113,48 +174,80 @@ export const MiniPlayer = () => {
                 />
             </div>
 
-            {/* Content */}
-            <div className="mini-player__content">
-                {/* Episode info */}
-                <div className="mini-player__info">
-                    <span className="mini-player__title">
+            {/* Title row - marquee only if overflows */}
+            <div className="mini-player__title-row">
+                <div className="mini-player__title-wrapper" ref={wrapperRef}>
+                    <span
+                        className={`mini-player__title ${shouldAnimate ? 'mini-player__title--animate' : ''}`}
+                        ref={titleRef}
+                    >
                         {currentPodcast?.title || 'Sin título'}
+                        {shouldAnimate && <span className="mini-player__title-spacer">{currentPodcast?.title || 'Sin título'}</span>}
                     </span>
                 </div>
+            </div>
 
-                {/* Controls */}
-                <div className="mini-player__controls">
-                    {/* Play/Pause */}
-                    <button
-                        className="mini-player__btn mini-player__btn--play"
-                        onClick={handlePlayPause}
-                        aria-label={isPlaying ? 'Pausar' : 'Reproducir'}
-                    >
-                        {isPlaying ? (
-                            <IconPlayerPause size={20} stroke={2} />
-                        ) : (
-                            <IconPlayerPlay size={20} stroke={2} />
-                        )}
-                    </button>
+            {/* Controls row - mobile first with good spacing */}
+            <div className="mini-player__controls">
+                {/* Previous */}
+                <button
+                    className="mini-player__btn"
+                    onClick={handlePrevious}
+                    disabled={!canPrevious}
+                    aria-label="Anterior"
+                >
+                    <IconChevronLeft size={22} stroke={2} />
+                </button>
 
-                    {/* Minimize */}
-                    <button
-                        className="mini-player__btn"
-                        onClick={handleMinimize}
-                        aria-label="Minimizar"
-                    >
-                        <IconMinus size={18} stroke={2} />
-                    </button>
+                {/* Play/Pause */}
+                <button
+                    className="mini-player__btn mini-player__btn--play"
+                    onClick={handlePlayPause}
+                    aria-label={isPlaying ? 'Pausar' : 'Reproducir'}
+                >
+                    {isPlaying ? (
+                        <IconPlayerPause size={24} stroke={2} />
+                    ) : (
+                        <IconPlayerPlay size={24} stroke={2} />
+                    )}
+                </button>
 
-                    {/* Close */}
-                    <button
-                        className="mini-player__btn"
-                        onClick={handleClose}
-                        aria-label="Cerrar"
-                    >
-                        <IconX size={18} stroke={2} />
-                    </button>
-                </div>
+                {/* Next */}
+                <button
+                    className="mini-player__btn"
+                    onClick={handleNext}
+                    disabled={!canNext}
+                    aria-label="Siguiente"
+                >
+                    <IconChevronRight size={22} stroke={2} />
+                </button>
+
+                {/* Speed */}
+                <button
+                    className="mini-player__btn mini-player__btn--speed"
+                    onClick={handleSpeedToggle}
+                    aria-label="Velocidad"
+                >
+                    {playbackRate}x
+                </button>
+
+                {/* Minimize */}
+                <button
+                    className="mini-player__btn"
+                    onClick={handleMinimize}
+                    aria-label="Minimizar"
+                >
+                    <IconMinus size={20} stroke={2} />
+                </button>
+
+                {/* Close */}
+                <button
+                    className="mini-player__btn"
+                    onClick={handleClose}
+                    aria-label="Cerrar"
+                >
+                    <IconX size={20} stroke={2} />
+                </button>
             </div>
         </div>
     );
