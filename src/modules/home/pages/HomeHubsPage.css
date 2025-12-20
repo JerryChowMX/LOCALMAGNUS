@@ -25,29 +25,27 @@
 /* 1. MAGNUS Logo Stack */
 .home-hubs__brand {
     text-align: center;
-    margin-top: var(--spacing-xl);
+    margin-top: var(--spacing-lg);
 }
 
 .home-hubs__logo {
-    font-size: 4rem;
+    font-size: 3.5rem;
     font-family: 'Blinker', sans-serif;
     font-weight: 800;
-    margin-bottom: var(--spacing-xs);
-    line-height: 0.9;
+    margin-bottom: 4px;
+    line-height: 1;
     letter-spacing: -0.02em;
     color: var(--ink-950);
 }
 
 .home-hubs__submark {
-    font-family: 'Blinker', sans-serif;
-    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
     color: var(--brass);
-    font-size: 0.9rem;
-    letter-spacing: 0.05em;
-    text-transform: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
-
-
 
 /* 2. Welcome Block */
 .home-hubs__welcome {
@@ -56,38 +54,45 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding: var(--spacing-2xl) 0;
 }
 
 .home-hubs__greeting {
     font-weight: 400;
-    margin-bottom: var(--spacing-xs);
-    font-size: 1.25rem;
-    color: var(--ink-700);
-}
-
-.home-hubs__date {
+    margin-bottom: 0;
+    font-size: 0.9rem;
     color: var(--ink-500);
-    display: block;
-    font-size: 1rem;
-    text-transform: capitalize;
+    letter-spacing: 0.03em;
 }
 
 .home-hubs__username {
     display: block;
-    font-size: 2.5rem;
+    font-size: 1.75rem;
     font-weight: 700;
     font-family: 'Blinker', sans-serif;
     color: var(--ink-950);
-    line-height: 1.2;
+    line-height: 1.1;
     margin-top: var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
+}
+
+.home-hubs__date {
+    color: var(--ink-700);
+    display: inline-block;
+    font-size: 0.8rem;
+    text-transform: capitalize;
+    font-weight: 500;
+    letter-spacing: 0.02em;
 }
 
 /* 3. Prompt Block */
 .home-hubs__prompt {
     text-align: center;
-    margin-bottom: var(--spacing-lg);
-    font-weight: 600;
-    color: var(--ink-800);
+    margin-bottom: var(--spacing-md);
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--ink-700);
+    letter-spacing: 0.01em;
 }
 
 /* 4. Button Group */
@@ -95,29 +100,55 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
     margin-bottom: var(--spacing-xl);
 }
 
-/* Override button styling for Home Screen */
+/* Navigation Buttons - Editorial Style */
 .home-hubs__buttons .btn--lg,
 .home-hubs__buttons button {
-    padding: var(--spacing-lg) var(--spacing-xl);
-    font-size: 1.1rem;
-    border: 1px solid var(--ink-700) !important;
-    /* Softer ink border */
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: 0.95rem;
+    border: none !important;
     border-radius: 0;
-    background: transparent;
+    background: var(--cream-100);
     color: var(--ink-950);
-    font-weight: 500;
-    transition: all 0.2s ease;
+    font-weight: 600;
+    transition: all 0.15s ease;
+    text-align: left;
+    position: relative;
+    padding-left: var(--spacing-lg);
+}
+
+/* Left accent bar on buttons */
+.home-hubs__buttons .btn--lg::before,
+.home-hubs__buttons button::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--brass);
+    opacity: 0;
+    transition: opacity 0.15s ease;
 }
 
 .home-hubs__buttons .btn--lg:hover,
 .home-hubs__buttons button:hover {
-    background: rgba(18, 14, 11, 0.04);
-    /* Subtle ink tint on hover */
-    border-color: var(--ink-950) !important;
+    background: var(--cream-50);
+}
+
+.home-hubs__buttons .btn--lg:hover::before,
+.home-hubs__buttons button:hover::before {
+    opacity: 1;
+}
+
+/* Active/Focus state */
+.home-hubs__buttons .btn--lg:active,
+.home-hubs__buttons button:active {
+    background: var(--cream-100);
+    transform: translateX(2px);
 }
 
 /* 5. Footer */
@@ -129,11 +160,13 @@
 .home-hubs__footer button {
     color: var(--ink-500);
     font-weight: 500;
+    font-size: 0.85rem;
     background: transparent;
     border: none;
     cursor: pointer;
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    text-decoration: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    transition: color 0.15s ease;
 }
 
 .home-hubs__footer button:hover {
@@ -144,6 +177,7 @@
 [data-theme='dark'] .home-hubs {
     --cream-25: #12100D;
     --cream-50: #191613;
+    --cream-100: #201C18;
     --ink-950: #F2EEE8;
     --ink-800: #DCD5CA;
     --ink-700: #BEB5A7;
@@ -154,11 +188,11 @@
 
 [data-theme='dark'] .home-hubs__buttons .btn--lg,
 [data-theme='dark'] .home-hubs__buttons button {
-    border-color: var(--ink-700) !important;
+    background: var(--cream-100);
     color: var(--ink-950);
 }
 
 [data-theme='dark'] .home-hubs__buttons .btn--lg:hover,
 [data-theme='dark'] .home-hubs__buttons button:hover {
-    background: rgba(242, 238, 232, 0.08);
+    background: rgba(242, 238, 232, 0.12);
 }

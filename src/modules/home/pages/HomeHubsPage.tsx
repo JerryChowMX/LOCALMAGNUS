@@ -74,7 +74,7 @@ export const HomeHubsPage: React.FC = () => {
                     fullWidth
                     onClick={() => navigate(`/EPaper/${today}`)}
                 >
-                    E-Paper
+                    Periódico del Día
                 </Button>
             </div>
 
