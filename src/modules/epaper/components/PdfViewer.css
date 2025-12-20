@@ -3,8 +3,9 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    height: calc(100vh - 60px);
-    /* Always use full height minus header */
+    max-width: 320px;
+    height: auto;
+    /* No min-height - shrink to content */
     position: relative;
     overflow: hidden;
     transition: height 0.3s ease;
@@ -80,16 +81,40 @@
     align-items: center;
     /* Center horizontally */
     justify-content: flex-start;
-    /* Align top */
+    /* Align to top */
     width: 100%;
-    height: 100%;
+    height: auto;
     position: relative;
     overflow-y: auto;
     /* Vertical scroll */
     overflow-x: hidden;
     padding-top: 20px;
-    padding-bottom: 120px;
-    /* Space for chat bar */
+    padding-bottom: 40px;
+    /* Reduced space */
+}
+
+/* Enforce centering for React PDF internals */
+.react-pdf__Document {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.react-pdf__Page {
+    display: flex;
+    justify-content: center;
+}
+
+/* Enforce centering for React PDF internals */
+.react-pdf__Document {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.react-pdf__Page {
+    display: flex;
+    justify-content: center;
 }
 
 /* Disable native scroll when zoom library handles navigation */
@@ -233,6 +258,13 @@
     }
 }
 
+/* Landscape orientation - expand width */
+@media (orientation: landscape) and (max-height: 600px) {
+    .pdf-viewer {
+        max-width: 80vw;
+    }
+}
+
 /* Fullscreen Toggle Button */
 .pdf-viewer__fullscreen-btn {
     position: absolute;
@@ -274,6 +306,22 @@
 /* When element is in browser fullscreen */
 .pdf-viewer:fullscreen {
     height: 100vh;
+    width: 100vw;
+    max-width: 100%;
     background: #1a1a1a;
     justify-content: center;
+    align-items: center;
+}
+
+/* Make PDF page expand horizontally in fullscreen */
+.pdf-viewer:fullscreen .pdf-viewer__content {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+}
+
+.pdf-viewer:fullscreen .react-pdf__Page canvas {
+    width: 90vw !important;
+    height: auto !important;
+    max-height: 85vh;
 }

@@ -83,6 +83,15 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({ url, fullscreen = false, o
         setPageNumber(prev => Math.min(prev + 1, numPages || 1));
     };
 
+    // Calculate page width - use larger width in fullscreen
+    const getPageWidth = () => {
+        if (isBrowserFullscreen) {
+            // In fullscreen, use 90% of viewport width (landscape-friendly)
+            return Math.min(window.innerWidth * 0.9, window.innerHeight * 1.6);
+        }
+        return containerWidth || 400;
+    };
+
     // Helper for generating PDF content to avoid duplication
     // We separate this to conditionally wrap it
     const pdfContent = (
@@ -96,7 +105,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({ url, fullscreen = false, o
             >
                 <Page
                     pageNumber={pageNumber}
-                    width={containerWidth || 400}
+                    width={getPageWidth()}
                     renderTextLayer={false}
                     renderAnnotationLayer={false}
                 />
