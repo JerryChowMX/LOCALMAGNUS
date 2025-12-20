@@ -18,8 +18,9 @@ const ALLOWED_SORT_FIELDS = [
 
 export default () => {
     return async (ctx: any, next: () => Promise<void>) => {
-        // Skip validation for admin routes
-        if (ctx.request.path.startsWith('/admin')) {
+        // Skip validation for admin and content-manager routes
+        const path = ctx.request.path;
+        if (path.startsWith('/admin') || path.startsWith('/content-manager')) {
             return next();
         }
 
