@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { es } from 'date-fns/locale/es';
+import { Icons } from '../Icons';
+import { SearchModal, type SearchMode } from '../Search/SearchModal';
 import './HeaderCenteredStack.css';
 import '../../modules/noticiasHub/components/HeaderHubsDatePicker.css';
 
@@ -14,6 +16,9 @@ export interface HeaderCenteredStackProps {
     onDateChange: (date: string) => void;
     onBack?: () => void;
     showBackButton?: boolean;
+    searchMode?: SearchMode;
+    onVideoSelect?: (video: any) => void;
+    onPodcastSelect?: (podcast: any) => void;
 }
 
 const BackIcon = () => (
@@ -33,9 +38,13 @@ export const HeaderCenteredStack: React.FC<HeaderCenteredStackProps> = ({
     currentDate,
     onDateChange,
     onBack,
-    showBackButton = true
+    showBackButton = true,
+    searchMode = 'articles',
+    onVideoSelect,
+    onPodcastSelect
 }) => {
     const navigate = useNavigate();
+    const [isSearchOpen, setIsSearchOpen] = React.useState(false);
 
     const handleBack = () => {
         if (onBack) {
@@ -103,6 +112,21 @@ export const HeaderCenteredStack: React.FC<HeaderCenteredStackProps> = ({
                     maxDate={new Date()}
                 />
             </div>
+
+            <button
+                className="header-centered-stack__search"
+                onClick={() => setIsSearchOpen(true)}
+            >
+                <Icons.search size={24} />
+            </button>
+
+            <SearchModal 
+                isOpen={isSearchOpen} 
+                onClose={() => setIsSearchOpen(false)}
+                mode={searchMode}
+                onVideoSelect={onVideoSelect}
+                onPodcastSelect={onPodcastSelect}
+            />
         </header>
     );
 };

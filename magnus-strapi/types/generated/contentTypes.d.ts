@@ -519,6 +519,7 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
       'manyToMany',
       'api::article.article'
     >;
+    search_keywords: Schema.Attribute.Text & Schema.Attribute.Private;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     state: Schema.Attribute.Enumeration<
       ['draft', 'review', 'published', 'scheduled', 'archived']
@@ -749,6 +750,39 @@ export interface ApiPodcastPodcast extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiSearchSearchLog extends Struct.CollectionTypeSchema {
+  collectionName: 'search_logs';
+  info: {
+    description: 'Logs of search queries';
+    displayName: 'Search Log';
+    pluralName: 'search-logs';
+    singularName: 'search-log';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::search.search-log'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    query: Schema.Attribute.String;
+    queryTime: Schema.Attribute.Integer;
+    resultCount: Schema.Attribute.Integer;
+    tokens: Schema.Attribute.JSON;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    userId: Schema.Attribute.String;
   };
 }
 
@@ -1355,6 +1389,7 @@ declare module '@strapi/strapi' {
       'api::comment.comment': ApiCommentComment;
       'api::epaper.epaper': ApiEpaperEpaper;
       'api::podcast.podcast': ApiPodcastPodcast;
+      'api::search.search-log': ApiSearchSearchLog;
       'api::tag.tag': ApiTagTag;
       'api::video-post.video-post': ApiVideoPostVideoPost;
       'plugin::content-releases.release': PluginContentReleasesRelease;

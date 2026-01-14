@@ -60,19 +60,28 @@ export const getVideosByDate = async (
         'sort[0]': 'priority:desc',
         'sort[1]': 'publishedAt:desc',
         'sort[2]': 'id:desc',
-        'populate': '*',
         'pagination[page]': page.toString(),
         'pagination[pageSize]': pageSize.toString(),
     });
+    // Strapi 5: populate as array indices
+    params.append('populate[0]', 'video');
+    params.append('populate[1]', 'poster');
+    params.append('populate[2]', 'related_article');
 
-    const response = await fetch(`${STRAPI_URL}/video-posts?${params}`);
+    const url = `${STRAPI_URL}/video-posts?${params}`;
+    console.log('[VideoAPI] Fetching:', url);
+    
+    const response = await fetch(url);
+    console.log('[VideoAPI] Response status:', response.status);
 
     if (!response.ok) {
         throw new Error(`Failed to fetch videos: ${response.status}`);
     }
 
     const json = await response.json();
+    console.log('[VideoAPI] Response data:', json);
     const videos = (json.data || []).map(normalizeVideoPost);
+    console.log('[VideoAPI] Normalized videos:', videos);
     const pagination = json.meta?.pagination || {};
 
     return {

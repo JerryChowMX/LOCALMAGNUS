@@ -47,7 +47,7 @@ export const AuthCallbackPage: React.FC = () => {
     const { socialLogin } = useAuth();
     const [error, setError] = useState<string | null>(null);
     const [errorCode, setErrorCode] = useState<string | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [_isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const handleCallback = async () => {

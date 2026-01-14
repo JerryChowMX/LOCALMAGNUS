@@ -30,13 +30,22 @@ export const VideosDelDiaPage: React.FC = () => {
         navigate(`/VideosDelDia/${newDate}`);
     };
 
+    // Handle video selection from search
+    const handleVideoSelect = (video: any) => {
+        // TODO: Navigate to video or scroll to it in feed
+        // For now, we could potentially scroll to the video if it's in the current feed
+        console.log('Selected video from search:', video);
+    };
+
     return (
         <div className="videos-del-dia-page">
             <HeaderCenteredStack
-                variant="dark"
+                variant="light"
                 currentDate={currentDate}
                 onDateChange={handleDateChange}
                 onBack={() => navigate('/')}
+                searchMode="videos"
+                onVideoSelect={handleVideoSelect}
             />
 
             {error ? (

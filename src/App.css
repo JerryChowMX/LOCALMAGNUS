@@ -1,9 +1,10 @@
+/* Root container - no constraints for scrollytales */
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  width: 100%;
+  min-height: 100vh;
 }
+
+/* Page-specific max-width should be handled by PageWrapper, not root */
 
 .logo {
   height: 6em;

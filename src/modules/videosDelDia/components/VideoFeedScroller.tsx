@@ -4,7 +4,6 @@
  */
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { useShare } from '../../../hooks/useShare';
 import { VideoPlayer } from './VideoPlayer';
 import { VideoSideBar } from './VideoSideBar';
 import { Icons } from '../../../components/Icons';

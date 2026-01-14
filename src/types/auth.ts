@@ -5,7 +5,7 @@ export interface User {
     email: string;
     avatarUrl?: string;
     description?: string;
-    createdAt: string;
+    createdAt?: string;
 }
 
 export interface LoginCredentials {

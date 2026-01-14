@@ -31,16 +31,28 @@ export default ({ env }) => {
         user: env('DATABASE_USERNAME', 'strapi'),
         password: env('DATABASE_PASSWORD', 'strapi'),
         ssl: env.bool('DATABASE_SSL', false) && {
-          key: env('DATABASE_SSL_KEY', undefined),
-          cert: env('DATABASE_SSL_CERT', undefined),
-          ca: env('DATABASE_SSL_CA', undefined),
-          capath: env('DATABASE_SSL_CAPATH', undefined),
-          cipher: env('DATABASE_SSL_CIPHER', undefined),
-          rejectUnauthorized: env.bool('DATABASE_SSL_REJECT_UNAUTHORIZED', true),
+          // Supabase uses managed certs - allow for their CA chain
+          rejectUnauthorized: env.bool('DATABASE_SSL_REJECT_UNAUTHORIZED', false),
         },
         schema: env('DATABASE_SCHEMA', 'public'),
       },
-      pool: { min: env.int('DATABASE_POOL_MIN', 2), max: env.int('DATABASE_POOL_MAX', 10) },
+      pool: {
+        min: env.int('DATABASE_POOL_MIN', 2),
+        max: env.int('DATABASE_POOL_MAX', 10),
+        acquireTimeoutMillis: env.int('DATABASE_ACQUIRE_TIMEOUT', 30000),
+        idleTimeoutMillis: env.int('DATABASE_IDLE_TIMEOUT', 30000),
+        createTimeoutMillis: env.int('DATABASE_CREATE_TIMEOUT', 30000),
+        reapIntervalMillis: env.int('DATABASE_REAP_INTERVAL', 1000),
+        // Kill slow queries after 30 seconds
+        afterCreate: (conn: any, done: (err: any, conn: any) => void) => {
+          conn.query('SET statement_timeout = 30000', (err: any) => {
+            done(err, conn);
+          });
+        },
+      },
+      // CRITICAL: Disable prepared statements for Supabase pooler (transaction mode)
+      // Without this, you get "prepared statement already exists" errors
+      debug: env.bool('DATABASE_DEBUG', false),
     },
     sqlite: {
       connection: {

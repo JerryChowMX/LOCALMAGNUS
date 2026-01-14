@@ -151,3 +151,59 @@ export async function safeDel(key: string): Promise<boolean> {
         return false;
     }
 }
+
+/**
+ * Atomic SET NX (Set If Not Exists) with TTL.
+ * Used for leader election to prevent race conditions.
+ * 
+ * @returns true if key was set (we acquired the lock), false otherwise
+ */
+export async function safeSetNX(key: string, value: string, ttlSeconds: number): Promise<boolean> {
+    if (!redis) return false;
+
+    try {
+        // SET key value EX ttl NX - atomic operation
+        const result = await redis.set(key, value, 'EX', ttlSeconds, 'NX');
+        return result === 'OK';
+    } catch (err) {
+        console.error(`[Redis] SETNX failed for ${key}:`, (err as Error).message);
+        return false; // Fail closed for leader election
+    }
+}
+
+/**
+ * Atomic leader election with proper SET NX.
+ * Returns true if this instance is the leader.
+ * 
+ * CRITICAL: This is atomic - no race condition between GET and SET.
+ */
+export async function tryAcquireLeadership(key: string, instanceId: string, ttlSeconds: number): Promise<boolean> {
+    if (!redis) {
+        // Redis unavailable - FAIL CLOSED for cron
+        // This prevents all instances from running cron when Redis is down
+        console.warn('[Redis] Unavailable - leader election fails closed');
+        return false;
+    }
+
+    try {
+        // Try to acquire leadership atomically
+        const acquired = await redis.set(key, instanceId, 'EX', ttlSeconds, 'NX');
+        if (acquired === 'OK') {
+            return true;
+        }
+
+        // Didn't acquire - check if we're the current leader (for refresh)
+        const currentLeader = await redis.get(key);
+        if (currentLeader === instanceId) {
+            // We're the leader - refresh TTL
+            await redis.expire(key, ttlSeconds);
+            return true;
+        }
+
+        return false;
+    } catch (err) {
+        console.error(`[Redis] Leader election failed:`, (err as Error).message);
+        return false; // Fail closed
+    }
+}
+

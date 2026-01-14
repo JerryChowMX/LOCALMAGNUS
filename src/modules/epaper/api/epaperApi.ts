@@ -75,7 +75,8 @@ export const epaperApi = {
      */
     getByDate: async (date: string): Promise<EpaperEdition | null> => {
         try {
-            const url = `/epapers?filters[edition_date][$eq]=${date}&populate=*&status=published`;
+            // Explicit populate - NO populate=*
+            const url = `/epapers?filters[edition_date][$eq]=${date}&populate[cover_image][fields]=url,formats&populate[pdf_file][fields]=url,name&status=published`;
 
             // Use public fetch (no auth token) for EPaper content
             const response = await publicFetch<StrapiEpaperResponse>(url);
@@ -96,8 +97,9 @@ export const epaperApi = {
      */
     getAll: async (): Promise<EpaperEdition[]> => {
         try {
+            // Explicit populate - NO populate=*
             const response = await strapiClient.get<StrapiEpaperResponse>(
-                `/epapers?populate=*&sort=edition_date:desc`
+                `/epapers?populate[cover_image][fields]=url,formats&populate[pdf_file][fields]=url,name&sort=edition_date:desc`
             );
 
             return response.data?.map(mapEpaperEdition) || [];

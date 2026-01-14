@@ -6,14 +6,20 @@ import {
     type VerificationResult,
     type BlockTokenMapping
 } from '../../../../tts';
+import type { TtsWordTiming } from '../types';
 
-interface TtsWordTiming {
-    startMs: number;
-    endMs: number;
-    charIndex: number;
-    wordLength: number;
-    word?: string;
-}
+/**
+ * Normalize backend word timing format to the format expected by controller.
+ */
+const normalizeWordTimings = (timings: any[]): TtsWordTiming[] => {
+    return timings.map((t) => ({
+        startMs: t.startMs ?? (t.start_time * 1000),
+        endMs: t.endMs ?? (t.end_time * 1000),
+        charIndex: t.charIndex,
+        wordLength: t.wordLength,
+        word: t.word,
+    }));
+};
 
 interface UseTtsModelResult {
     wordTimings: TtsWordTiming[];
@@ -67,9 +73,9 @@ export const useTtsModel = (
 
                 // Handle legacy: wordTimings was the root array
                 if (Array.isArray(metadata)) {
-                    setWordTimings(metadata as unknown as TtsWordTiming[]);
+                    setWordTimings(normalizeWordTimings(metadata));
                 } else if (metadata.wordTimings) {
-                    setWordTimings(metadata.wordTimings);
+                    setWordTimings(normalizeWordTimings(metadata.wordTimings));
                 }
                 setVerification({ valid: false, error: 'Legacy metadata format' });
                 return;
@@ -95,7 +101,7 @@ export const useTtsModel = (
 
             // 3. Verification passed - load data
             console.log('[TTS-MODEL] Verification PASSED - loading timings and mappings');
-            setWordTimings(metadata.wordTimings);
+            setWordTimings(normalizeWordTimings(metadata.wordTimings));
             setBlockMappings(createBlockMappings(metadata.blockRanges));
 
         } catch (err: unknown) {

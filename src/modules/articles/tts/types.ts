@@ -35,3 +35,18 @@ export interface KaraokeState {
 }
 
 export type PlaybackStatus = 'idle' | 'loading' | 'playing' | 'paused' | 'ended' | 'error';
+
+/**
+ * Word timing from backend TTS metadata.
+ * Supports both normalized format (startMs/endMs) and backend format (start_time/end_time).
+ */
+export interface TtsWordTiming {
+    startMs: number;
+    endMs: number;
+    charIndex?: number;
+    wordLength?: number;
+    word?: string;
+    // Backend format (from API) - optional, normalized during loading
+    start_time?: number;
+    end_time?: number;
+}

@@ -157,7 +157,8 @@
 
 /* 5. Footer */
 .home-hubs__footer {
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: calc(var(--spacing-xl) + 60px);
+    /* Extra space for bottom nav bar */
     text-align: center;
 }
 

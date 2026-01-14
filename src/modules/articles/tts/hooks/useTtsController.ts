@@ -1,17 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import type { PlaybackStatus } from '../types';
-
-/**
- * Word timing from backend TTS metadata.
- * MATCHES RUNTIME DATA: { startMs, endMs, charIndex, wordLength }
- */
-interface TtsWordTiming {
-    startMs: number;
-    endMs: number;
-    charIndex: number;
-    wordLength: number;
-    word?: string; // Optional or missing in new format
-}
+import type { PlaybackStatus, TtsWordTiming } from '../types';
 
 interface UseTtsControllerProps {
     /** Array of word timings from TTS metadata */
@@ -62,7 +50,6 @@ function findActiveWordIndex(timings: TtsWordTiming[], timeMs: number): number {
     // Returning -1 during gaps is cleaner for karaoke.
 
     if (result !== -1) {
-        const timing = timings[result];
         // If we are strictly inside the word, we returned early.
         // If we are here, it means timeMs >= timing.startMs but timeMs >= timing.endMs
         // So we are AFTER the word.

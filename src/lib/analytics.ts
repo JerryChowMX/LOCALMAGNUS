@@ -115,10 +115,16 @@ export function initAnalytics() {
 
     // Only init if consent is explicitly granted
     if (consent) {
-        // Replace with your actual PostHog project key and host
-        // For now using placeholders or env vars if available
-        const POSTHOG_KEY = import.meta.env.VITE_POSTHOG_KEY || 'phc_PLACEHOLDER_KEY';
+        const POSTHOG_KEY = import.meta.env.VITE_POSTHOG_KEY;
         const POSTHOG_HOST = import.meta.env.VITE_POSTHOG_HOST || 'https://app.posthog.com';
+
+        // Skip initialization if PostHog key is not configured
+        if (!POSTHOG_KEY) {
+            if (import.meta.env.DEV) {
+                console.log('[Analytics] Skipping PostHog initialization - VITE_POSTHOG_KEY not configured');
+            }
+            return;
+        }
 
         posthog.init(POSTHOG_KEY, {
             api_host: POSTHOG_HOST,

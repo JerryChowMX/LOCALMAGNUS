@@ -18,7 +18,7 @@ const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1504711434969-e33886168
 export const NotasFeedPage: React.FC = () => {
     const navigate = useNavigate();
     const { currentDate, handleDateChange } = useNoticiasDate();
-    const { data: articles, isLoading, error } = useStrapiArticles(1, 10, currentDate);
+    const { data: articlesData, isLoading, error } = useStrapiArticles(1, 10, currentDate);
 
     return (
         <PageWrapper>
@@ -30,38 +30,36 @@ export const NotasFeedPage: React.FC = () => {
             />
 
             <Section padding="md">
-                {isLoading && <Body>Cargando artículos...</Body>}
-                {error && <Body color="error">Error cargando artículos.</Body>}
+                {isLoading && <Body>Cargando contenido...</Body>}
+                {error && <Body color="error">Error cargando contenido.</Body>}
 
                 {!isLoading && !error && (
                     <Grid columns={1} gap="md">
-                        {articles.map((article, index) => {
+                        {articlesData.map((article, index) => {
                             const imageUrl = article.hero_image?.url
                                 ? `${STRAPI_ORIGIN}${article.hero_image.url}`
                                 : DEFAULT_IMAGE;
-
-                            // Only show badge if category exists (no fallback)
                             const badgeCategory = article.category?.name;
 
                             return (
-                                <React.Fragment key={article.documentId}>
-                                    <ArticleCard
-                                        title={article.title}
-                                        imageUrl={imageUrl}
-                                        category={badgeCategory}
-                                        isSpecial={article.isSpecial}
-                                        onClick={() => navigate(routes.notasArticle(currentDate, article.slug))}
-                                    />
-                                    {index < articles.length - 1 && (
-                                        <Divider className="hub-divider" />
-                                    )}
-                                </React.Fragment>
+                              <React.Fragment key={`article-${article.documentId}`}>
+                                <ArticleCard
+                                    title={article.title}
+                                    imageUrl={imageUrl}
+                                    category={badgeCategory}
+                                    isSpecial={article.isSpecial}
+                                    onClick={() => navigate(routes.notasArticle(currentDate, article.slug))}
+                                />
+                                {index < articlesData.length - 1 && (
+                                    <Divider className="hub-divider" />
+                                )}
+                              </React.Fragment>
                             );
                         })}
                     </Grid>
                 )}
 
-                {!isLoading && !error && articles.length === 0 && (
+                {!isLoading && !error && articlesData.length === 0 && (
                     <EmptyState
                         title="¡Aún no hay noticias!"
                         message="Parece que no hay artículos publicados para esta fecha. Usa el calendario para explorar otras fechas."

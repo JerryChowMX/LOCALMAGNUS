@@ -1,3 +1,29 @@
+/**
+ * Middlewares Configuration
+ * 
+ * CORS is configured to use environment variable for production origins.
+ * Set CORS_ORIGINS in your .env for production deployments.
+ */
+
+const getCorsOrigins = () => {
+  // Default development origins
+  const devOrigins = [
+    'http://localhost:5173',
+    'http://localhost:5174', // Added for alternative Vite port
+    'http://localhost:3000',
+    'http://127.0.0.1:5173',
+    'http://127.0.0.1:5174',
+  ];
+
+  // Production origins from environment variable
+  // Format: comma-separated list, e.g., "https://magnus.vercel.app,https://yourdomain.com"
+  const prodOrigins = process.env.CORS_ORIGINS
+    ? process.env.CORS_ORIGINS.split(',').map((o) => o.trim())
+    : [];
+
+  return [...devOrigins, ...prodOrigins];
+};
+
 export default [
   'strapi::logger',
   'strapi::errors',
@@ -23,19 +49,12 @@ export default [
       },
     },
   },
-  // CORS configuration - explicit origin allowlist
+  // CORS configuration - uses CORS_ORIGINS env var for production
   {
     name: 'strapi::cors',
     config: {
       enabled: true,
-      // Production: replace with actual domains
-      origin: [
-        'http://localhost:5173',
-        'http://localhost:3000',
-        'http://127.0.0.1:5173',
-        // Add production domains here:
-        // 'https://magnus.example.com',
-      ],
+      origin: getCorsOrigins(),
       headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
       credentials: true,
@@ -49,6 +68,11 @@ export default [
   // Query validation middleware (sort field whitelist)
   {
     name: 'global::query-validator',
+    config: {},
+  },
+  // Populate guard - blocks populate=* and deep nesting in production
+  {
+    name: 'global::populate-guard',
     config: {},
   },
   'strapi::poweredBy',

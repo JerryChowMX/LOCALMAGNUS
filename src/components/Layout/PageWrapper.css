@@ -5,6 +5,8 @@
     padding: var(--spacing-lg);
     padding-top: 96px;
     /* 80px header + 16px spacing */
+    padding-bottom: calc(var(--spacing-lg) + env(safe-area-inset-bottom, 0px));
+    /* Standard padding + safe area */
     /* 16px outer margin */
     width: 100%;
     min-height: 100vh;

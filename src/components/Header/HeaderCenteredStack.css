@@ -70,6 +70,36 @@
     height: 24px;
 }
 
+/* Search Button (right side) */
+.header-centered-stack__search {
+    position: absolute;
+    right: var(--spacing-md);
+    left: auto;
+    top: 50%;
+    transform: translateY(-50%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    color: var(--text-secondary);
+
+    transition: color 0.2s ease;
+}
+
+.header-centered-stack__search:hover {
+    color: var(--text-primary);
+}
+
+.header-centered-stack__search svg {
+    width: 24px;
+    height: 24px;
+}
+
 /* Logo */
 .header-centered-stack__logo {
     font-family: var(--font-family-display);

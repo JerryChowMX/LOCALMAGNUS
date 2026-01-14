@@ -129,9 +129,25 @@ function mapToRecommendation(item: any): any {
 }
 
 export async function fetchStandardArticle(slug: string): Promise<ArticleStandard | null> {
+    // Explicit populate - only what we need (NO populate=*)
     const params = new URLSearchParams({
         'filters[slug][$eq]': slug,
-        'populate': '*'
+        // Hero image
+        'populate[hero_image][fields]': 'url,alternativeText,caption,width,height',
+        // Category
+        'populate[category][fields]': 'name,slug,isSpecial',
+        // Author with avatar
+        'populate[author][fields]': 'name,slug',
+        'populate[author][populate][profile_picture][fields]': 'url',
+        // Tags
+        'populate[tags][fields]': 'name,slug',
+        // Content blocks need deep populate for media
+        'populate[content_blocks][populate]': '*',
+        // Audio/Video summaries
+        'populate[audio_summary][populate]': '*',
+        'populate[video_summary][populate]': '*',
+        'populate[tts_audio][fields]': 'url',
+        'populate[tts_metadata]': '*',
     });
 
     try {

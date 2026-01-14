@@ -11,8 +11,8 @@ export const PlaygroundAudioPlayer = () => {
     const [isActive, setIsActive] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
-    const [playbackRate, setPlaybackRate] = useState(1);
-    const [isFavorited, setIsFavorited] = useState(false);
+    const [playbackRate, _setPlaybackRate] = useState(1);
+    const [isFavorited, _setIsFavorited] = useState(false);
 
     // Simulated duration of 6 minutes 12 seconds
     const duration = 372;
@@ -52,17 +52,9 @@ export const PlaygroundAudioPlayer = () => {
         setIsPaused(false);
     };
 
-    const handleSeek = (time: number) => {
-        setCurrentTime(time);
-    };
-
-    const handlePlaybackRateChange = (rate: number) => {
-        setPlaybackRate(rate);
-    };
-
-    const handleFavorite = () => {
-        setIsFavorited(!isFavorited);
-    };
+    // Note: These functions are available for future use
+    // setCurrentTime, setPlaybackRate, setIsFavorited can be used
+    // when more advanced controls are needed
 
     return (
         <PageWrapper>

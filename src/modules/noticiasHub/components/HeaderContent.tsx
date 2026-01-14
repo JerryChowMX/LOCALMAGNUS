@@ -58,10 +58,12 @@ export const HeaderContent: React.FC<HeaderContentProps> = ({
                 </div>
             </Link>
 
-            {/* Right: Action Button */}
-            <button className="header-content__share" onClick={onRightClick || onShareClick}>
-                {rightIcon || <Icons.share size={24} stroke={2} />}
-            </button>
+            {/* Right: Action Buttons */}
+            <div className="flex gap-1 items-center">
+                <button className="header-content__share" onClick={onRightClick || onShareClick}>
+                    {rightIcon || <Icons.share size={24} stroke={2} />}
+                </button>
+            </div>
         </header>
     );
 };

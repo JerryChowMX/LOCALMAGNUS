@@ -108,11 +108,11 @@ export const PodcastHubPage = () => {
         // e.dataTransfer.setDragImage(e.currentTarget, 20, 20);
     };
 
-    const handleDragEnd = (e: React.DragEvent<HTMLLIElement>) => {
+    const handleDragEnd = (_e: React.DragEvent<HTMLLIElement>) => {
         setDraggedItemIndex(null);
     };
 
-    const handleDragOver = (e: React.DragEvent<HTMLLIElement>, index: number) => {
+    const handleDragOver = (e: React.DragEvent<HTMLLIElement>, _index: number) => {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
     };
@@ -345,6 +345,12 @@ export const PodcastHubPage = () => {
     const upcomingTracks = playlist.slice(currentIndex + 1);
 
     // Show loading or empty state
+    // Handle podcast selection from search
+    const handlePodcastSelect = (podcast: any) => {
+        // TODO: Play the selected podcast
+        console.log('Selected podcast from search:', podcast);
+    };
+
     if (isLoading || playlist.length === 0) {
         return (
             <div className="podcast-player podcast-player--loading">
@@ -354,6 +360,8 @@ export const PodcastHubPage = () => {
                         currentDate={currentDate}
                         onDateChange={handleDateChange}
                         onBack={() => navigate('/')}
+                        searchMode="podcasts"
+                        onPodcastSelect={handlePodcastSelect}
                     />
                 </div>
                 <Text variant="body">
@@ -632,6 +640,8 @@ export const PodcastHubPage = () => {
                         currentDate={currentDate}
                         onDateChange={handleDateChange}
                         onBack={() => navigate('/')}
+                        searchMode="podcasts"
+                        onPodcastSelect={handlePodcastSelect}
                     />
                 </div>
 

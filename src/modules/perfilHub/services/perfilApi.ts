@@ -76,7 +76,8 @@ export const perfilApi = {
     getUserProfile: async () => {
         return withMockFallback<UserProfile>(
             async () => {
-                const response = await strapiClient.get<any>('/users/me?populate=*');
+                // Explicit populate - NO populate=*
+                const response = await strapiClient.get<any>('/users/me?populate=avatar');
                 return mapStrapiUser(response);
             },
             MOCK_PROFILE,

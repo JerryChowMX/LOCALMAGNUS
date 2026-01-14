@@ -158,6 +158,10 @@
     },
     "tts_last_error": {
       "type": "text"
+    },
+    "search_keywords": {
+      "type": "text",
+      "private": true
     }
   }
 }

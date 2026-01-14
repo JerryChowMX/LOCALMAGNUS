@@ -42,6 +42,7 @@ import {
     IconVolumeOff,
     IconMessageCircle,
     IconArrowRight,
+    IconSearch,
 } from '@tabler/icons-react';
 
 export const Icons = {
@@ -89,4 +90,5 @@ export const Icons = {
     chevronUp: IconChevronUp,
     comment: IconMessageCircle,
     arrowRight: IconArrowRight,
+    search: IconSearch,
 };

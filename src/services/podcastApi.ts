@@ -48,7 +48,9 @@ export const podcastApi = {
         const params = new URLSearchParams();
         params.append('filters[publishedAt][$gte]', startDate);
         params.append('filters[publishedAt][$lte]', endDate);
-        params.append('populate', '*');
+        // Explicit populate - NO populate=*
+        params.append('populate[audio_file][fields]', 'url');
+        params.append('populate[cover_art][fields]', 'url,alternativeText');
         params.append('sort[0]', 'publishedAt:asc'); // Oldest first (Episode 1 = First Uploaded) // Latest first? Or specific order? Let's say desc for now.
 
         try {

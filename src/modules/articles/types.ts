@@ -92,6 +92,7 @@ export interface AudioSummary {
         url: string;
         mime?: string;
     };
+    duration?: number;
     title?: string;
 }
 

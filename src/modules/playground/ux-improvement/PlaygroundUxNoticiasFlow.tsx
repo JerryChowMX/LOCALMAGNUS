@@ -122,7 +122,7 @@ export const PlaygroundUxNoticiasFlow = () => {
                         />
 
                         <div>
-                            {activeFormat === 'nota-original' && <NotaOriginal article={article} />}
+                            {activeFormat === 'nota-original' && <NotaOriginal article={article} blockMappings={null} isTtsActive={false} />}
                             {activeFormat === 'video' && <Video article={article} />}
                             {activeFormat === 'podcast' && <Podcast article={article} />}
                             {activeFormat === 'presentacion' && <Presentacion article={article} />}

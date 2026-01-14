@@ -1,19 +1,18 @@
 import { type ReactNode } from 'react';
-import { useSubscription } from '../hooks/useSubscription';
-import { LandingPage } from '../pages/LandingPage';
-import { PaymentWallPage } from '../pages/PaymentWallPage';
+// import { useSubscription } from '../hooks/useSubscription';
+// import { LandingPage } from '../pages/LandingPage';
+// import { PaymentWallPage } from '../pages/PaymentWallPage';
 
 interface SubscriptionGuardProps {
     children: ReactNode;
 }
 
 export const SubscriptionGuard = ({ children }: SubscriptionGuardProps) => {
-    const { status } = useSubscription();
+    // For local dev, disable login
+    return <>{children}</>;
 
-    // If loading or just starting, shows nothing or a spinner
-    // For better UX during "Auth Loading", we might want a splash screen
-    // But for now, we rely on AppRouter's loader or similar.
-    // However, useSubscription relies on useAuth which has its own loading.
+    /* 
+    const { status } = useSubscription();
 
     // Status Logic
     if (status === 'loading') {
@@ -34,4 +33,5 @@ export const SubscriptionGuard = ({ children }: SubscriptionGuardProps) => {
 
     // Trial or Active -> Render App
     return <>{children}</>;
+    */
 };

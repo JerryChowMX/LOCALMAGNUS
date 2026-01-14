@@ -9,7 +9,7 @@ interface AiCommentsExpandedProps {
 }
 
 export const AiCommentsExpanded: React.FC<AiCommentsExpandedProps> = ({ onClose, articleId }) => {
-    const { comments, isLoading, submitComment, submitReply } = useComments(articleId);
+    const { comments, isLoading: _isLoading, submitComment, submitReply } = useComments(articleId);
 
     const handleAddComment = async (content: string) => {
         await submitComment(content);
