@@ -62,4 +62,8 @@ export const routes = {
 
     // Strapi Integration Test
     strapiTest: '/dev/strapi-test',
+
+    // Storybook (Flipboard style)
+    storybook: '/storybook',
+    storybookDate: (date: string) => `/storybook/${date}`,
 };

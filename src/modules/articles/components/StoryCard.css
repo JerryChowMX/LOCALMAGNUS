@@ -1,0 +1,125 @@
+/* Main Container: Split Layout */
+.story-card--split {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    overflow: hidden;
+}
+
+/* TOP HALF: 50% Height */
+.story-card__top {
+    height: 50%;
+    width: 100%;
+    position: relative;
+    background-color: #000;
+}
+
+.story-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.story-card__category-badge {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 8px 16px;
+    background: #E30000;
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    z-index: 10;
+}
+
+/* BOTTOM HALF: 50% Height */
+.story-card__bottom {
+    height: 50%;
+    width: 100%;
+    background-color: #fff;
+    color: #1a1a1a;
+    padding: 32px 24px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    /* Start from top of bottom half */
+}
+
+.story-card__content {
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.story-card__title {
+    font-family: 'Times New Roman', serif;
+    /* Use Serif for "Newspaper" feel */
+    font-weight: 700;
+    font-size: 2.2rem;
+    /* Adjusted for mobile readability */
+    line-height: 1.15;
+    color: #000;
+    margin: 0 0 12px 0;
+}
+
+.story-card__meta {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 20px;
+    font-family: sans-serif;
+    display: flex;
+    gap: 4px;
+}
+
+.story-card__author {
+    font-weight: 600;
+    color: #333;
+}
+
+.story-card__excerpt {
+    font-family: 'Georgia', serif;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #444;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    /* Truncate if too long */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* 
+   Context Awareness:
+   When inside the Flipboard Engine, .page-content-top will clip .story-card--split to show only the top half.
+   .page-content-bottom will clip to show only the bottom half.
+   
+   However, Flipboard.css logic was:
+   Top Content: 200% height, top 0.
+   Bottom Content: 200% height, bottom 0.
+   
+   If StoryCard is 100vh height:
+   Top Half Render:
+     - Container is 50vh.
+     - Content is 100vh.
+     - Top aligned.
+     - Visible: 0-50vh (Image). CORRECT.
+     
+   Bottom Half Render:
+     - Container is 50vh.
+     - Content is 100vh.
+     - Bottom aligned.
+     - Visible: 50-100vh (Text). CORRECT.
+     
+   Wait, let's verify Bottom Alignment in Flipboard.css.
+   .page-content-bottom: bottom: 0;
+   If content is 100vh. Bottom aligns with bottom of 50vh container.
+   The top 50vh of the content (0-50vh, Image) is pushed ABOVE the container (-50vh).
+   The bottom 50vh (50-100vh, Text) is IN the container.
+   CORRECT.
+*/

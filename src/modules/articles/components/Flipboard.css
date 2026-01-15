@@ -1,0 +1,153 @@
+/* Main Container */
+.flipboard-container {
+    perspective: 2500px;
+    /* Tweaked for "Mechanical" depth */
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background: #000;
+    touch-action: none;
+    /* Hardware Acceleration Hints */
+    transform: translateZ(0);
+}
+
+.gesture-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 100;
+    cursor: grab;
+}
+
+.gesture-overlay:active {
+    cursor: grabbing;
+}
+
+/* Generic Layer Styles */
+.flip-layer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    background-color: #fff;
+    /* White base to prevent black flash */
+    pointer-events: none;
+}
+
+.layer-top {
+    top: 0;
+    height: 50%;
+    z-index: 1;
+    /* No border-bottom for cleaner look, or subtle */
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+}
+
+.layer-bottom {
+    bottom: 0;
+    height: 50%;
+    z-index: 0;
+}
+
+/* Flipper (Forward - Bottom Leaf) */
+.flipper-leaf {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    z-index: 10;
+    transform-style: preserve-3d;
+    transform-origin: top center;
+    will-change: transform;
+    /* Hinge gap fix */
+    margin-top: -0.5px;
+}
+
+/* Flipper (Reverse - Top Leaf) */
+.flipper-leaf-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    z-index: 10;
+    transform-style: preserve-3d;
+    transform-origin: bottom center;
+    will-change: transform;
+    /* Hinge gap fix */
+    margin-bottom: -0.5px;
+}
+
+/* Faces */
+.flipper-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    overflow: hidden;
+    background: #fff;
+    /* Critical: Ensure faces are opaque */
+}
+
+.face-front {
+    transform: rotateX(0deg);
+    z-index: 2;
+}
+
+.face-back {
+    transform: rotateX(180deg);
+    z-index: 1;
+}
+
+/* Content Positioning Logic (Viewport Locked) */
+.page-content-top {
+    position: absolute;
+    top: 0;
+    /* Anchor Top */
+    left: 0;
+    width: 100%;
+    height: 200%;
+    /* Project full page */
+}
+
+.page-content-bottom {
+    position: absolute;
+    bottom: 0;
+    /* Anchor Bottom */
+    left: 0;
+    width: 100%;
+    height: 200%;
+    /* Project full page */
+}
+
+/* Lighting */
+.shadow-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: #000;
+}
+
+.crease-shadow-top {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 24px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent);
+    pointer-events: none;
+    z-index: 20;
+}
+
+/* Utilities */
+.z-0 {
+    z-index: 0;
+}
+
+.z-1 {
+    z-index: 1;
+}
+
+.z-10 {
+    z-index: 10;
+}

@@ -41,6 +41,7 @@ export const HomeHubsPage: React.FC = () => {
 
             {/* 4. Main Navigation Button Group */}
             <div className="home-hubs__buttons">
+                {/* 1. Noticias del Día (Primary) */}
                 <Button
                     variant="glass"
                     size="lg"
@@ -48,6 +49,16 @@ export const HomeHubsPage: React.FC = () => {
                     onClick={() => navigate(`/Notas/${today}`)}
                 >
                     Noticias del día
+                </Button>
+
+                {/* 2. Flipboard / Storybook (Visual Experience) */}
+                <Button
+                    variant="glass"
+                    size="lg"
+                    fullWidth
+                    onClick={() => navigate('/storybook')}
+                >
+                    Flipboard / Storybook
                 </Button>
 
                 <Button
