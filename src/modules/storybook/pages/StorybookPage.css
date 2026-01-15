@@ -1,0 +1,43 @@
+.storybook-page {
+    min-height: 100vh;
+    background-color: var(--cream-25);
+    /* Add padding to account for fixed header */
+    padding-top: 80px;
+}
+
+/* Mobile First Grid */
+.storybook-grid {
+    display: grid;
+    /* 2 columns on mobile, as requested */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    /* Smaller gap */
+    padding: 12px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* First child spans full width on mobile too? 
+   Flipboard usually has one big story then little ones.
+*/
+.article-card-wrapper:first-child {
+    grid-column: 1 / -1;
+}
+
+/* Tablet and up */
+@media (min-width: 768px) {
+    .storybook-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        padding: 24px;
+    }
+}
+
+/* Desktop and up */
+@media (min-width: 1024px) {
+    .storybook-grid {
+        grid-template-columns: repeat(4, 1fr);
+        /* 4 columns on desktop for smaller cards feeling */
+    }
+}

@@ -786,6 +786,41 @@ export interface ApiSearchSearchLog extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiStoryBookStoryBook extends Struct.CollectionTypeSchema {
+  collectionName: 'story_books';
+  info: {
+    displayName: 'StoryBook';
+    pluralName: 'story-books';
+    singularName: 'story-book';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Category: Schema.Attribute.String;
+    CoverImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    DestinationURl: Schema.Attribute.String;
+    Excerpt: Schema.Attribute.String;
+    Headline: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::story-book.story-book'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    StoryDate: Schema.Attribute.Date;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiTagTag extends Struct.CollectionTypeSchema {
   collectionName: 'tags';
   info: {
@@ -1390,6 +1425,7 @@ declare module '@strapi/strapi' {
       'api::epaper.epaper': ApiEpaperEpaper;
       'api::podcast.podcast': ApiPodcastPodcast;
       'api::search.search-log': ApiSearchSearchLog;
+      'api::story-book.story-book': ApiStoryBookStoryBook;
       'api::tag.tag': ApiTagTag;
       'api::video-post.video-post': ApiVideoPostVideoPost;
       'plugin::content-releases.release': PluginContentReleasesRelease;

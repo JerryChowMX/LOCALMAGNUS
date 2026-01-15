@@ -47,6 +47,11 @@ const RouteLoader = () => (
     </div>
 );
 
+// Storybook
+const StorybookPage = lazy(() => import('../modules/storybook/pages/StorybookPage').then(module => ({ default: module.StorybookPage })));
+
+
+
 // Helper to redirect to today's date
 const RedirectToToday = () => {
     const location = useLocation();
@@ -125,6 +130,12 @@ export const AppRouter = () => {
 
                         {/* Podcasts Test Route (Phase 0) */}
                         <Route path="/test-podcasts" element={<PodcastTestPage />} />
+
+                        {/* Storybook / Flipboard */}
+                        <Route path={routes.storybook} element={<RedirectToToday />} />
+                        <Route path={`${routes.storybook}/:date`} element={<StorybookPage />} />
+
+
 
                         {/* 404 Catch-all */}
                         <Route path="*" element={<NotFoundPage />} />
