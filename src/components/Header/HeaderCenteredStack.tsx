@@ -1,10 +1,7 @@
 import React, { forwardRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { es } from 'date-fns/locale/es';
-import { Icons } from '../Icons';
-import { SearchModal, type SearchMode } from '../Search/SearchModal';
 import './HeaderCenteredStack.css';
 import '../../modules/noticiasHub/components/HeaderHubsDatePicker.css';
 
@@ -14,21 +11,16 @@ export interface HeaderCenteredStackProps {
     variant?: "light" | "dark";
     currentDate: string;
     onDateChange: (date: string) => void;
+    // Optional props kept for interface compatibility but currently unused
     onBack?: () => void;
     showBackButton?: boolean;
-    searchMode?: SearchMode;
+    searchMode?: any;
     onVideoSelect?: (video: any) => void;
     onPodcastSelect?: (podcast: any) => void;
     categories?: string[];
     selectedCategory?: string;
     onCategoryChange?: (category: string) => void;
 }
-
-const BackIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-);
 
 const ChevronDownIcon = () => (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -40,25 +32,14 @@ export const HeaderCenteredStack: React.FC<HeaderCenteredStackProps> = ({
     variant = "light",
     currentDate,
     onDateChange,
-    onBack,
-    showBackButton = true,
-    searchMode = 'articles',
-    onVideoSelect,
-    onPodcastSelect,
     categories,
     selectedCategory,
     onCategoryChange
 }) => {
-    const navigate = useNavigate();
-    const [isSearchOpen, setIsSearchOpen] = React.useState(false);
+    // Removed unused logic (search, back button)
+    // Removed isSearchOpen state as requested
 
-    const handleBack = () => {
-        if (onBack) {
-            onBack();
-        } else {
-            navigate(-1);
-        }
-    };
+    // Removed handleBack as requested
 
     const handleDateChange = (date: Date | null) => {
         if (date) {
@@ -99,11 +80,7 @@ export const HeaderCenteredStack: React.FC<HeaderCenteredStackProps> = ({
     return (
         <header className={`header-centered-stack header-centered-stack--${variant} ${categories?.length ? 'header-centered-stack--with-categories' : ''}`}>
             <div className="header-centered-stack__top-row">
-                {showBackButton && (
-                    <button className="header-centered-stack__back" onClick={handleBack}>
-                        <BackIcon />
-                    </button>
-                )}
+                {/* Back Button Removed as requested */}
 
                 <div className="header-centered-stack__date-picker">
                     <DatePicker
@@ -118,12 +95,7 @@ export const HeaderCenteredStack: React.FC<HeaderCenteredStackProps> = ({
                     />
                 </div>
 
-                <button
-                    className="header-centered-stack__search"
-                    onClick={() => setIsSearchOpen(true)}
-                >
-                    <Icons.search size={24} />
-                </button>
+                {/* Search Button Removed as requested */}
             </div>
 
             {categories && categories.length > 0 && (
@@ -139,14 +111,6 @@ export const HeaderCenteredStack: React.FC<HeaderCenteredStackProps> = ({
                     ))}
                 </div>
             )}
-
-            <SearchModal
-                isOpen={isSearchOpen}
-                onClose={() => setIsSearchOpen(false)}
-                mode={searchMode}
-                onVideoSelect={onVideoSelect}
-                onPodcastSelect={onPodcastSelect}
-            />
         </header>
     );
 };
