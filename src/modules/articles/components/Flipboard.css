@@ -2,14 +2,15 @@
 .flipboard-container {
     perspective: 2500px;
     /* Tweaked for "Mechanical" depth */
-    width: 100vw;
-    height: 100vh;
-    position: relative;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
     overflow: hidden;
     background: #000;
     touch-action: none;
     /* Hardware Acceleration Hints */
-    transform: translateZ(0);
+    /* Debug Border */
 }
 
 .gesture-overlay {
@@ -29,7 +30,6 @@
     left: 0;
     right: 0;
     overflow: hidden;
-    background-color: #fff;
     /* White base to prevent black flash */
     pointer-events: none;
 }

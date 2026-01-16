@@ -19,6 +19,9 @@ export interface HeaderCenteredStackProps {
     searchMode?: SearchMode;
     onVideoSelect?: (video: any) => void;
     onPodcastSelect?: (podcast: any) => void;
+    categories?: string[];
+    selectedCategory?: string;
+    onCategoryChange?: (category: string) => void;
 }
 
 const BackIcon = () => (
@@ -41,7 +44,10 @@ export const HeaderCenteredStack: React.FC<HeaderCenteredStackProps> = ({
     showBackButton = true,
     searchMode = 'articles',
     onVideoSelect,
-    onPodcastSelect
+    onPodcastSelect,
+    categories,
+    selectedCategory,
+    onCategoryChange
 }) => {
     const navigate = useNavigate();
     const [isSearchOpen, setIsSearchOpen] = React.useState(false);
@@ -91,37 +97,51 @@ export const HeaderCenteredStack: React.FC<HeaderCenteredStackProps> = ({
     ));
 
     return (
-        <header className={`header-centered-stack header-centered-stack--${variant}`}>
-            {showBackButton && (
-                <button className="header-centered-stack__back" onClick={handleBack}>
-                    <BackIcon />
+        <header className={`header-centered-stack header-centered-stack--${variant} ${categories?.length ? 'header-centered-stack--with-categories' : ''}`}>
+            <div className="header-centered-stack__top-row">
+                {showBackButton && (
+                    <button className="header-centered-stack__back" onClick={handleBack}>
+                        <BackIcon />
+                    </button>
+                )}
+
+                <div className="header-centered-stack__date-picker">
+                    <DatePicker
+                        selected={selectedDate}
+                        onChange={handleDateChange}
+                        customInput={<DatePickerCustomInput />}
+                        dateFormat="yyyy-MM-dd"
+                        popperPlacement="bottom"
+                        calendarClassName="magnus-datepicker"
+                        locale="es"
+                        maxDate={new Date()}
+                    />
+                </div>
+
+                <button
+                    className="header-centered-stack__search"
+                    onClick={() => setIsSearchOpen(true)}
+                >
+                    <Icons.search size={24} />
                 </button>
-            )}
-
-
-
-            <div className="header-centered-stack__date-picker">
-                <DatePicker
-                    selected={selectedDate}
-                    onChange={handleDateChange}
-                    customInput={<DatePickerCustomInput />}
-                    dateFormat="yyyy-MM-dd"
-                    popperPlacement="bottom"
-                    calendarClassName="magnus-datepicker"
-                    locale="es"
-                    maxDate={new Date()}
-                />
             </div>
 
-            <button
-                className="header-centered-stack__search"
-                onClick={() => setIsSearchOpen(true)}
-            >
-                <Icons.search size={24} />
-            </button>
+            {categories && categories.length > 0 && (
+                <div className="header-centered-stack__categories">
+                    {categories.map((category) => (
+                        <button
+                            key={category}
+                            className={`header-centered-stack__category-item ${selectedCategory === category ? 'active' : ''}`}
+                            onClick={() => onCategoryChange?.(category)}
+                        >
+                            {category}
+                        </button>
+                    ))}
+                </div>
+            )}
 
-            <SearchModal 
-                isOpen={isSearchOpen} 
+            <SearchModal
+                isOpen={isSearchOpen}
                 onClose={() => setIsSearchOpen(false)}
                 mode={searchMode}
                 onVideoSelect={onVideoSelect}

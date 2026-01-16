@@ -13,33 +13,48 @@ export const StorybookPage: React.FC = () => {
     const navigate = useNavigate();
     const { currentDate, handleDateChange } = useStorybookDate();
 
+    const [selectedCategory, setSelectedCategory] = React.useState<string>('All');
+
     // Fetch stories from the new Content Type
     const { data: storiesData, isLoading, error } = useStrapiStoryBooks(currentDate);
 
+    // Extract unique categories
+    const categories = React.useMemo(() => {
+        const unique = new Set(
+            storiesData
+                .map(story => story.Category)
+                .filter((cat): cat is string => !!cat)
+        );
+        return ['All', ...Array.from(unique)];
+    }, [storiesData]);
+
     // Adapter: Map StoryBookArticle to StrapiArticle for Flipboard compatibility
-    const mappedArticles: any[] = storiesData.map(story => ({
-        id: story.id,
-        documentId: story.documentId,
-        title: story.Headline,
-        slug: story.DestinationURl,
-        excerpt: story.Excerpt || '',
-        publishedAt: story.StoryDate,
-        hero_image: story.CoverImage ? {
-            url: story.CoverImage.url,
-            alternativeText: story.CoverImage.alternativeText
-        } : undefined,
-        category: story.Category ? {
-            name: story.Category,
-            slug: story.Category.toLowerCase().replace(/\s+/g, '-'),
-            color: '#000000'
-        } : undefined,
-        author: {
-            name: 'Magnus',
-            slug: 'magnus'
-        },
-        blocks: [],
-        locale: 'es'
-    }));
+    const mappedArticles: any[] = storiesData
+        .filter(story => selectedCategory === 'All' || story.Category === selectedCategory)
+        .map(story => ({
+            id: story.id,
+            documentId: story.documentId,
+            title: story.Headline,
+            slug: story.DestinationURl,
+            excerpt: story.Excerpt || '',
+            // Append noon time to prevent timezone shifts (e.g. UTC midnight -> previous day)
+            publishedAt: story.StoryDate ? `${story.StoryDate}T12:00:00` : story.StoryDate,
+            hero_image: story.CoverImage ? {
+                url: story.CoverImage.url,
+                alternativeText: story.CoverImage.alternativeText
+            } : undefined,
+            category: story.Category ? {
+                name: story.Category,
+                slug: story.Category.toLowerCase().replace(/\s+/g, '-'),
+                color: '#000000'
+            } : undefined,
+            author: {
+                name: story.Author || 'Magnus',
+                slug: (story.Author || 'magnus').toLowerCase().replace(/\s+/g, '-')
+            },
+            blocks: [],
+            locale: 'es'
+        }));
 
     // Note: Story click handling is internal to Flipboard -> StoryCard now, but Flipboard takes just articles.
     // Ideally Flipboard's StoryCard should handle navigation if needed, but current spec is "Flip through".
@@ -58,9 +73,18 @@ export const StorybookPage: React.FC = () => {
                 onDateChange={handleDateChange}
                 onBack={() => navigate('/')}
                 showBackButton={true}
+                categories={categories}
+                selectedCategory={selectedCategory}
+                onCategoryChange={setSelectedCategory}
             />
 
-            <main className="fixed inset-0 top-[60px] z-0">
+            {/* 
+                Main Content Area 
+                - Fixed positioning to fill the viewport below the header.
+                - top-[160px] ensures it starts after the header + categories.
+                - bottom-0/left-0/right-0 ensures it fills the rest of the screen.
+            */}
+            <main className="fixed top-[160px] bottom-0 left-0 right-0 z-0">
                 {/* Top padding/margin for header if needed, assuming Header is fixed or we need to offset */}
                 {/* Actually Flipboard is fixed fullscreen. We might need to adjust it to not cover the header? 
                     The header is z-index high. Flipboard is z-0? 
@@ -71,6 +95,7 @@ export const StorybookPage: React.FC = () => {
                     Wait, Flipboard logic uses 100vh.
                     Let's ensure it fits.
                  */}
+                {/* DEBUG DATA REMOVED */}
 
                 {isLoading && <FlipboardSkeleton />}
 

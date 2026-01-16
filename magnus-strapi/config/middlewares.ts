@@ -9,10 +9,12 @@ const getCorsOrigins = () => {
   // Default development origins
   const devOrigins = [
     'http://localhost:5173',
-    'http://localhost:5174', // Added for alternative Vite port
+    'http://localhost:5174',
+    'http://localhost:5175', // Fix: User is running on port 5175
     'http://localhost:3000',
     'http://127.0.0.1:5173',
     'http://127.0.0.1:5174',
+    'http://127.0.0.1:5175',
   ];
 
   // Production origins from environment variable
@@ -53,7 +55,6 @@ export default [
   {
     name: 'strapi::cors',
     config: {
-      enabled: true,
       origin: getCorsOrigins(),
       headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],

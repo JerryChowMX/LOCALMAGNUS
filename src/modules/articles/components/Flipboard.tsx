@@ -110,22 +110,22 @@ const FlipboardRenderer: React.FC<FlipboardRendererProps> = ({
             {/* STATIC LAYERS */}
             <div className="flip-layer layer-bottom z-0">
                 {nextArticle && (
-                    <motion.div className="page-content-bottom absolute inset-0" style={{ opacity: opacityStaticNextBottom }}>
+                    <motion.div className="page-content-bottom" style={{ opacity: opacityStaticNextBottom }}>
                         <StoryCard story={nextArticle} />
                     </motion.div>
                 )}
-                <motion.div className="page-content-bottom absolute inset-0" style={{ opacity: opacityStaticCurrentBottom }}>
+                <motion.div className="page-content-bottom" style={{ opacity: opacityStaticCurrentBottom }}>
                     <StoryCard story={currentArticle} />
                 </motion.div>
             </div>
 
             <div className="flip-layer layer-top z-0">
                 {prevArticle && (
-                    <motion.div className="page-content-top absolute inset-0" style={{ opacity: opacityStaticPrevTop }}>
+                    <motion.div className="page-content-top" style={{ opacity: opacityStaticPrevTop }}>
                         <StoryCard story={prevArticle} />
                     </motion.div>
                 )}
-                <motion.div className="page-content-top absolute inset-0" style={{ opacity: opacityStaticCurrentTop }}>
+                <motion.div className="page-content-top" style={{ opacity: opacityStaticCurrentTop }}>
                     <StoryCard story={currentArticle} />
                 </motion.div>
                 <div className="crease-shadow-top" />

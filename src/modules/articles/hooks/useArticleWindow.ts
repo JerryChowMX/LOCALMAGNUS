@@ -19,6 +19,11 @@ export const useArticleWindow = (articles: StrapiArticle[]): ArticleWindow => {
 
     const totalArticles = articles.length;
 
+    // Reset index when articles change
+    useEffect(() => {
+        setCurrentIndex(0);
+    }, [articles]);
+
     // Derived State
     const currentArticle = articles[currentIndex] || null;
     const nextArticle = currentIndex < totalArticles - 1 ? articles[currentIndex + 1] : null;

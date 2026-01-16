@@ -25,6 +25,7 @@ export interface StoryBookArticle {
     DestinationURl: string;
     Excerpt?: string;
     Category?: string;
+    Author?: string;
     CoverImage?: StrapiImage;
 }
 

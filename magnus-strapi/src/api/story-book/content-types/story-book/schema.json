@@ -11,6 +11,9 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "Author": {
+      "type": "string"
+    },
     "Headline": {
       "type": "string"
     },

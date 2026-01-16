@@ -1,7 +1,7 @@
 /* Main Container: Split Layout */
 .story-card--split {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     background: #fff;
@@ -11,6 +11,8 @@
 /* TOP HALF: 50% Height */
 .story-card__top {
     height: 50%;
+    flex: 0 0 50%;
+    max-height: 50%;
     width: 100%;
     position: relative;
     background-color: #000;
@@ -40,6 +42,8 @@
 /* BOTTOM HALF: 50% Height */
 .story-card__bottom {
     height: 50%;
+    flex: 0 0 50%;
+    max-height: 50%;
     width: 100%;
     background-color: #fff;
     color: #1a1a1a;
@@ -89,6 +93,7 @@
     color: #444;
     display: -webkit-box;
     -webkit-line-clamp: 6;
+    line-clamp: 6;
     /* Truncate if too long */
     -webkit-box-orient: vertical;
     overflow: hidden;

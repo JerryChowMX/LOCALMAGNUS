@@ -1,8 +1,8 @@
 .storybook-page {
-    min-height: 100vh;
+    width: 100%;
+    height: 100vh;
     background-color: var(--cream-25);
-    /* Add padding to account for fixed header */
-    padding-top: 80px;
+    overflow: hidden;
 }
 
 /* Mobile First Grid */
