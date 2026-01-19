@@ -5,6 +5,21 @@
     overflow: hidden;
 }
 
+.storybook-main {
+    position: fixed;
+    top: 130px;
+    bottom: 64px;
+    left: 0;
+    right: 0;
+    z-index: 0;
+}
+
+@media (min-width: 768px) {
+    .storybook-main {
+        bottom: 0;
+    }
+}
+
 /* Mobile First Grid */
 .storybook-grid {
     display: grid;

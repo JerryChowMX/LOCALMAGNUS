@@ -7,13 +7,14 @@ import { Body } from '../../../components/Typography/Typography';
 import { EmptyState } from '../../../components/EmptyState/EmptyState';
 import { FlipboardSkeleton } from '../../articles/components/FlipboardSkeleton';
 import { Flipboard } from '../../articles/components/Flipboard';
+import { BottomNav } from '../../../components/Navigation/BottomNav';
 import './StorybookPage.css';
 
 export const StorybookPage: React.FC = () => {
     const navigate = useNavigate();
     const { currentDate, handleDateChange } = useStorybookDate();
 
-    const [selectedCategory, setSelectedCategory] = React.useState<string>('All');
+    const [selectedCategory, setSelectedCategory] = React.useState<string>('Todas');
 
     // Fetch stories from the new Content Type
     const { data: storiesData, isLoading, error } = useStrapiStoryBooks(currentDate);
@@ -25,17 +26,18 @@ export const StorybookPage: React.FC = () => {
                 .map(story => story.Category)
                 .filter((cat): cat is string => !!cat)
         );
-        return ['All', ...Array.from(unique)];
+        return ['Todas', ...Array.from(unique)];
     }, [storiesData]);
 
     // Adapter: Map StoryBookArticle to StrapiArticle for Flipboard compatibility
     const mappedArticles: any[] = storiesData
-        .filter(story => selectedCategory === 'All' || story.Category === selectedCategory)
+        .filter(story => selectedCategory === 'Todas' || story.Category === selectedCategory)
         .map(story => ({
             id: story.id,
             documentId: story.documentId,
             title: story.Headline,
             slug: story.DestinationURl,
+            externalUrl: story.DestinationURl, // Add external URL for opening in new tab
             excerpt: story.Excerpt || '',
             // Append noon time to prevent timezone shifts (e.g. UTC midnight -> previous day)
             publishedAt: story.StoryDate ? `${story.StoryDate}T12:00:00` : story.StoryDate,
@@ -78,25 +80,14 @@ export const StorybookPage: React.FC = () => {
                 onCategoryChange={setSelectedCategory}
             />
 
-            {/* 
-                Main Content Area 
+            {/*
+                Main Content Area
                 - Fixed positioning to fill the viewport below the header.
                 - top-[160px] ensures it starts after the header + categories.
-                - bottom-0/left-0/right-0 ensures it fills the rest of the screen.
+                - bottom-[64px] ensures space for bottom nav on mobile.
+                - left-0/right-0 ensures it fills the rest of the screen.
             */}
-            <main className="fixed top-[160px] bottom-0 left-0 right-0 z-0">
-                {/* Top padding/margin for header if needed, assuming Header is fixed or we need to offset */}
-                {/* Actually Flipboard is fixed fullscreen. We might need to adjust it to not cover the header? 
-                    The header is z-index high. Flipboard is z-0? 
-                    Flipboard CSS says fixed top:0. 
-                    If we want it inside this page relative:
-                    We should override Flipboard CSS or wrap it.
-                    Flipboard.css has .flipboard-container { width: 100vw; height: 100vh; position: relative; ... }
-                    Wait, Flipboard logic uses 100vh.
-                    Let's ensure it fits.
-                 */}
-                {/* DEBUG DATA REMOVED */}
-
+            <main className="storybook-main">
                 {isLoading && <FlipboardSkeleton />}
 
                 {error && (
@@ -106,7 +97,10 @@ export const StorybookPage: React.FC = () => {
                 )}
 
                 {!isLoading && !error && mappedArticles.length > 0 && (
-                    <Flipboard articles={mappedArticles} />
+                    <Flipboard
+                        articles={mappedArticles}
+                        onCategoryClick={setSelectedCategory}
+                    />
                 )}
 
                 {!isLoading && !error && mappedArticles.length === 0 && (
@@ -118,6 +112,9 @@ export const StorybookPage: React.FC = () => {
                     </div>
                 )}
             </main>
+
+            {/* Bottom Navigation */}
+            <BottomNav variant="light" />
         </div>
     );
 };

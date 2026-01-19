@@ -154,6 +154,7 @@ export interface StrapiArticle {
     publishedAt: string;
     reading_time: number;
     isSpecial?: boolean;
+    externalUrl?: string;
     hero_image?: {
         url: string;
         alternativeText?: string;

@@ -10,6 +10,7 @@ import './Flipboard.css';
 
 interface FlipboardProps {
     articles: StrapiArticle[];
+    onCategoryClick?: (category: string) => void;
 }
 
 interface FlipboardRendererProps {
@@ -20,13 +21,14 @@ interface FlipboardRendererProps {
     onPrev: () => void;
     hasNext: boolean;
     hasPrev: boolean;
+    onCategoryClick?: (category: string) => void;
 }
 
 // --- FLIPBOARD RENDERER (The Physics Engine) ---
 // This component is mounted fresh on every page turn due to the key={currentIndex} in the parent.
 // This guarantees that all physics state (springs, motion values) starts at exactly 0 with zero momentum.
 const FlipboardRenderer: React.FC<FlipboardRendererProps> = ({
-    currentArticle, nextArticle, prevArticle, onNext, onPrev, hasNext, hasPrev
+    currentArticle, nextArticle, prevArticle, onNext, onPrev, hasNext, hasPrev, onCategoryClick
 }) => {
     // -- State Locks --
     const [isAnimating, setIsAnimating] = useState(false);
@@ -49,7 +51,7 @@ const FlipboardRenderer: React.FC<FlipboardRendererProps> = ({
     const opacityStaticCurrentTop = useTransform(angle, (a) => a < 0 ? 0 : 1);
 
     // -- Gesture Handlers --
-    const onPan = useCallback((_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    const onPan = useCallback((e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
         if (isAnimating) return;
 
         const delta = info.delta.y;
@@ -66,7 +68,8 @@ const FlipboardRenderer: React.FC<FlipboardRendererProps> = ({
         }
     }, [angle, hasNext, hasPrev, isAnimating]);
 
-    const onPanEnd = useCallback((_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+
+    const onPanEnd = useCallback((e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
         if (isAnimating) return;
 
         const currentAngle = angle.get();
@@ -104,29 +107,28 @@ const FlipboardRenderer: React.FC<FlipboardRendererProps> = ({
                 className="gesture-overlay"
                 onPan={onPan}
                 onPanEnd={onPanEnd}
-                style={{ touchAction: 'none' }}
             />
 
             {/* STATIC LAYERS */}
             <div className="flip-layer layer-bottom z-0">
                 {nextArticle && (
                     <motion.div className="page-content-bottom" style={{ opacity: opacityStaticNextBottom }}>
-                        <StoryCard story={nextArticle} />
+                        <StoryCard story={nextArticle} onCategoryClick={onCategoryClick} />
                     </motion.div>
                 )}
                 <motion.div className="page-content-bottom" style={{ opacity: opacityStaticCurrentBottom }}>
-                    <StoryCard story={currentArticle} />
+                    <StoryCard story={currentArticle} onCategoryClick={onCategoryClick} />
                 </motion.div>
             </div>
 
             <div className="flip-layer layer-top z-0">
                 {prevArticle && (
                     <motion.div className="page-content-top" style={{ opacity: opacityStaticPrevTop }}>
-                        <StoryCard story={prevArticle} />
+                        <StoryCard story={prevArticle} onCategoryClick={onCategoryClick} />
                     </motion.div>
                 )}
                 <motion.div className="page-content-top" style={{ opacity: opacityStaticCurrentTop }}>
-                    <StoryCard story={currentArticle} />
+                    <StoryCard story={currentArticle} onCategoryClick={onCategoryClick} />
                 </motion.div>
                 <div className="crease-shadow-top" />
             </div>
@@ -141,14 +143,14 @@ const FlipboardRenderer: React.FC<FlipboardRendererProps> = ({
             >
                 <div className="flipper-face face-front">
                     <div className="page-content-bottom">
-                        <StoryCard story={currentArticle} />
+                        <StoryCard story={currentArticle} onCategoryClick={onCategoryClick} />
                     </div>
                     <motion.div className="shadow-overlay" style={{ opacity: shadowOpacityFront }} />
                 </div>
                 {nextArticle && (
                     <div className="flipper-face face-back">
                         <div className="page-content-top">
-                            <StoryCard story={nextArticle} />
+                            <StoryCard story={nextArticle} onCategoryClick={onCategoryClick} />
                         </div>
                         <motion.div className="shadow-overlay" style={{ opacity: shadowOpacityBack }} />
                     </div>
@@ -165,14 +167,14 @@ const FlipboardRenderer: React.FC<FlipboardRendererProps> = ({
             >
                 <div className="flipper-face face-front">
                     <div className="page-content-top">
-                        <StoryCard story={currentArticle} />
+                        <StoryCard story={currentArticle} onCategoryClick={onCategoryClick} />
                     </div>
                     <motion.div className="shadow-overlay" style={{ opacity: shadowOpacityRevFront }} />
                 </div>
                 {prevArticle && (
                     <div className="flipper-face face-back">
                         <div className="page-content-bottom">
-                            <StoryCard story={prevArticle} />
+                            <StoryCard story={prevArticle} onCategoryClick={onCategoryClick} />
                         </div>
                         <motion.div className="shadow-overlay" style={{ opacity: shadowOpacityRevBack }} />
                     </div>
@@ -183,7 +185,7 @@ const FlipboardRenderer: React.FC<FlipboardRendererProps> = ({
 };
 
 // --- MAIN WRAPPER (Data Source) ---
-export const Flipboard: React.FC<FlipboardProps> = ({ articles }) => {
+export const Flipboard: React.FC<FlipboardProps> = ({ articles, onCategoryClick }) => {
     const {
         currentArticle, nextArticle, prevArticle, goNext, goPrev, hasNext, hasPrev, currentIndex
     } = useArticleWindow(articles);
@@ -200,6 +202,7 @@ export const Flipboard: React.FC<FlipboardProps> = ({ articles }) => {
             onPrev={goPrev}
             hasNext={hasNext}
             hasPrev={hasPrev}
+            onCategoryClick={onCategoryClick}
         />
     );
 };

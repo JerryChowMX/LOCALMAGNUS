@@ -233,6 +233,7 @@
 /* ACTIVE STATE - Editorial Contrast (Inverted) */
 .header-centered-stack__category-item.active {
     background: var(--text-primary);
-    color: var(--text-inverse);
+    color: #FFFFFF !important;
+    /* White text on dark background */
     border-color: var(--text-primary);
 }

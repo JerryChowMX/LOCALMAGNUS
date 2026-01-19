@@ -34,7 +34,8 @@
       "type": "string"
     },
     "Excerpt": {
-      "type": "string"
+      "type": "text",
+      "maxLength": 200
     },
     "Category": {
       "type": "string"
