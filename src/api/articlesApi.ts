@@ -22,7 +22,18 @@ function mapStrapiArticleToStandard(one: any): ArticleStandard {
         layout_type,
         publishedAt,
         read_time_minutes,
-        content_blocks
+
+        content_blocks,
+        isSpecial,
+        // Summaries
+        audio_summary,
+        video_summary,
+        ppt_summary,
+        infographic_summary,
+        // TTS
+        tts_status,
+        tts_audio,
+        tts_metadata
     } = attributes;
 
     // Handle Relations/Media which might also be flat or wrapped in .data.attributes
@@ -99,6 +110,7 @@ function mapStrapiArticleToStandard(one: any): ArticleStandard {
     return {
         id: id,
         layoutType: layout_type || "standard-one",
+        isSpecial: isSpecial || false,
         title: title || "Untitled",
         dek: dek || null,
         slug: slug,
@@ -111,7 +123,30 @@ function mapStrapiArticleToStandard(one: any): ArticleStandard {
         author,
         audioUrl: attributes.audioUrl || attributes.audio?.url || undefined,
         contentBlocks: normalizedBlocks,
-        relatedArticles: [] // Populated by separate fetch
+        relatedArticles: [], // Populated by separate fetch
+
+        // Pass through raw summary data (normalized if needed, but keeping simple for now)
+        audio_summary: audio_summary ? {
+            episode_label: audio_summary.episode_label,
+            podcast_title: audio_summary.podcast_title,
+            audio_file: audio_summary.audio_file?.data ? { url: audio_summary.audio_file.data.attributes.url } : (audio_summary.audio_file ? { url: audio_summary.audio_file.url } : undefined)
+        } : undefined,
+        video_summary: video_summary ? {
+            video_file: video_summary.video_file?.data ? { url: video_summary.video_file.data.attributes.url } : (video_summary.video_file ? { url: video_summary.video_file.url } : undefined),
+            thumbnail: video_summary.thumbnail?.data ? { url: video_summary.thumbnail.data.attributes.url } : (video_summary.thumbnail ? { url: video_summary.thumbnail.url } : undefined),
+            duration_seconds: video_summary.duration_seconds
+        } : undefined,
+        ppt_summary: ppt_summary ? {
+            ppt_file: ppt_summary.ppt_file?.data ? { url: ppt_summary.ppt_file.data.attributes.url } : (ppt_summary.ppt_file ? { url: ppt_summary.ppt_file.url } : undefined),
+            slide_count: ppt_summary.slide_count
+        } : undefined,
+        infographic_summary: infographic_summary ? {
+            image_file: infographic_summary.image_file?.data ? { url: infographic_summary.image_file.data.attributes.url } : (infographic_summary.image_file ? { url: infographic_summary.image_file.url } : undefined)
+        } : undefined,
+
+        tts_status,
+        tts_audio: tts_audio?.data ? { url: tts_audio.data.attributes.url } : (tts_audio ? { url: tts_audio.url } : undefined),
+        tts_metadata: tts_metadata?.data ? { url: tts_metadata.data.attributes.url } : (tts_metadata ? { url: tts_metadata.url } : undefined)
     };
 }
 
@@ -185,5 +220,42 @@ export async function fetchStandardArticle(slug: string): Promise<ArticleStandar
     } catch (error) {
         console.error("Error fetching standard article:", error);
         return null;
+    }
+}
+
+export async function fetchStandardArticles(page = 1, pageSize = 10, date?: string): Promise<{ articles: ArticleStandard[], meta: any }> {
+    const params = new URLSearchParams();
+
+    // Populate required fields for the card view
+    params.append('populate[hero_image][fields]', 'url,alternativeText');
+    params.append('populate[category][fields]', 'name,slug');
+    params.append('populate[author][fields]', 'name,slug');
+
+    // Sorting and pagination
+    params.append('sort[0]', 'publishedAt:desc');
+    params.append('pagination[page]', page.toString());
+    params.append('pagination[pageSize]', pageSize.toString());
+
+    // Add Date Filtering if provided (YYYY-MM-DD)
+    if (date) {
+        // Start of day (Monterrey/Mexico Time -06:00)
+        const startDate = `${date}T00:00:00.000-06:00`;
+        // End of day (Local Time -06:00)
+        const endDate = `${date}T23:59:59.999-06:00`;
+
+        params.append('filters[publishedAt][$gte]', startDate);
+        params.append('filters[publishedAt][$lte]', endDate);
+    }
+
+    try {
+        const response: any = await strapiClient.get(`/articles?${params.toString()}`);
+        const rawData = response.data || [];
+        const meta = response.meta || {};
+
+        const articles = rawData.map(mapStrapiArticleToStandard);
+        return { articles, meta };
+    } catch (error) {
+        console.error("Error fetching articles:", error);
+        return { articles: [], meta: {} };
     }
 }

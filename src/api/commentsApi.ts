@@ -15,7 +15,7 @@ export interface Comment {
     } | undefined;
     article: {
         data: {
-            id: number;
+            id: number | string;
         };
     } | undefined;
     parent: {
@@ -41,15 +41,16 @@ function normalizeComment(data: any): Comment {
 
 export interface CreateCommentPayload {
     content: string;
-    article: number;
+    article: number | string;
     parent?: number; // Optional parent comment ID for replies
 }
 
 export const commentsApi = {
     // Fetch comments for a specific article (including parent info for nesting)
-    getCommentsByArticle: async (articleId: number) => {
+    getCommentsByArticle: async (articleId: number | string) => {
         // Explicit populate for author (users-permissions) and parent
-        const query = `filters[article][id][$eq]=${articleId}&populate[0]=author&populate[1]=parent&sort=createdAt:asc`;
+        const idFilter = typeof articleId === 'string' ? `filters[article][documentId][$eq]=${articleId}` : `filters[article][id][$eq]=${articleId}`;
+        const query = `${idFilter}&populate[0]=author&populate[1]=parent&sort=createdAt:asc`;
 
         const response = await strapiClient.get<{ data: any[] }>(`comments?${query}`);
 

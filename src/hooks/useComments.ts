@@ -71,7 +71,7 @@ function toUIComment(comment: Comment, parentAuthorName?: string): UIComment {
     };
 }
 
-export const useComments = (articleId: number | undefined) => {
+export const useComments = (articleId: number | string | undefined) => {
     const [comments, setComments] = useState<Comment[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);

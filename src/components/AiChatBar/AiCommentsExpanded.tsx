@@ -5,7 +5,7 @@ import './AiChatBar.css';
 
 interface AiCommentsExpandedProps {
     onClose: () => void;
-    articleId?: number;
+    articleId?: number | string;
 }
 
 export const AiCommentsExpanded: React.FC<AiCommentsExpandedProps> = ({ onClose, articleId }) => {

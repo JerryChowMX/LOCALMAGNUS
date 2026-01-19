@@ -77,6 +77,36 @@ export const mapStrapiToStandard = (strapiArticle: StrapiArticle): ArticleStanda
             avatarUrl: strapiArticle.author?.profile_picture?.url,
             role: 'Columnista' // Placeholder, add to Strapi if needed
         },
+        // Extended fields
+        isSpecial: strapiArticle.isSpecial || false,
+
+        // Summaries
+        audio_summary: strapiArticle.audio_summary ? {
+            episode_label: strapiArticle.audio_summary.episode_label,
+            podcast_title: strapiArticle.audio_summary.podcast_title,
+            audio_file: strapiArticle.audio_summary.audio_file ? { url: strapiArticle.audio_summary.audio_file.url } : undefined
+        } : undefined,
+
+        video_summary: strapiArticle.video_summary ? {
+            video_file: strapiArticle.video_summary.video_file ? { url: strapiArticle.video_summary.video_file.url } : undefined,
+            thumbnail: strapiArticle.video_summary.thumbnail ? { url: strapiArticle.video_summary.thumbnail.url } : undefined,
+            duration_seconds: strapiArticle.video_summary.duration_seconds
+        } : undefined,
+
+        ppt_summary: strapiArticle.ppt_summary ? {
+            ppt_file: strapiArticle.ppt_summary.ppt_file ? { url: strapiArticle.ppt_summary.ppt_file.url } : undefined,
+            slide_count: strapiArticle.ppt_summary.slide_count
+        } : undefined,
+
+        infographic_summary: strapiArticle.infographic_summary ? {
+            image_file: strapiArticle.infographic_summary.image_file ? { url: strapiArticle.infographic_summary.image_file.url } : undefined,
+        } : undefined,
+
+        // TTS
+        tts_status: strapiArticle.tts_status,
+        tts_audio: strapiArticle.tts_audio ? { url: strapiArticle.tts_audio.url } : undefined,
+        tts_metadata: strapiArticle.tts_metadata ? { url: strapiArticle.tts_metadata.url } : undefined,
+
         contentBlocks: blocks,
         relatedArticles: strapiArticle.relatedArticles?.map(ra => {
             const imgUrl = ra.hero_image?.url;

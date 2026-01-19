@@ -24,7 +24,7 @@ import { ArticleTtsEntry } from '../tts/components/ArticleTtsEntry';
 import { TtsExperience, type TtsExperienceHandle } from '../tts/components/TtsExperience';
 
 // Hooks & Utils
-import { useStrapiArticle } from '../../../hooks/useStrapiArticles';
+import { useArticle } from '../../../hooks/useArticles';
 import { usePreviewMode } from '../../../hooks/usePreviewMode';
 import { usePodcastContext } from '../../../contexts/PodcastContext';
 import { routes } from '../../../app/routes';
@@ -43,9 +43,9 @@ export const UnifiedArticleView = () => {
     const { isPreview, previewStatus } = usePreviewMode();
 
     // Fetch article with preview status support
-    const { article, isLoading, error } = useStrapiArticle(slug || '', {
-        status: isPreview ? previewStatus : undefined
-    });
+    const { data: article, isLoading, error } = useArticle(slug || '');
+    // Note: status support for preview is pending in new hook, defaulting to standard fetch
+    // TODO: Add support for options in useArticles hook if needed for preview
 
     // Audio focus management - pause global podcast when local audio plays
     const { pauseForOtherAudio } = usePodcastContext();
@@ -128,17 +128,17 @@ export const UnifiedArticleView = () => {
         if (!article) return null;
         return {
             title: article.title,
-            summary: article.excerpt || article.summary || '',
+            summary: article.dek || '',
             publishedAt: article.publishedAt,
             updatedAt: article.publishedAt,
-            image: article.hero_image ? {
-                url: `${STRAPI_ORIGIN}${article.hero_image.url}`,
-                caption: '',
-                alternativeText: article.hero_image.alternativeText
+            image: article.coverImage ? {
+                url: `${STRAPI_ORIGIN}${article.coverImage.url}`,
+                caption: article.coverImage.caption || '',
+                alternativeText: article.coverImage.alt || ''
             } : { url: '' },
             author: article.author ? { name: article.author.name } : undefined,
             category: article.category ? { name: article.category.name, slug: article.category.slug } : undefined,
-            content: article.blocks || [],
+            content: article.contentBlocks || [],
             audio_summary: article.audio_summary ? {
                 id: 1,
                 episode_label: article.audio_summary.episode_label,
@@ -315,7 +315,7 @@ export const UnifiedArticleView = () => {
                         {/* TTS Controller View - Now sits below format tabs */}
                         {activeFormat === 'nota-original' && (
                             <ArticleTtsEntry
-                                ttsStatus={article.tts_status}
+                                ttsStatus={article.tts_status as "error" | "none" | "pending" | "ready" | undefined}
                                 isActive={isTtsActive}
                                 isPaused={isTtsPaused}
                                 currentTime={ttsCurrentTime}
@@ -365,8 +365,8 @@ export const UnifiedArticleView = () => {
                         ref={ttsRef}
                         audioUrl={`${STRAPI_ORIGIN}${article.tts_audio.url}`}
                         metadataUrl={`${STRAPI_ORIGIN}${article.tts_metadata.url}`}
-                        articleBlocks={article.blocks || []}
-                        articleId={article.documentId}
+                        articleBlocks={article.contentBlocks || []}
+                        articleId={String(article.id)}
                         isPaused={isTtsPaused}
                         playbackRate={ttsPlaybackRate}
                         onEnded={() => {
@@ -401,8 +401,8 @@ export const UnifiedArticleView = () => {
                         title: article.title,
                         author: article.author?.name || 'Redacción Magnus',
                         date: article.publishedAt,
-                        summary: article.excerpt || article.summary || undefined,
-                        content: extractTextFromBlocks(article.blocks || [])
+                        summary: article.dek || undefined,
+                        content: extractTextFromBlocks(article.contentBlocks || [])
                     }}
                 />
             )}
